@@ -1,0 +1,41 @@
+{
+  "Github Search": {
+    "url": "https://github.com/search?q={searchTerms}&type=repositories",
+    "icon": "./github.svg",
+    "definedAliases": [ "@gs" ]
+  },
+  "Github Topics": {
+    "url": "https://github.com/search?q={searchTerms}&type=topics",
+    "icon": "./github.svg",
+    "definedAliases": [ "@gt" ]
+  },
+  "Github Username": {
+    "url": "https://github.com/{searchTerms}",
+    "icon": "./github.svg",
+    "definedAliases": [ "@gu" ]
+  },
+  "HM Options": {
+    "url": "https://home-manager-options.extranix.com/?type=packages&release=master&query={searchTerms}",
+    "definedAliases": [ "@hm" ]
+  },
+  "Nix Packages": {
+    "url": "https://search.nixos.org/packages?type=packages&channel=unstable&query={searchTerms}",
+    "icon": "{{ pkgs.nixos-icons }}/share/icons/hicolor/scalable/apps/nix-snowflake.svg",
+    "definedAliases": [ "@np" ]
+  },
+  "NixOS Options": {
+    "url": "https://search.nixos.org/options?type=packages&channel=unstable&query={searchTerms}",
+    "icon": "{{ pkgs.nixos-icons }}/share/icons/hicolor/scalable/apps/nix-snowflake.svg",
+    "definedAliases": [ "@no" ]
+  },
+  "NixOS Wiki": {
+    "url": "https://wiki.nixos.org/index.php?search={searchTerms}",
+    "icon": "{{ pkgs.nixos-icons }}/share/icons/hicolor/scalable/apps/nix-snowflake.svg",
+    "definedAliases": [ "@nw" ]
+  },
+  "Nixvim Options": {
+    "url": "https://nix-community.github.io/nixvim/search?query={searchTerms}",
+    "icon": "./nixvim.svg",
+    "definedAliases": [ "@nx" ]
+  }
+}

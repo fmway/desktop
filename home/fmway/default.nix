@@ -1,17 +1,33 @@
 { internal, config, self, lib, ... } @ x:
-{ config, inputs, osConfig ? {}, ... } @ y: let
+{ config, pkgs, inputs, osConfig ? {}, ... } @ y: let
   cfg = config.home;
 in {
   imports = [
     ./packages.nix
     ./configs
     ./fish.nix
-    ./floorp
     (self.homeManagerModules.defaultWithout [
       "hyprland"
       "firefox"
     ])
-  ];
+  ] ++ map (name: { lib, pkgs, ... }: {
+      options.programs.${name}.profiles = lib.mkOption {
+        type = lib.types.attrsOf (lib.types.submodule {
+          config._module.args.pkgs = pkgs;
+        });
+      };
+    }) [ "floorp" "firefox" "zen-browser" ];
+  programs.floorp = {
+    enable = true;
+    nativeMessagingHosts = with pkgs ;[
+      firefoxpwa
+      gnome-browser-connector
+    ];
+    profiles.namaku = { ... }: {
+      imports = [ self.firefoxProfileModules.default ];
+      extensions = import ./firefox-extension.nix pkgs;
+    };
+  };
   home = {
     username = "fmway";
     homeDirectory = "/home/fmway";
