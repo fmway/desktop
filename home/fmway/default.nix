@@ -6,6 +6,7 @@ in {
     ./packages.nix
     ./configs
     ./fish.nix
+    inputs.zen-browser.homeModules.beta
     (self.homeManagerModules.defaultWithout [
       "hyprland"
       "firefox"
@@ -17,7 +18,7 @@ in {
         });
       };
     }) [ "floorp" "firefox" "zen-browser" ];
-  programs.floorp = {
+  programs.zen-browser = {
     enable = true;
     nativeMessagingHosts = with pkgs ;[
       firefoxpwa
