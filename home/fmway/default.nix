@@ -26,7 +26,7 @@ in {
     ];
     profiles.namaku = { ... }: {
       imports = [ self.firefoxProfileModules.default ];
-      extensions = import ./firefox-extension.nix pkgs;
+      extensions.packages = import ./firefox-extension.nix pkgs;
     };
   };
   home = {
