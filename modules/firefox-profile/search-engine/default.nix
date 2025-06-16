@@ -9,7 +9,7 @@
     rest = removeAttrs v [ "url" "icon" ];
     matchedUrl = lib.match "^(.+)[?](.+)$" url;
     template = if isNull matchedUrl then url else lib.elemAt matchedUrl 0;
-    icon = builtins.toPath (mkResolvePath ./. (mkParse var (v.icon or "")));
+    icon = with builtins; toPath (mkResolvePath (toPath ./.) (mkParse var (v.icon or "")));
     params = if isNull matchedUrl then [] else map (x: let
       y = lib.match "^(.+)=(.*)$" x;
     in {
