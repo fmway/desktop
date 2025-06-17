@@ -82,26 +82,6 @@
         "type": "github"
       }
     },
-    "encore": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1749632075,
-        "narHash": "sha256-si8Kzk60nUw5homQrKj543UQ9JtJtamkOu4JXqAIxOw=",
-        "owner": "encoredev",
-        "repo": "encore-flake",
-        "rev": "8e40f1d1f72aae8acf3fd5deefd5881418e7b9e3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "encoredev",
-        "repo": "encore-flake",
-        "type": "github"
-      }
-    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
@@ -1033,7 +1013,6 @@
         "catppuccin": "catppuccin",
         "chaotic": "chaotic",
         "disko": "disko",
-        "encore": "encore",
         "flake-parts": "flake-parts",
         "fmpkgs": "fmpkgs",
         "fmway-nix": "fmway-nix",

@@ -24,9 +24,6 @@
     lib.foldl' (acc: curr: acc // curr self acc) super [
       inputs.h-m-m.overlays.default
       inputs.nur.overlays.default
-      (self: super: {
-        encore = inputs.encore.packages.${self.system}.encore;
-      })
     ];
 
   perSystem = { pkgs, config, system, ... }: {

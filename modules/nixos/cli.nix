@@ -9,7 +9,6 @@
     wl-clipboard
     scrcpy
     h-m-m
-    encore
     # flox
     nixd # nix lsp
     waydroid-script

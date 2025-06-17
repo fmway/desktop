@@ -33,8 +33,6 @@
     # flox.url = "github:flox/flox/v1.3.17";
     fmpkgs.url = "github:fmway/fmpkgs/master";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    encore.url = "github:encoredev/encore-flake";
-    encore.inputs.nixpkgs.follows = "nixpkgs";
     # TODO
     # nix-colors.url = "github:misterio77/nix-colors";
     home-manager.url = "github:nix-community/home-manager/master";
