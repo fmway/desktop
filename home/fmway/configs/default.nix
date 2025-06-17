@@ -1,9 +1,9 @@
-{ config, pkgs, lib, ... } @ v:
-{
-  # TODO auto-import
-  xdg.configFile = {
-    "contour/contour.yml".source = ./contour/contour.yml;
-    "zellij/layouts/fmlayout.kdl".source = ./zellij/layouts/fmlayout.kdl;
-    "zellij/config.kdl".text = import ./zellij/config.kdl.nix v;
-  };
+{ config, pkgs, lib, ... } @ v: let
+  dir = ./.;
+  list = lib.filter (x: x != "default.nix") (lib.fmway.tree-path { inherit dir; prefix = ""; });
+in {
+  xdg.configFile = lib.listToAttrs (map (name: {
+    inherit name;
+    value.text = lib.fmway.mkParse' v (builtins.readFile "${dir}/${name}");
+  }) list);
 }
