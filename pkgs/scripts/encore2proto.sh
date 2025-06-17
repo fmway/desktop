@@ -1,4 +1,10 @@
-# @runtimeInputs buf
+#!{{ lib.getExe pkgs.bash }}
+export PATH=$PATH:{{
+  lib.makeBinPath [
+    pkgs.buf
+  ]
+}}
+
 cd {{ pkgs.encore.src }}/proto
 text=""
 [ $# -lt 1 ] && {

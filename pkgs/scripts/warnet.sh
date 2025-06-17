@@ -1,5 +1,10 @@
-# @pkgs sysctl
-#!{{ pkgs.bash }}/bin/bash
+#!{{ lib.getExe pkgs.bash }}
+
+export PATH=$PATH:{{
+  lib.makeBinPath [
+    pkgs.sysctl
+  ]
+}}
 
 temp="/tmp/old-ttl";
 

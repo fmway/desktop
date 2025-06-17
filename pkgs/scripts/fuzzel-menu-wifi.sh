@@ -1,4 +1,12 @@
-# @runtimeInputs libnotify, gnused, fuzzel, networkmanager
+#!{{ lib.getExe pkgs.bash }}
+export PATH=PATH:{{
+  lib.makeBinPath [
+    pkgs.libnotify
+    pkgs.fuzzel
+    pkgs.gnused
+    pkgs.networkmanager
+  ]
+}}
 
 # taken from https://github.com/ericmurphyxyz/rofi-wifi-menu/blob/070ef6cb1939d8928a7dcfb42fcf223d545d3e7d/rofi-wifi-menu.sh
 notify-send "Getting list of available Wi-Fi networks..."

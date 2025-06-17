@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    scripts.all
     # cli
     element # periodic table
     # matui

@@ -30,6 +30,7 @@
   environment.systemPackages = with pkgs; [
     agenix
     google-authenticator
+    scripts.all
   ];
 
   home-manager.users.fmway.imports = [
