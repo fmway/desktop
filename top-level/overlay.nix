@@ -28,6 +28,7 @@
 
   perSystem = { pkgs, config, system, ... }: {
     nixpkgs.overlays = with inputs; [
+      lix-module.overlays.default
       self.overlays.default
       agenix.overlays.default
       self.overlays.externalPackages

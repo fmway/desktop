@@ -1,2 +1,5 @@
 result
 result-*
+.direnv
+.devenv
+.pre-commit-config.yaml

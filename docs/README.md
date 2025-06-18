@@ -14,4 +14,4 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > - **Desktop Environment / Window Manager** : [GNOME](https://www.gnome.org/), (and [swayfx](https://github.com/WillPower3309/swayfx))
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
-> - **Version** : 25.11 (Home Manager), 25.11 (NixOS), 2.93.0 (Lix)
+> - **Version** : {{ (with builtins; fromJSON (readFile "${inputs.home-manager}/release.json")).release }} (Home Manager), {{ lib.fileContents "${inputs.nixpkgs}/lib/.version" }} (NixOS), {{ pkgs.lix.version }} (Lix)
