@@ -8,7 +8,7 @@
       hooks.readme = {
         enable = true;
         name = "Compile Readme";
-        files = /* regex */ "^docs\\/README\\.md$";
+        files = /* regex */ "^(docs\\/README\\.md|flake\\.(nix|lock)|top-level\\/devShells\\.nix)$";
         entry = "nix run .#readme ./README.md";
         stages = [ "pre-commit" ];
         verbose = true;
