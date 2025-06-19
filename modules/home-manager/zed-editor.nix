@@ -68,8 +68,8 @@
       {
         context = "vim_mode != insert";
         bindings = {
-          "tab" = "tab_switcher::Toggle";
-          "shift-tab" = ["tab_switcher::Toggle" { select_last = true; }];
+          # "tab" = "tab_switcher::Toggle";
+          # "shift-tab" = ["tab_switcher::Toggle" { select_last = true; }];
         };
       }
       # visual / normal mode
