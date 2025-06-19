@@ -29,7 +29,7 @@
       inputs.darwin.follows = "";
     };
     fmway-nix = {
-      url = "github:fmway/fmway.nix";
+      url = "github:fmway/fmway.nix/experimental";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # flox.url = "github:flox/flox/v1.3.17";

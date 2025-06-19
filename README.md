@@ -1,4 +1,5 @@
 # NixOS configuration
+
 [![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
 
 [![CI](https://github.com/fmway/myOS/actions/workflows/ci.yml/badge.svg)](https://github.com/fmway/myOS/actions/workflows/ci.yml)

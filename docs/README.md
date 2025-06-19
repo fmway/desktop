@@ -1,4 +1,11 @@
 # NixOS configuration
+<!--{=
+ version = {
+    home-manager = (with builtins; fromJSON (readFile "${inputs.home-manager}/release.json")).release;
+    nixos-module = lib.fileContents "${inputs.nixpkgs}/lib/.version";
+    lix = pkgs.lix.version;
+  };
+}-->
 [![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
 
 [![CI](https://github.com/fmway/myOS/actions/workflows/ci.yml/badge.svg)](https://github.com/fmway/myOS/actions/workflows/ci.yml)
@@ -14,4 +21,4 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > - **Desktop Environment / Window Manager** : [GNOME](https://www.gnome.org/), (and [swayfx](https://github.com/WillPower3309/swayfx))
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
-> - **Version** : {{ (with builtins; fromJSON (readFile "${inputs.home-manager}/release.json")).release }} (Home Manager), {{ lib.fileContents "${inputs.nixpkgs}/lib/.version" }} (NixOS), {{ pkgs.lix.version }} (Lix)
+> - **Version** : <!--{ version.home-manager }--> (Home Manager), <!--{ version.nixos-module }--> (NixOS), <!--{ version.lix }--> (Lix)
