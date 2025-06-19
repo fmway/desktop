@@ -2,6 +2,9 @@
 { lib, ... }:
 {
   inherit _file;
+  imports = [
+    ./binds.nix
+  ];
   programs.fish.generateCompletions = lib.mkDefault false; # dont create fish completions by manpage, very very useless
   programs.fish.enable = lib.mkDefault true;
   programs.fish.interactiveShellInit = /* fish */ ''
