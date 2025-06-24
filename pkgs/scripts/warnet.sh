@@ -3,6 +3,7 @@
 export PATH=$PATH:{{
   lib.makeBinPath [
     pkgs.sysctl
+    pkgs.ripgrep
   ]
 }}
 
@@ -20,6 +21,9 @@ up() {
   old="$(sysctl -n net.ipv4.ip_default_ttl)"
   echo "$old" > "$temp"
   sysctl -w net.ipv4.ip_default_ttl=65
+  sysctl -a | rg 'net\.ipv6\.conf\..+\.hop_limit' | rg '([^=]+) = ([^=]+)' -r '$1' | while read i; do
+    sysctl -w $i=65
+  done
   echo "$old -> 65"
 }
 
@@ -30,6 +34,9 @@ down() {
     old="$(cat $temp | xargs)"
   fi
   sysctl -w net.ipv4.ip_default_ttl="$old"
+  sysctl -a | rg 'net\.ipv6\.conf\..+\.hop_limit' | rg '([^=]+) = ([^=]+)' -r '$1' | while read i; do
+    sysctl -w $i=$old
+  done
   echo "65 -> $old"
   [[ -e "$temp" ]] && rm "$temp"
 }

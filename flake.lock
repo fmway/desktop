@@ -361,16 +361,15 @@
         "read-tree": "read-tree"
       },
       "locked": {
-        "lastModified": 1750344961,
-        "narHash": "sha256-ogYvlkrvHnN4Re9TmOMF7f/GM+fsIiitaDryJqNPB3Q=",
+        "lastModified": 1750728583,
+        "narHash": "sha256-/ks9ZgEzc+E0KP1NeVxi/aFLnDKJhH041n4PU+L/r2M=",
         "owner": "fmway",
         "repo": "fmway.nix",
-        "rev": "b580566f1f46ceea4b4ed30f9a191689322cc187",
+        "rev": "bb5b5d920f0943231a7d481a149a9ee960391fd2",
         "type": "github"
       },
       "original": {
         "owner": "fmway",
-        "ref": "experimental",
         "repo": "fmway.nix",
         "type": "github"
       }
