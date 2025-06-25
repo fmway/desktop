@@ -1,19 +1,6 @@
 { self, inputs, ... }:
 {
-  imports = [
-    inputs.git-hooks.flakeModule
-  ];
   perSystem = { pkgs, system, config, lib, ... }: {
-    pre-commit.settings = {
-      hooks.readme = {
-        enable = true;
-        name = "Compile Readme";
-        files = /* regex */ "^(docs\\/README\\.md|flake\\.(nix|lock)|top-level\\/devShells\\.nix)$";
-        entry = "nix run .#readme ./README.md";
-        stages = [ "pre-commit" ];
-        verbose = true;
-      };
-    };
     devShells.default = pkgs.mkShellNoCC {
       shellHook = ''
         ${config.pre-commit.installationScript}
