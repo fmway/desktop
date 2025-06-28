@@ -3,6 +3,8 @@
   description = "My NixOS configuration";
   # Inputs
   inputs = {
+    waydroid_script.flake = false;
+    waydroid_script.url = "github:casualsnek/waydroid_script";
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.url = "github:cachix/git-hooks.nix";
     zen-browser = {

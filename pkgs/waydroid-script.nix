@@ -1,4 +1,4 @@
-{ internal, self, super, ... }:
+{ internal, inputs, self, super, ... }:
 _: self.stdenv.mkDerivation {
   name = "waydroid-script";
 
@@ -6,12 +6,7 @@ _: self.stdenv.mkDerivation {
     (self.python3.withPackages(ps: with ps; [ tqdm requests inquirerpy ]))
   ];
 
-  src = self.fetchFromGitHub {
-    owner = "casualsnek";
-    repo = "waydroid_script";
-    rev = "1a2d3ad643206ad5f040e0155bb7ab86c0430365";
-    hash = "sha256-OiZO62cvsFyCUPGpWjhxVm8fZlulhccKylOCX/nEyJU=";
-  };
+  src = inputs.waydroid_script.outPath;
 
   postPatch = ''
     patchShebangs main.py

@@ -1080,6 +1080,7 @@
         "nur": "nur",
         "nxchad": "nxchad",
         "systems": "systems_10",
+        "waydroid_script": "waydroid_script",
         "zen-browser": "zen-browser"
       }
     },
@@ -1272,6 +1273,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "waydroid_script": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1748622964,
+        "narHash": "sha256-dnQBDcHM7fG+w7YilbKT2kon4cRfGprhfL3v85z4fdw=",
+        "owner": "casualsnek",
+        "repo": "waydroid_script",
+        "rev": "32d21c8074c17bfbab70f7158b80464227821424",
+        "type": "github"
+      },
+      "original": {
+        "owner": "casualsnek",
+        "repo": "waydroid_script",
         "type": "github"
       }
     },
