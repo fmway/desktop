@@ -59,6 +59,7 @@
     inherit (fmway-nix) lib;
   in lib.mkFlake {
       inherit inputs;
+      strict-packages = false;
       specialArgs = {
         lib = [
           home-manager.lib

@@ -1,30 +1,34 @@
-{ lib, config, inputs, self, ... } @ v:
-{
-  flake.overlays.default = self: super: let
-    dir = ../pkgs;
-    packages = lib.pipe dir [
-      (builtins.readDir)
-      (lib.filterAttrs (k: v:
-        (v == "directory" && lib.pathIsRegularFile "${dir}/${k}/default.nix") ||
-        (v == "regular" && lib.hasSuffix ".nix" k)
-      ))
-      (lib.attrNames)
-      (map (path: {
-        name = lib.removeSuffix ".nix" path;
-        value = lib.fmway.withImport "${dir}/${path}" (v // {
+{ lib, config, inputs, self, ... } @ v: let
+  dir = builtins.toPath ../pkgs;
+  listDir = lib.attrNames (
+    lib.filterAttrs (k: v:
+      (v == "directory" && lib.pathIsRegularFile "${dir}/${k}/default.nix") ||
+      (v == "regular" && lib.hasSuffix ".nix" k)
+    ) (builtins.readDir dir)
+  );
+  fetcheds = let
+    res = lib.listToAttrs (map (x: let
+      path = "${dir}/${x}";
+    in rec {
+      name = lib.removeSuffix ".nix" x;
+      value = self: super: {
+        "${name}" = lib.fmway.withImport path (v // {
           inherit self super;
           inherit (config.flake) lib;
         });
-      }))
-      (lib.listToAttrs)
-    ];
-  in lib.infuse super packages;
-
-  flake.overlays.externalPackages = self: super:
-    lib.foldl' (acc: curr: acc // curr self acc) super [
-      inputs.h-m-m.overlays.default
-      inputs.nur.overlays.default
-    ];
+      };
+    }) listDir);
+  in res // {
+    default = self: super: lib.foldl' (acc: curr: acc // res.${curr} self super) {} (builtins.attrNames res);
+  };
+in {
+  flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse super (fn self super)) fetcheds // {
+    externalPackages = self: super:
+      lib.foldl' (acc: curr: acc // curr self acc) super [
+        inputs.h-m-m.overlays.default
+        inputs.nur.overlays.default
+      ];
+  };
 
   perSystem = { pkgs, config, system, ... }: {
     nixpkgs.overlays = with inputs; [
@@ -46,6 +50,13 @@
         } // acc) obj arr;
       in overlayNixpkgs [ "master" "24_11" "25_05" ] {})
     ];
+
+    packages = lib.listToAttrs (map (x: let
+      name = lib.removeSuffix ".nix" x;
+    in {
+      inherit name;
+      value = pkgs.${name};
+    }) listDir);
 
     legacyPackages = pkgs;
   };
