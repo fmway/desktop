@@ -13,7 +13,7 @@
   '';
 
   programs.fish.functions = let
-    dir = ./functions;
+    dir = builtins.toPath ./functions;
     scanned = builtins.readDir dir;
     filtered = lib.filterAttrs (p: t:
       t == "regular" && lib.hasSuffix ".fish" p

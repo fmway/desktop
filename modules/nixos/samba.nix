@@ -1,5 +1,6 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 {
+  services.samba.enable = lib.mkDefault true;
   services.samba = {
     # enable = true;
     package = pkgs.sambaFull;

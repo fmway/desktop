@@ -22,6 +22,9 @@
     ("pipe-operator" + lib.optionalString (!config.lix.enable) "s")
   ];
 
+  services.samba.enable = false;
+  services.displayManager.ly.enable = false;
+
   programs.nixvim.enable = true;
   programs.nixvim.imports = [
     self.nixvimModules.default

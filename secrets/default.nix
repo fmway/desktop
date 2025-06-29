@@ -5,7 +5,7 @@ let
     matched = lib.match "^(.*)\\.age$" (toString value);
   in if lib.isList matched then baseNameOf (lib.elemAt matched 0) else matched;
 
-  folder = ./.;
+  folder = builtins.toPath ./.;
 
   resultAges = import ./secrets.nix;
   files = lib.attrNames resultAges;

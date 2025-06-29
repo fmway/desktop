@@ -1,5 +1,6 @@
 { lib, pkgs, ... }:
 {
+  services.displayManager.ly.enable = lib.mkDefault true;
   services.displayManager.ly.settings = {
     save = true;
     allow_empty_password = false;
