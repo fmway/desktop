@@ -31,6 +31,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
+    cosmocc
     agenix
     google-authenticator
     scripts.all
