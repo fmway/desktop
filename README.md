@@ -16,4 +16,4 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
 > - **Version** : 25.11 (Home Manager), 25.11 (NixOS) , 2.93.0 (Lix)
-> - **Kernel** : 6.15.3 (linux-cachyos)
+> - **Kernel** : 6.15.4 (linux-cachyos)
