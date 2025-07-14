@@ -15,5 +15,5 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > - **Desktop Environment / Window Manager** : [GNOME v48.2](https://www.gnome.org/)
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
-> - **Version** : 25.11 (Home Manager), 25.11 (NixOS) , 2.93.2-pre20250629-f3a7bbe (Lix)
-> - **Kernel** : 6.15.4 (linux-cachyos)
+> - **Version** : 25.11 (Home Manager), 25.11 (NixOS) , 2.93.2 (Lix)
+> - **Kernel** : 6.15.6 (linux-cachyos)
