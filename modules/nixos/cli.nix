@@ -22,7 +22,6 @@
     # himalaya # email client...🤔
     # nix-index # nix-index is suck, fuck it
     # comma # also this, very suck
-    # fmpkgs.scribd-downloader # scribd downloader 😱, tai
     # nh # wrapper nixos-rebuild & home-manager with nvd + nix-output-monitor
     # nvd # nix diff
     # nix-output-monitor # nix beautiful output

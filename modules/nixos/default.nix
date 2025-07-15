@@ -3,7 +3,7 @@
 {
   inherit _file;
   imports = allModules ++ [
-    inputs.fmway-nix.nixosModules.all
+    inputs.fmway-modules.nixosModules.all
   ];
 
   nixpkgs.config = {

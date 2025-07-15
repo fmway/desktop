@@ -12,7 +12,7 @@
     disko.nixosModules.default
     agenix.nixosModules.default
     self.nixosModules.default
-    fmpkgs.nixosModules.default
+    fmway-pkgs.nixosModules.default
     nixvim.nixosModules.nixvim
     nxchad.nixosModules.nixvim
     lix-module.nixosModules.default

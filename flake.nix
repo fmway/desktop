@@ -3,8 +3,8 @@
   description = "My NixOS configuration";
   # Inputs
   inputs = {
-    waydroid_script.flake = false;
     waydroid_script.url = "github:casualsnek/waydroid_script";
+    waydroid_script.flake = false;
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.url = "github:cachix/git-hooks.nix";
     zen-browser = {
@@ -30,12 +30,14 @@
       url = "github:ryantm/agenix";
       inputs.darwin.follows = "";
     };
-    fmway-nix = {
-      url = "github:fmway/fmway.nix";
+    fmway-lib = {
+      url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fmway-modules.url = "github:fmway/modules";
+    fmway-modules.inputs.fmway-lib.follows = "fmway-lib";
+    fmway-pkgs.url = "github:fmway/pkgs";
     # flox.url = "github:flox/flox/v1.3.17";
-    fmpkgs.url = "github:fmway/fmpkgs/master";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     # TODO
     # nix-colors.url = "github:misterio77/nix-colors";
@@ -43,20 +45,26 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     # nixgl.url = "github:nix-community/NixGL";
     nur.url = "github:nix-community/nur";
+    nur.inputs.flake-parts.follows = "flake-parts";
+    nur.inputs.nixpkgs.follows = "nixpkgs";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     systems.url = "github:nix-systems/default";
     nxchad.url = "github:fmway/nxchad";
     nxchad.inputs.nixpkgs.follows = "nixpkgs";
+    nxchad.inputs.fmway-nix.follows = "fmway-lib";
+    nxchad.inputs.flake-parts.follows = "flake-parts";
+    nxchad.inputs.nixvim.follows = "nixvim";
     nixvim.url = "github:nix-community/nixvim";
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim.inputs.flake-parts.follows = "flake-parts";
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.2-1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { home-manager, nxchad, fmway-nix, ... } @ inputs: let
-    inherit (fmway-nix) lib;
+  outputs = { home-manager, nxchad, fmway-lib, ... } @ inputs: let
+    inherit (fmway-lib) lib;
   in lib.mkFlake {
       inherit inputs;
       strict-packages = false;
@@ -64,7 +72,7 @@
         lib = [
           home-manager.lib
           {
-            inherit (fmway-nix) infuse readTree fmway;
+            inherit (fmway-lib) infuse readTree fmway;
             inherit (nxchad.lib) nixvim;
           }
           (self: super: import ./lib { lib = self; inherit self super; })

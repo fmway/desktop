@@ -8,7 +8,7 @@ pkgs: (with pkgs.nur.repos.rycee.firefox-addons; [
   # search-by-image
   firefox-color
   vue-js-devtools
-]) ++ (with pkgs.fmpkgs.firefox-addons; [
+]) ++ (with pkgs.fmway.firefox-addons; [
   xdm_v8
   what-font
   wakatime

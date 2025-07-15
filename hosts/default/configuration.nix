@@ -4,7 +4,7 @@
   imports = with inputs; [
     ./hardware-configuration.nix
     selfConfig.flake.nixosModules.default
-    fmpkgs.nixosModules.default
+    fmway-pkgs.nixosModules.default
   ];
 
   # Enable fwupd for updating firmware

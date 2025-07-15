@@ -3,7 +3,7 @@
 {
   inherit _file;
   imports = allModules ++ [
-    (inputs.fmway-nix or selfInputs.fmway-nix).homeManagerModules.all
+    (inputs.fmway-modules or selfInputs.fmway-modules).homeManagerModules.all
   ];
 
   nix.package = lib.mkDefault pkgs.nix;

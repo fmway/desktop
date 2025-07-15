@@ -44,7 +44,7 @@
       inhibit-gnome
       evafast
       uosc
-    ]) ++ lib.optionals (pkgs ? fmpkgs) (with pkgs.fmpkgs.mpv-scripts; [
+    ]) ++ lib.optionals (pkgs ? fmway) (with pkgs.fmway.mpv-scripts; [
       multiloop
       menu
       bookmarker

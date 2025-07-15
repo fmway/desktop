@@ -1,6 +1,9 @@
 { self, inputs, ... }:
 {
   perSystem = { pkgs, system, config, lib, ... }: {
+    nixpkgs.overlays = [
+      inputs.fmway-lib.overlays.devshell-lorri-fix
+    ];
     devShells.default = pkgs.mkShellNoCC {
       shellHook = ''
         ${config.pre-commit.installationScript}

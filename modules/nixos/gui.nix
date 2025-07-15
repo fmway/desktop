@@ -14,7 +14,6 @@
     gst_all_1.gstreamer # ...
     keepassxc # password manager
     # qutebrowser
-    # fmpkgs.keypunch # monkeytype for gnome
     firefoxpwa # pwa for firefox
 
     # terminal
