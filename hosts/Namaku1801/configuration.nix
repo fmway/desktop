@@ -15,11 +15,11 @@
     fmway-pkgs.nixosModules.default
     nixvim.nixosModules.nixvim
     nxchad.nixosModules.nixvim
-    lix-module.nixosModules.default
+    # lix-module.nixosModules.default
   ];
 
   nix.settings.experimental-features = [
-    ("pipe-operator" + lib.optionalString (!config.lix.enable) "s")
+    ("pipe-operator" + lib.optionalString (!config.lix.enable or false) "s")
   ];
 
   services.samba.enable = false;
@@ -31,7 +31,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    cosmocc
     agenix
     google-authenticator
     scripts.all

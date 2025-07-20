@@ -16,6 +16,7 @@
     };
     h-m-m.url = "github:nadrad/h-m-m";
     h-m-m.inputs.nixpkgs.follows = "nixpkgs";
+    h-m-m.inputs.systems.follows = "systems";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-24_11.url = "github:NixOS/nixpkgs/nixos-24.11";
@@ -29,6 +30,8 @@
     agenix = {
       url = "github:ryantm/agenix";
       inputs.darwin.follows = "";
+      inputs.systems.follows = "systems";
+      inputs.home-manager.follows = "home-manager";
     };
     fmway-lib = {
       url = "github:fmway/lib";
@@ -51,12 +54,15 @@
     systems.url = "github:nix-systems/default";
     nxchad.url = "github:fmway/nxchad";
     nxchad.inputs.nixpkgs.follows = "nixpkgs";
-    nxchad.inputs.fmway-nix.follows = "fmway-lib";
+    nxchad.inputs.fmway-lib.follows = "fmway-lib";
+    nxchad.inputs.fmway-modules.follows = "fmway-modules";
     nxchad.inputs.flake-parts.follows = "flake-parts";
     nxchad.inputs.nixvim.follows = "nixvim";
+    nxchad.inputs.systems.follows = "systems";
     nixvim.url = "github:nix-community/nixvim";
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.inputs.flake-parts.follows = "flake-parts";
+    nixvim.inputs.systems.follows = "systems";
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.2-1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -67,7 +73,6 @@
     inherit (fmway-lib) lib;
   in lib.mkFlake {
       inherit inputs;
-      strict-packages = false;
       specialArgs = {
         lib = [
           home-manager.lib
@@ -80,6 +85,7 @@
       };
     } {
       imports = lib.fmway.genImports ./top-level ++ [
+        inputs.fmway-modules.flakeModules.packages
         ({ self, config, lib, ... } @ v: let
         in {
           disabledModules = [ "${inputs.flake-parts}/modules/nixosModules.nix" ];
