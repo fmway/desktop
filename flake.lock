@@ -211,11 +211,11 @@
         "read-tree": "read-tree"
       },
       "locked": {
-        "lastModified": 1752945877,
-        "narHash": "sha256-yQAnQzQUm0B/fXAJ1timLY57BUXHvKWOIerFbNAQl78=",
+        "lastModified": 1753092532,
+        "narHash": "sha256-U4w35IZkufZ6WN7wpELYGcq3UjNVx4/9RhQFAnaGJwo=",
         "owner": "fmway",
         "repo": "lib",
-        "rev": "9a67d2cc2731e5ba2f7a2b5382b4a034e1e7afc6",
+        "rev": "9d25312e84942f5f8de37c3db76718e365f26c80",
         "type": "github"
       },
       "original": {

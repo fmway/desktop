@@ -26,9 +26,9 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > [!NOTE]
 > **System Information** : 
 > - **Hardware** : [ThinkPad t480](https://github.com/NixOS/nixos-hardware/blob/master/lenovo/thinkpad/t480/default.nix)
-> - **Display Manager** : GDM <!--{ "(v${pkgs.gdm.version})" }-->
-> - **Desktop Environment / Window Manager** : [GNOME<!--{ " v" + pkgs.gnome-shell.version }-->](https://www.gnome.org/)
+> - **Display Manager** : GDM v`{ pkgs.gdm.version }`
+> - **Desktop Environment / Window Manager** : [GNOME v`{ pkgs.gnome-shell.version }`](https://www.gnome.org/)
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
-> - **Version** : <!--{ version.home-manager }--> (Home Manager), <!--{ version.nixos-module }--> (NixOS) <!--{ ", ${nix.version} (${nix.name})" }-->
-> - **Kernel** : <!--{ "${kernel.version} (${kernel.name})" }-->
+> - **Version** : `{ version.home-manager }` (Home Manager), `{ version.nixos-module }` (NixOS), `{ nix.version }` (`{ nix.name }`)
+> - **Kernel** : `{ kernel.version }` (`{ kernel.name }`)
