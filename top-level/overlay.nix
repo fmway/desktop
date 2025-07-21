@@ -1,4 +1,4 @@
-{ lib, config, inputs, self, ... } @ v: let
+{ lib, sources, config, inputs, self, ... } @ v: let
   dir = builtins.toPath ../pkgs;
   listDir = lib.attrNames (
     lib.filterAttrs (k: v:
@@ -32,7 +32,7 @@ in {
 
   perSystem = { pkgs, config, system, ... }: {
     nixpkgs.overlays = with inputs; [
-      lix-module.overlays.default
+      # sources.lix-module.overlays.default
       self.overlays.default
       agenix.overlays.default
       self.overlays.externalPackages

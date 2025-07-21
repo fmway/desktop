@@ -63,10 +63,6 @@
     nixvim.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.inputs.flake-parts.follows = "flake-parts";
     nixvim.inputs.systems.follows = "systems";
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.2-1.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = { home-manager, nxchad, fmway-lib, ... } @ inputs: let
@@ -74,6 +70,7 @@
   in lib.mkFlake {
       inherit inputs;
       specialArgs = {
+        sources = import ./sources;
         lib = [
           home-manager.lib
           {

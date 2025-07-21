@@ -1,4 +1,4 @@
-{ internal, inputs, config, self, selfInputs ? inputs, ... }:
+{ internal, sources, inputs, config, self, selfInputs ? inputs, ... }:
 { inputs, config, lib, pkgs, ... }:
 {
   imports = with inputs; [
@@ -15,7 +15,7 @@
     fmway-pkgs.nixosModules.default
     nixvim.nixosModules.nixvim
     nxchad.nixosModules.nixvim
-    # lix-module.nixosModules.default
+    # sources.lix-module.nixosModules.default
   ];
 
   nix.settings.experimental-features = [
