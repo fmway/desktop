@@ -11,12 +11,17 @@
     nixos-hardware.nixosModules.lenovo-thinkpad-t480
     disko.nixosModules.default
     agenix.nixosModules.default
-    self.nixosModules.default
+    (self.nixosModules.defaultWithout [
+      "inputs"
+    ])
     fmway-pkgs.nixosModules.default
     nixvim.nixosModules.nixvim
     nxchad.nixosModules.nixvim
     # sources.lix-module.nixosModules.default
   ];
+
+  environment.etc."nix/inputs/nixos".source = inputs.self.outPath;
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs.outPath}" ];
 
   nix.settings.experimental-features = [
     ("pipe-operator" + lib.optionalString (!config.lix.enable or false) "s")
