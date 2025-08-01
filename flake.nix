@@ -65,32 +65,28 @@
     nixvim.inputs.systems.follows = "systems";
   };
 
-  outputs = { home-manager, nxchad, fmway-lib, ... } @ inputs: let
-    inherit (fmway-lib) lib;
-  in lib.mkFlake {
-      inherit inputs;
-      specialArgs = {
-        sources = import ./sources;
-        lib = [
-          home-manager.lib
-          {
-            inherit (fmway-lib) infuse readTree fmway;
-            inherit (nxchad.lib) nixvim;
-          }
-          (self: super: import ./lib { lib = self; inherit self super; })
-        ];
-      };
-    } {
-      imports = lib.fmway.genImports ./top-level ++ [
-        inputs.fmway-modules.flakeModules.packages
-        ({ self, config, lib, ... } @ v: let
-        in {
-          disabledModules = [ "${inputs.flake-parts}/modules/nixosModules.nix" ];
-          flake = lib.fmway.genModules ./modules v;
-        })
-        ({ lib, ... }: { flake = { inherit lib; }; })
+  outputs = { home-manager, nxchad, fmway-lib, ... } @ inputs:
+  fmway-lib.mkFlake {
+    src = ./.;
+    inherit inputs;
+    specialArgs = {
+      sources = import ./sources;
+      lib = [
+        home-manager.lib
+        {
+          inherit (nxchad.lib) nixvim;
+        }
       ];
     };
+  } {
+    imports = [
+      inputs.fmway-modules.flakeModules.packages
+      {
+        disabledModules = [ "${inputs.flake-parts}/modules/nixosModules.nix" ];
+      }
+      ({ lib, ... }: { flake = { inherit lib; }; })
+    ];
+  };
   nixConfig = {
     extra-trusted-substituters = [
       "https://cache.nixos.org/"
