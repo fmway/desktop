@@ -36,19 +36,6 @@ in {
       self.overlays.default
       agenix.overlays.default
       self.overlays.externalPackages
-      (self: super: let
-        overlayNixpkgs = arr: obj: lib.foldl' (acc: curr: let
-          name = "_${curr}";
-          importName =
-            inputs.${curr} or
-            inputs."$nixpkgs-${curr}";
-        in {
-          "${name}" = import importName {
-            inherit system;
-            inherit (config.nixpkgs) config;
-          };
-        } // acc) obj arr;
-      in overlayNixpkgs [ "master" "24_11" "25_05" ] {})
     ];
 
     packages = lib.listToAttrs (map (x: let

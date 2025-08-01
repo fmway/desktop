@@ -18,10 +18,7 @@
     h-m-m.inputs.nixpkgs.follows = "nixpkgs";
     h-m-m.inputs.systems.follows = "systems";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-24_11.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-25_05.url = "github:NixOS/nixpkgs/nixos-24.05";
-    master.url = "github:NixOS/nixpkgs";
+    nixpkgs.follows = "chaotic/nixpkgs";
     catppuccin.url = "github:catppuccin/nix";
     # TODO implement impermanence
     # impermanence.url = "github:nix-community/impermanence";
@@ -32,6 +29,7 @@
       inputs.darwin.follows = "";
       inputs.systems.follows = "systems";
       inputs.home-manager.follows = "home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     fmway-lib = {
       url = "github:fmway/lib";
@@ -40,6 +38,7 @@
     fmway-modules.url = "github:fmway/modules";
     fmway-modules.inputs.fmway-lib.follows = "fmway-lib";
     fmway-pkgs.url = "github:fmway/pkgs";
+    fmway-pkgs.inputs.nixpkgs.follows = "nixpkgs";
     # flox.url = "github:flox/flox/v1.3.17";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     # TODO
