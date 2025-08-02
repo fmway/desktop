@@ -1,6 +1,5 @@
 { pkgs, config, lib, ... }:
 {
-  services.samba.enable = lib.mkDefault true;
   services.samba = {
     # enable = true;
     package = pkgs.sambaFull;
@@ -21,7 +20,7 @@
   };
 
   services.samba-wsdd = {
-    enable = config.services.samba.enable;
+    enable = lib.mkDefault config.services.samba.enable;
     openFirewall = true;
   };
 }

@@ -1,11 +1,11 @@
 { lib, ... }: {
   # Set your time zone
-  time.timeZone = lib.mkDefault "Asia/Jakarta";
+  time.timeZone = "Asia/Jakarta";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  i18n.extraLocaleSettings = lib.mkDefault {
+  i18n.extraLocaleSettings = {
     LC_ADDRESS = "id_ID.UTF-8";
     LC_IDENTIFICATION = "id_ID.UTF-8";
     LC_MEASUREMENT = "id_ID.UTF-8";
