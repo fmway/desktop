@@ -126,7 +126,7 @@ jobs:
         extra-conf: |
           ${{ steps.nix.outputs.CONF }}
     - name: Build
-      run: nix run nixpkgs#nixos-rebuild -- build --flake .#default --verbose
+      run: nix run nixpkgs#nixos-rebuild -- build --flake .#default --show-trace
     - name: Info
       run: nix path-info -Sh ./result
 
