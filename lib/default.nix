@@ -12,13 +12,12 @@ in {
    + lib.optionalString (rest == 0) "${toString x}"
    + lib.optionalString (rest != 0 && dig != 0) (toString dig)
    + lib.optionalString (rest != 0) "[0-${toString rest}]";
+
   mkFishPath = pkgs:
-    lib.pipe pkgs [
-      (lib.makeBinPath)
-      (lib.splitString ":")
-      (map (x: "fish_add_path ${x}"))
-      (lib.concatStringsSep "\n")
-    ];
+    lib.concatStrings (
+      map (x:
+        "fish_add_path ${x}\n"
+      ) (lib.splitString ":" (lib.makeBinPath pkgs)));
 
   genUser = name: assert lib.isString name; args @ {
     description ? name,

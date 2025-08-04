@@ -17,19 +17,16 @@
       # calls.mute_on_join = false;
 
       # Only deno for ts / typescript 😏
-      languages = lib.pipe [ "TypeScript" "TSX" ] [
-        (map (name: {
-          inherit name;
-          value.language_servers = [
-            "deno"
-            "!typescript-language-server"
-            "!vtsls"
-            "!eslint"
-          ];
-          value.formatter = "language_server";
-        })) 
-        (builtins.listToAttrs)
-      ];
+      languages = builtins.listToAttrs (map (name: {
+        inherit name;
+        value.language_servers = [
+          "deno"
+          "!typescript-language-server"
+          "!vtsls"
+          "!eslint"
+        ];
+        value.formatter = "language_server";
+      }) [ "TypeScript" "TSX" ]);
 
       lsp = {
         deno.settings.deno.enable = true;

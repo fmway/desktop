@@ -39,18 +39,9 @@
         in pkgs.writeScriptBin "gen-nix-conf.sh" /* sh */ ''
           #!${lib.getExe pkgs.bash}
 
-          ${lib.pipe [
-            "substituters"
-            "trusted-public-keys"
-            "experimental-features"
-          ] [
-            # (lib.flip removeAttrs [ "system-features" ])
-            # (lib.attrNames)
-            (map (x: /* sh */ ''
-              echo ${x} = ${lib.concatStringsSep " " settings.${x} or []};
-            ''))
-            (lib.concatStringsSep "")
-          ]}
+          ${lib.concatStringsSep "" (map (x: /* sh */ ''
+            echo ${x} = ${lib.concatStringsSep " " settings.${x} or []};
+          '') [ "substituters" "trusted-public-keys" "experimental-features" ])}
         '';
       };
       # generate nixConf on flake.nix
