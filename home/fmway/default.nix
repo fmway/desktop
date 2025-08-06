@@ -17,6 +17,8 @@ in {
         });
       };
     }) [ "floorp" "firefox" "zen-browser" ];
+
+  programs.zellij.enable = true;
   programs.zen-browser = {
     enable = true;
     nativeMessagingHosts = with pkgs ;[
