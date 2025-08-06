@@ -1,7 +1,7 @@
 { internal, lib, self, pkgs ? self, ... } @ v: let
-  inherit (lib.fmway) tree-path hasSuffix' removeSuffix' mkParse';
+  inherit (lib.fmway) tree-path hasSuffix' removeSuffix' mkParse;
   dir = builtins.toPath ./.;
-  parse = mkParse' (v // { pkgs = self; });
+  parse = mkParse (v // { pkgs = self; });
   allowed-exts = [ ".sh" ];
   list = lib.filter (hasSuffix' allowed-exts) (tree-path { inherit dir; prefix = ""; });
   result = lib.listToAttrs (map (x: rec {
