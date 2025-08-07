@@ -13,6 +13,24 @@ in {
    + lib.optionalString (rest != 0 && dig != 0) (toString dig)
    + lib.optionalString (rest != 0) "[0-${toString rest}]";
 
+  kdl = super.kdl // rec {
+    m = {
+      Left = "h"; Down = "j"; Up = "k"; Right = "l";
+      h = "Left"; j = "Down"; k = "Up"; l = "Right";
+    };
+    M = {
+      Left = "H"; Down = "J"; Up = "K"; Right = "L";
+      H = "Left"; J = "Down"; K = "Up"; L = "Right";
+    };
+    hjkl = fn: lib.flatten (
+      map (x: fn m.${x}) [ "h" "j" "k" "l" ]);
+    HJKL = fn: lib.flatten (
+      map (x: fn M.${x}) [ "H" "J" "K" "L" ]);
+    seq = start: end: fn: let
+      range = builtins.genList (x: x + start) (end - start + 1);
+    in lib.flatten (map (x: fn x) range);
+  };
+
   mkFishPath = pkgs:
     lib.concatStrings (
       map (x:

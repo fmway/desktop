@@ -1,13 +1,13 @@
 { lib, ... }: let
-  inherit (lib.kdl) flag leaf node plain serialize; kv = leaf;
-  inherit (lib.zellij) bind unbind Resize SwitchToMode MoveFocus NewPane Normal m hjkl seq;
+  inherit (lib.kdl) flag leaf node plain serialize m hjkl seq; kv = leaf;
+  inherit (lib.zellij) bind unbind Resize SwitchToMode MoveFocus NewPane Normal;
 in serialize.nodes [
   # If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
   (plain "keybinds"
-    (plain "normal"
-      # uncomment this and adjust key if using copy_on_select=false
-      # (bind "Alt+C" (s "Copy"))
-    )
+    # (plain "normal"
+    #   # uncomment this and adjust key if using copy_on_select=false
+    #   # (bind "Alt+C" (s "Copy"))
+    # )
     (plain "locked"
       (bind "Ctrl g" Normal)
     )
