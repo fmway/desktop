@@ -20,6 +20,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.follows = "chaotic/nixpkgs";
     catppuccin.url = "github:catppuccin/nix";
+    catppuccin.inputs.nixpkgs.follows = "nixpkgs";
     # TODO implement impermanence
     # impermanence.url = "github:nix-community/impermanence";
     disko.url = "github:nix-community/disko";
