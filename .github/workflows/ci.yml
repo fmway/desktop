@@ -128,30 +128,7 @@ jobs:
     - name: Build
       run: nix run nixpkgs#nixos-rebuild -- build --flake .#default --show-trace
     - name: Info
-      run: nix path-info -Sh ./result
-
-  auto-merge:
-    needs: [ nixos ]
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && !cancelled() && success() && !contains(needs.*.result, 'skipped') }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup git
-      run: |
-        git config --global user.name 'fmway'
-        git config --global user.email 'fm18lv@gmail.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-    - name: Enable auto-merge
-      env:
-        PR_URL: ${{github.event.pull_request.html_url}}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: ${{ github.head_ref }}
-      run: |
-        if [[ "${BRANCH}" != "nixos-unstable" ]]; then
-          gh pr merge --auto --merge "$PR_URL" -d
-        else
-          gh pr merge --auto --merge "$PR_URL"
-        fi
+      run: nix path-info -Sh ./result 
 
 # TODO add readme generator
 # TODO ci for nixvim
