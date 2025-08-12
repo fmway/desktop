@@ -16,8 +16,8 @@
       };
 
       readme = let
-        var = v // w // { prefix = ["<!--{" "`{"]; postfix = ["}-->" "}`"]; };
-        txt = lib.fmway.mkParse var (builtins.readFile ../docs/README.md);
+        var = v // w // { prefix = "<!--{"; postfix = "}-->"; };
+        txt = lib.fmway.mkParse' var (builtins.readFile ../README.md);
       in pkgs.writeScriptBin "gen-readme.sh" /* bash */ ''
         #!${lib.getExe pkgs.bash}
 
