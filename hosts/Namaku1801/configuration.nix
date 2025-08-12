@@ -112,8 +112,6 @@
   };
 
   # Add list DE/WM to login manager
-  services.windowManager = {
-    sway.enable = true;
-    niri.enable = true;
-  };
+  programs.sway.enable = true;
+  programs.niri.enable = true;
 }
