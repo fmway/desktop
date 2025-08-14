@@ -7,6 +7,12 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  setup-git: |
+    git config --global user.name 'fmway_bot'
+    git config --global user.email 'fm18lv@gmail.com'
+    git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
 permissions: write-all
 jobs:
   generate-nixconf:
@@ -138,6 +144,8 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref }}
+    - name: Setup git
+      run: ${{ env.setup-git }}
     - uses: wimpysworld/nothing-but-nix@main
     - uses: actions/download-artifact@v4
       with:
