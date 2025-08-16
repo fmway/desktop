@@ -21,6 +21,11 @@
     # sources.lix-module.nixosModules.default
   ];
 
+  programs.steam.gamescopeSession.args = [
+    "--tap-to-click"
+    "--natural-scrolling=touchpad"
+  ];
+
   environment.etc."nix/inputs/nixos".source = inputs.self.outPath;
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs.outPath}" ];
 
