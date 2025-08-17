@@ -23,6 +23,9 @@
 
   programs.steam.gamescopeSession.args = [
     "--tap-to-click"
+    "--tap-and-drag"
+    "--drag-lock"
+    "--middle-emulation"
     "--natural-scrolling=touchpad"
   ];
 
