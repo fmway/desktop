@@ -22,7 +22,9 @@
     default = self: super: lib.foldl' (acc: curr: acc // res.${curr} self super) {} (builtins.attrNames res);
   };
 in {
-  flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse super (fn self super)) fetcheds // {
+flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
+    __add = path: infusion: target: super.yaziPlugins.mkYaziPlugin infusion;
+  } super (fn self super)) fetcheds // {
     externalPackages = self: super:
       lib.foldl' (acc: curr: acc // curr self acc) super [
         inputs.h-m-m.overlays.default
