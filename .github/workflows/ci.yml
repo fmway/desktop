@@ -13,6 +13,13 @@ env:
     git config --global user.name 'fmway_bot'
     git config --global user.email 'fm18lv@gmail.com'
     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+  read-nix-conf: |
+    {
+      echo 'CONF<<EOF'
+      cat nix.conf
+      echo 'EOF'
+      rm nix.conf
+    } >> "$GITHUB_OUTPUT"
 permissions: write-all
 jobs:
   generate-nixconf:
@@ -43,12 +50,7 @@ jobs:
         name: nix-conf
     - name: Read nix.conf
       id: nix
-      run: |
-        {
-          echo 'CONF<<EOF'
-          cat nix.conf
-          echo 'EOF'
-        } >> "$GITHUB_OUTPUT"
+      run: ${{ env.read-nix-conf }}
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GH_TOKEN }}
@@ -77,12 +79,7 @@ jobs:
         name: nix-conf
     - name: Read nix.conf
       id: nix
-      run: |
-        {
-          echo 'CONF<<EOF'
-          cat nix.conf
-          echo 'EOF'
-        } >> "$GITHUB_OUTPUT"
+      run: ${{ env.read-nix-conf }}
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GH_TOKEN }}
@@ -98,12 +95,42 @@ jobs:
     - name: Info
       run: nix path-info -Sh ./result
     - run: nix-collect-garbage -d
+  megasync:
+    runs-on: ubuntu-latest
+    needs: [ generate-nixconf ]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+    - uses: wimpysworld/nothing-but-nix@main
+    - uses: actions/download-artifact@v4
+      with:
+        name: nix-conf
+    - name: Read nix.conf
+      id: nix
+      run: ${{ env.read-nix-conf }}
+    - uses: DeterminateSystems/nix-installer-action@main
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
+        extra-conf: |
+          ${{ steps.nix.outputs.CONF }}
+    - uses: cachix/cachix-action@master
+      with:
+        name: fmcachix
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        skipAddingSubstituter: true
+    - name: Build
+      run: nix build .#megasync --verbose
+    - name: Info
+      run: nix path-info -Sh ./result
+    - run: nix-collect-garbage -d
   nixos:
     runs-on: ubuntu-latest
     needs:
     - generate-nixconf
     - swayfx
     - gnome-session
+    - megasync
     steps:
     - uses: actions/checkout@v4
       with:
@@ -120,12 +147,7 @@ jobs:
         name: nix-conf
     - name: Read nix.conf
       id: nix
-      run: |
-        {
-          echo 'CONF<<EOF'
-          cat nix.conf
-          echo 'EOF'
-        } >> "$GITHUB_OUTPUT"
+      run: ${{ env.read-nix-conf }}
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GH_TOKEN }}
@@ -152,12 +174,7 @@ jobs:
         name: nix-conf
     - name: Read nix.conf
       id: nix
-      run: |
-        {
-          echo 'CONF<<EOF'
-          cat nix.conf
-          echo 'EOF'
-        } >> "$GITHUB_OUTPUT"
+      run: ${{ env.read-nix-conf }}
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GH_TOKEN }}
