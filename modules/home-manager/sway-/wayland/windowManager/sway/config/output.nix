@@ -1,7 +1,7 @@
 {
   "*" = {
     # Default wallpaper (more resolutions are available in */share/backgrounds/sway/)
-    bg = "~/.wallpaper fill";
+    bg = "~/.wallpapers/current fill";
     adaptive_sync = "on";
   };
   HDMI1 = {
