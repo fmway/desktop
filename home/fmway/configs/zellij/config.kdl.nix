@@ -1,18 +1,19 @@
 { lib, ... }: let
   inherit (lib.kdl) flag leaf node plain serialize m hjkl seq; kv = leaf;
-  inherit (lib.zellij) bind unbind Resize SwitchToMode MoveFocus NewPane Normal;
+  inherit (lib.zellij) bind unbind Resize SwitchToMode MoveFocus NewPane SwitchToNormal;
 in serialize.nodes [
-  # If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
-  (plain "keybinds"
+  (node "keybinds" {
+    # clear-defaults = true; # If you'd like to override the default keybindings completely
+  }
     # (plain "normal"
     #   # uncomment this and adjust key if using copy_on_select=false
     #   # (bind "Alt+C" (s "Copy"))
     # )
     (plain "locked"
-      (bind "Ctrl g" Normal)
+      (bind "Ctrl g" SwitchToNormal)
     )
     (plain "resize"
-      (bind "Ctrl n"      Normal)
+      (bind "Ctrl n"      SwitchToNormal)
       (hjkl (k: [
         (bind [k m.${k}]           (Resize "Increase ${k}"))
         (bind (lib.toUpper m.${k}) (Resize "Decrease ${k}"))
@@ -22,23 +23,23 @@ in serialize.nodes [
     )
 
     (plain "pane"
-      (bind ["Ctrl p"]    Normal)
+      (bind ["Ctrl p"]    SwitchToNormal)
       (hjkl (k:
         bind [k m.${k}] (MoveFocus k)
       ))
       (bind "p" (flag "SwitchFocus"))
-      (bind "n" NewPane Normal)
-      (bind "d" (NewPane "Down") Normal)
-      (bind "r" (NewPane "Right") Normal)
-      (bind "x" (flag "CloseFocus") Normal)
-      (bind "f" (flag "ToggleFocusFullscreen") Normal)
-      (bind "z" (flag "TogglePaneFrames") Normal)
-      (bind "w" (flag "ToggleFloatingPanes") Normal)
-      (bind "e" (flag "TogglePaneEmbedOrFloating") Normal)
+      (bind "n" NewPane SwitchToNormal)
+      (bind "d" (NewPane "Down") SwitchToNormal)
+      (bind "r" (NewPane "Right") SwitchToNormal)
+      (bind "x" (flag "CloseFocus") SwitchToNormal)
+      (bind "f" (flag "ToggleFocusFullscreen") SwitchToNormal)
+      (bind "z" (flag "TogglePaneFrames") SwitchToNormal)
+      (bind "w" (flag "ToggleFloatingPanes") SwitchToNormal)
+      (bind "e" (flag "TogglePaneEmbedOrFloating") SwitchToNormal)
       (bind "c" (SwitchToMode "RenamePane") (kv "PaneNameInput" 0))
     )
     (plain "move"
-      (bind "Ctrl h"      Normal)
+      (bind "Ctrl h"      SwitchToNormal)
       (bind ["n" "Tab"]   (flag "MovePane"))
       (bind "p"           (flag "MovePaneBackwards"))
       (hjkl (k:
@@ -46,24 +47,24 @@ in serialize.nodes [
       ))
     )
     (plain "tab"
-      (bind "Ctrl t"  Normal)
-      (bind "n" (flag "NewTab")              Normal)
-      (bind "x" (flag "CloseTab")            Normal)
-      (bind "s" (flag "ToggleActiveSyncTab") Normal)
-      (bind "b" (flag "BreakPane")           Normal)
-      (bind "]" (flag "BreakPaneRight")      Normal)
-      (bind "[" (flag "BreakPaneLeft")       Normal)
+      (bind "Ctrl t"  SwitchToNormal)
+      (bind "n" (flag "NewTab")              SwitchToNormal)
+      (bind "x" (flag "CloseTab")            SwitchToNormal)
+      (bind "s" (flag "ToggleActiveSyncTab") SwitchToNormal)
+      (bind "b" (flag "BreakPane")           SwitchToNormal)
+      (bind "]" (flag "BreakPaneRight")      SwitchToNormal)
+      (bind "[" (flag "BreakPaneLeft")       SwitchToNormal)
       (seq 1 9 (i:
-        bind "${toString i}" (kv "GoToTab" i) Normal
+        bind "${toString i}" (kv "GoToTab" i) SwitchToNormal
       ))
       (bind "Tab" (flag "ToggleTab"))
     )
 
     (plain "scroll"
-      (bind "Ctrl s" Normal)
-      (bind "e" (flag "EditScrollback") Normal)
+      (bind "Ctrl s" SwitchToNormal)
+      (bind "e" (flag "EditScrollback") SwitchToNormal)
       (bind "s" (SwitchToMode "EnterSearch") (kv "SearchInput" 0))
-      (bind "Ctrl c" (flag "ScrollToBottom") Normal)
+      (bind "Ctrl c" (flag "ScrollToBottom") SwitchToNormal)
       (bind ["j" "Down"] (flag "ScrollDown"))
       (bind ["k" "Up"]   (flag "ScrollUp"))
       (bind ["Ctrl f" "PageDown" "Right" "l"] (flag "PageScrollDown"))
@@ -73,8 +74,8 @@ in serialize.nodes [
     )
 
     (plain "search"
-      (bind "Ctrl s" Normal)
-      (bind "Ctrl c" (flag "ScrollToBottom") Normal)
+      (bind "Ctrl s" SwitchToNormal)
+      (bind "Ctrl c" (flag "ScrollToBottom") SwitchToNormal)
       (bind ["j" "Down"] (flag "ScrollDown"))
       (bind ["k" "Up"]   (flag "ScrollUp"))
       (bind ["Ctrl f" "PageDown" "Right" "l"] (flag "PageScrollDown"))
@@ -94,17 +95,17 @@ in serialize.nodes [
     )
 
     (plain "renametab"
-      (bind "Ctrl c" Normal)
+      (bind "Ctrl c" SwitchToNormal)
       (bind "Esc" (flag "UndoRenameTab") (SwitchToMode "Tab"))
     )
 
     (plain "renamepane"
-      (bind "Ctrl c" Normal)
+      (bind "Ctrl c" SwitchToNormal)
       (bind "Esc" (flag "UndoRenamePane") (SwitchToMode "Pane"))
     )
 
     (plain "session"
-      (bind "Ctrl o" Normal)
+      (bind "Ctrl o" SwitchToNormal)
       (bind "Ctrl s" (SwitchToMode "Scroll"))
       (bind "d" (flag "Detach"))
       (bind "w"
@@ -112,34 +113,34 @@ in serialize.nodes [
           (kv "floating" true)
           (kv "move_to_focused_tab" true)
         )
-        Normal
+        SwitchToNormal
       )
     )
 
     (plain "tmux"
       (bind "[" (kv "SwitchToMode" "Scroll"))
-      (bind "Ctrl b" (kv "Write" 2) Normal)
-      (bind ["\"" "-"] (NewPane "Down") Normal)
-      (bind ["%" "|"] (NewPane "Right") Normal)
-      (bind "z" (flag "ToggleFocusFullscreen") Normal)
-      (bind "c" (flag "NewTab") Normal)
+      (bind "Ctrl b" (kv "Write" 2) SwitchToNormal)
+      (bind ["\"" "-"] (NewPane "Down") SwitchToNormal)
+      (bind ["%" "|"] (NewPane "Right") SwitchToNormal)
+      (bind "z" (flag "ToggleFocusFullscreen") SwitchToNormal)
+      (bind "c" (flag "NewTab") SwitchToNormal)
       (bind "," (SwitchToMode "RenameTab"))
       # (bind "e"
       #   (node "Run" "nvim"
       #     (kv "cwd" "${config.home.homeDirectory}/.config/zellij")
       #   )
       #   (flag "TogglePaneEmbedOrFloating")
-      #   Normal
+      #   SwitchToNormal
       # )
-      (bind "p" (flag "GoToPreviousTab") Normal)
-      (bind "n" (flag "GoToNextTab") Normal)
+      (bind "p" (flag "GoToPreviousTab") SwitchToNormal)
+      (bind "n" (flag "GoToNextTab") SwitchToNormal)
       (hjkl (k:
-        bind [ k m.${k} ] (MoveFocus k) Normal
+        bind [ k m.${k} ] (MoveFocus k) SwitchToNormal
       ))
       (bind "o" (flag "FocusNextPane"))
       (bind "d" (flag "Detach"))
-      (bind "Space" (flag "NextSwapLayout") Normal)
-      (bind "x" (flag "CloseFocus") Normal)
+      (bind "Space" (flag "NextSwapLayout") SwitchToNormal)
+      (bind "x" (flag "CloseFocus") SwitchToNormal)
       (bind "r" (SwitchToMode "Resize"))
       (bind "P" (SwitchToMode "Pane"))
       (bind "L" (SwitchToMode "Locked"))
@@ -187,7 +188,7 @@ in serialize.nodes [
     )
 
     (node "shared_except" ["normal" "locked"]
-      (bind ["Enter" "Esc"] Normal)
+      (bind ["Enter" "Esc"] SwitchToNormal)
     )
 
     (node "shared_except" ["pane" "locked"]
