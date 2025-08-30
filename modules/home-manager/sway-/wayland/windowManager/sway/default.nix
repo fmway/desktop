@@ -1,30 +1,6 @@
-{ pkgs, uncommon, lib, config, ... }: let
+{ pkgs, uncommon, superLib, lib, config, ... }: let
   cfg = config.wayland.windowManager.sway;
-  env = builtins.concatStringsSep "\n" (
-    lib.attrsToList (k: v:
-      "export ${k}=${if builtins.isString v then v else builtins.toJSON v}"
-    ) uncommon.env);
-  flat = x: if builtins.isList x then x else [x];
-in {
-  extraSessionCommands = lib.mkAfter env;
-  config = builtins.foldl' (acc: curr: acc // (
-    if curr == "normal" then {
-      keybindings = acc.keybindings or {} //
-        lib.mapAttrs (_: toString) (uncommon.modes.${curr}.binds or {});
-    } else {
-      keybindings = builtins.foldl' (a: c: a // {
-        "${c}" = ''mode "${curr}"'';
-      }) (acc.keybindings or {}) (flat (uncommon.modes.${curr}.enterBy or []));
-      modes = acc.modes or {} // {
-        "${curr}" = let
-          a = acc.modes.${curr} or {} //
-          lib.mapAttrs (_: toString) (uncommon.modes.${curr}.binds or {});
-        in builtins.foldl' (a: c: a // {
-          "${c}" = ''mode "default"'';
-        }) a (flat (uncommon.modes.${curr}.exitBy or []));
-      };
-    }
-  )) {} (builtins.attrNames uncommon.modes);
+in superLib.sway.parse uncommon // {
   wrapperFeatures.gtk = true;
   # swayfx problems
   checkConfig = false;

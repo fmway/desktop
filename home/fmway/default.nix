@@ -9,6 +9,7 @@ in {
     inputs.zen-browser.homeModules.beta
     (self.homeManagerModules.defaultWithout [
       "hyprland"
+      "sway"
     ])
   ] ++ map (name: { lib, pkgs, ... }: {
       options.programs.${name}.profiles = lib.mkOption {
