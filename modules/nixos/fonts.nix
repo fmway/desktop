@@ -87,7 +87,18 @@
       # victor-mono
       # zed-mono
     ]);
+    fontconfig = {
+      enable = true;
+      antialias = true;
+      hinting.enable = true;
+      hinting.autohint = false;
+      hinting.style = "full";
+      subpixel.lcdfilter = "default";
+      subpixel.rgba = "rgb";
+    };
+    fontDir.decompressFonts = true;
   };
+  
 
   # bindfs to integrate fonts & icons.
   environment.systemPackages = [ pkgs.bindfs ];
@@ -117,4 +128,6 @@
     "/usr/share/icons" = mkRoSymBind "${aggregatedIcons}/share/icons";
     "/usr/share/fonts" = mkRoSymBind "${aggregatedFonts}/share/fonts";
   };
+  xdg.mime.enable = true;
+  xdg.icons.enable = true;
 }
