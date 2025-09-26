@@ -18,17 +18,17 @@
   # Enable common container config files in /etc/containers
   virtualisation.containers.enable = lib.mkDefault true;
   virtualisation = {
-    podman = {
-      enable = lib.mkDefault true;
+    # podman = {
+    #   enable = lib.mkDefault true;
+    #
+    #   # Create a `docker` alias for podman, to use it as a drop-in replacement
+    #   dockerCompat = true;
+    #
+    #   # Required for containers under podman-compose to be able to talk to each other.
+    #   defaultNetwork.settings.dns_enabled = true;
+    # };
 
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
-    };
-
-    # docker.enable = true;
+    docker.enable = lib.mkDefault true;
     # docker.rootless = {
     #   enable = true;
     #   setSocketVariable = true;
