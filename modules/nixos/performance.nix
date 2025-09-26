@@ -14,5 +14,14 @@
       freeMemThreshold = 2;
       freeSwapThreshold = 3;
     };
+    # power-profiles-daemon.enable = true;
+    tuned = {
+      enable = true;
+      ppdSupport = true;
+    };
+    tlp.enable = false;
+    upower.enable = true;
+    hardware.bolt.enable = true;
   };
+  security.rtkit.enable = true;
 }
