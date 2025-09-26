@@ -8,6 +8,7 @@
     ./caddy.nix
     ./users.nix
     ./timezone.nix
+    ./zfs.nix
     ../../secrets
     nixos-hardware.nixosModules.lenovo-thinkpad-t480
     disko.nixosModules.default

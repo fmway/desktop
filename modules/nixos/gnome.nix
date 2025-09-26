@@ -16,6 +16,7 @@ in {
     gnome-tour
     # gnome-software
     gnome-contacts
+    gnome-software
   ];
 
   # Override default Dconf settings.

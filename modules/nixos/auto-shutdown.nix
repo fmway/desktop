@@ -40,7 +40,7 @@
     NOTIFY_MESSAGE="Mati sia anjing!!!"
     NOTIFY_SEND="$(command -v notify-send)"
 
-    export SHUTDOWN_WITH=${toString (lib.attrByPath [ "data" "battery_limit" ] 10 config)}
+    export SHUTDOWN_WITH=${toString (lib.attrByPath [ "data" "battery_limit" ] 25 config)}
 
     #Detect the name of the display in use
     display=":$(ls /tmp/.X11-unix/* | sed 's#/tmp/.X11-unix/X##' | head -n 1)"

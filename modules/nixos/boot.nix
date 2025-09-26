@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   # limit boot entry
-  configurationLimit = lib.mkDefault 15;
+  configurationLimit = lib.mkDefault 25;
 in {
   boot = {
     loader = {
