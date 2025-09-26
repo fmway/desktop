@@ -4,7 +4,7 @@
     save = true;
     allow_empty_password = false;
     animation = "doom";
-    asterisk = "0";
+    asterisk = "-";
     auth_fails = 10;
 
     brightness_down_cmd = "${lib.getExe pkgs.brightnessctl} -q s 1%-";
