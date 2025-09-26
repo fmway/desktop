@@ -241,6 +241,8 @@ in { pkgs, ... }:
         (toKeymaps "<leader>tsc" "<cmd>SmearCursorToggle<cr>" { desc = "Toggle Animation Cursor"; })
       ];
     };
+    # Disable smear-cursor in startup
+    luaConfig.post = ''require("smear_cursor").enabled = false'';
   };
  
 
