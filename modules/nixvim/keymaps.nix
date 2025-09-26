@@ -21,5 +21,7 @@ in { ... }:
     (toKeymaps' "<A-t>" (mkRawFn ''
       require("nvchad.themes").open { style = "compat", border = true, }
     '') { desc = "Show themes menu"; })
+    
+    (toKeymaps' "<leader>db" "<CMD>DBUIToggle<CR>" {})
   ];
 }

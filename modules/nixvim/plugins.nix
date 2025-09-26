@@ -3,6 +3,8 @@
   inherit (lib.nixvim) toKeymaps toLuaObject mkLuaFn mkRawFn;
 in { pkgs, ... }:
 {
+  # Depends for git-dev plugins
+  globals.git_username.__raw = "get_git_username()";
   inherit _file;
   opts.relativenumber = true;
   nvchad.config.colorify.mode = "bg";
@@ -14,6 +16,22 @@ in { pkgs, ... }:
     vim-startuptime
     # vim-markdown-composer
     # kitty-scrollback-nvim
+    (pkgs.vimUtils.buildVimPlugin rec {
+      pname = "git-dev-nvim";
+      version = "0.7.1";
+      src = pkgs.fetchFromGitHub {
+        owner = "moyiz";
+        repo = "git-dev.nvim";
+        rev = version;
+        hash = "sha256-W+42RmHv9wfGS42klk+y3TCmjB4lmH8Zl+RiwQtNcok=";
+      };
+
+      meta = {
+        description = "Open remote git repositories in the comfort of Neovim";
+        homepage = "https://github.com/moyiz/git-dev.nvim";
+        license = lib.licenses.bsd3;
+      };
+    })
     (pkgs.vimUtils.buildVimPlugin {
       pname = "showkeys";
       version = "1.0.0";
@@ -51,6 +69,16 @@ in { pkgs, ... }:
   ];
   extraConfigLua = ''
     vim.g.startuptime_tries = 10
+  '';
+
+  extraConfigLuaPre = lib.mkBefore /* lua */ ''
+    function get_git_username()
+      local username = vim.fn.system("git config user.name"):gsub("\n", "")
+      if username == "" then
+        return vim.env.USERNAME
+      end
+      return username
+    end
   '';
 
   plugins.lz-n.plugins = [
@@ -129,6 +157,54 @@ in { pkgs, ... }:
         }
       ];
     })
+    (let
+      opts = {
+        read_only = false;
+        verbose = true;
+        git.default_org.__raw = "vim.g.git_username";
+        xdg_handler.enabled = true;
+        opener = mkRawFn [ "dir" "_" "selected_path" ] ''
+          vim.cmd("NvimTreeOpen " .. vim.fn.fnameescape(dir))
+          if selected_path then
+            vim.cmd("edit " .. selected_path)
+          end
+        '';
+      };
+    in {
+      __unkeyed-1 = "git-dev.nvim";
+      cmd = [ "GitDevClean" "GitDevCleanAll" "GitDevCloseBuffers" "GitDevOpen" "GitDevRecents" "GitDevToggleUI" "GitDevXDGHandle" ];
+      after = mkRawFn ''
+        require("git-dev").setup {${toLuaObject opts}}
+      '';
+      keys = [
+        {
+          __unkeyed-1 = "<leader>go";
+          __unkeyed-2 = mkRawFn ''
+            local repo = vim.fn.input "Repository: "
+            if repo ~= "" then
+              require("git-dev").open(repo)
+            end
+          '';
+          desc = "[O]pen a remote git repository";
+        }
+        {
+          __unkeyed-1 = "<leader>gc";
+          __unkeyed-2 = mkRawFn ''
+            require("git-dev").close_buffers()
+          '';
+          mode = "n";
+          desc = "[C]lose buffers of current repository";
+        }
+        {
+          __unkeyed-1 = "<leader>gC";
+          __unkeyed-2 = mkRawFn ''
+            require("git-dev").clean()
+          '';
+          mode = "n";
+          desc = "[C]lean current repository";
+        }
+      ];
+    })
   ];
   nvchad.config.base46.theme = "starlight";
   nvchad.config.base46.second_theme = "gruvbox_light";
@@ -190,6 +266,7 @@ in { pkgs, ... }:
     modules = {
       surround = {};
       align = {};
+      icons = {};
     };
   };
 
@@ -219,6 +296,7 @@ in { pkgs, ... }:
   };
   plugins.telescope.enabledExtensions = [
     "notify"
+    "git_dev"
   ];
 
   plugins.neoscroll = {

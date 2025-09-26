@@ -63,6 +63,7 @@
     pymanifest
     python
     query
+    qmljs
     regex
     rescript
     ron
