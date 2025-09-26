@@ -1,5 +1,5 @@
 { internal, _file, lib, ... }:
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   inherit _file;
   plugins.lsp.luaConfig.pre = lib.mkMerge [
@@ -35,6 +35,11 @@
     '')
   ];
   plugins.lsp.servers = {
+    lua_ls = {
+      settings.workspace.library = [
+        "${pkgs.yaziPlugins.chmod.src}/types.yazi"
+      ];
+    };
     rust_analyzer.enable = true;
     rust_analyzer.filetypes = [ "rust" ];
     rust_analyzer.cmd = [ "rust-analyzer" ];
