@@ -117,5 +117,14 @@
         # nix.flake.autoArchive = true;
       };
     };
+
+    html.enable = true;
+    html.filetypes = [ "html" "blade" "templ" ];
+    html.extraOptions = {
+      configurationSection = [ "html" "css" "javascript" ];
+      embeddedLanguages.css = true;
+      embeddedLanguages.javascript = true;
+      provideFormatter = true;
+    };
   };
 }
