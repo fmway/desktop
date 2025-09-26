@@ -9,6 +9,7 @@
   # add some filetype alias
   filetype.filename = {
     "build.zig.zon" = "zig";
+    "direnvrc" = "bash";
   };
   filetype.pattern = {
     ".*%.blade%.php" = "blade";
