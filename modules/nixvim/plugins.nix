@@ -259,6 +259,16 @@ in { pkgs, ... }:
     };
   };
 
+  plugins.hlchunk = {
+    enable = true;
+    lazyLoad.enable = true;
+    lazyLoad.settings.event = [ "BufReadPre" "BufNewFile" ];
+    settings = {
+      chunk.enable = true;
+      line_num.enable = true;
+    };
+  };
+
   extraFiles."ftplugin/typr.lua".text = /* lua */ ''
     -- 
     vim.b.completion = false;
