@@ -38,6 +38,7 @@ in {
 
     kernelParams = lib.optionals config.boot.zfs.enabled [
       "zfs.zfs_arc_max=536870912" # max zfs cache (512MB)
+      "zswap.enabled=0" # disable zswap
     ];
 
     kernel.sysctl  = {
