@@ -108,5 +108,14 @@
       filetypes = [ "prisma" ];
       rootMarkers = [ ".git" "package.json" "deno.json" "tsconfig.json" "deno.jsonc" ];
     };
+  
+    nil_ls = {
+      enable = true;
+      settings = {
+        nix.flake.autoEvalInputs = false;
+        nix.flake.maxMemoryMB = 2;
+        # nix.flake.autoArchive = true;
+      };
+    };
   };
 }
