@@ -7,6 +7,8 @@
         font = "JetBrainsMonoNL NF:style=Bold:size=14";
         pad = "2x2";
       };
+      # disable window title in gnome
+      csd.size = 0;
       cursor = {
         blink = "yes";
         style = "beam";
