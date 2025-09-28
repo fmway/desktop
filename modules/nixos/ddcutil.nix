@@ -20,5 +20,8 @@
   environment.systemPackages = with pkgs; [
     ddcutil
   ];
+  services.udev.packages = with pkgs; [
+    ddcutil
+  ];
   users.groups.i2c = {};
 }
