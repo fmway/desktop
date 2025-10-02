@@ -129,7 +129,7 @@ jobs:
     needs:
     - generate-nixconf
     - swayfx
-    - noctalia-shell
+    - noctalia
     - megasync
     steps:
     - uses: actions/checkout@v4
