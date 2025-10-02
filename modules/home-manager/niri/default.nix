@@ -31,8 +31,8 @@ in {
     (pkgs.formats.yaml {}).generate "wlr-which-key.yaml"
       (import ./wlr-which-key.nix {
         menu = let
-          allBinds = builtins.elemAt (builtins.filter (x: x.name or "" == "binds") cfg.config) 0;
-          allSubs = builtins.filter (x: x._sub or false) allBinds.children;
+          allBinds = builtins.filter (x: x.name or "" == "binds") cfg.config;
+          allSubs = builtins.filter (x: x._sub or false) (lib.flatten (map (x: x.children) allBinds));
         in map (x: {
           key = x._key;
           desc = x._desc;
