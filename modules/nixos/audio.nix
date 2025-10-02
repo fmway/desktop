@@ -1,4 +1,9 @@
+{ internal, sources, ... }:
+{ ... }:
 {
+  imports = [
+    sources."kaku/services/pipewire"
+  ];
   # pipewire
   security.rtkit.enable = true;
 
@@ -10,6 +15,11 @@
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     # jack.enable = true;
+    wireplumber.extraConfig = {
+      "wireplumber.settings" = {
+        "bluetooth.autoswitch-to-headset-profile" = true;
+      };
+    };
   };
 
   # disable pulseaudio

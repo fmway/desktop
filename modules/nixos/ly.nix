@@ -1,5 +1,6 @@
 { lib, pkgs, ... }:
 {
+  services.displayManager.ly.enable = let f = lib.mkForce true; in f // { priority = f.priority - 5; }; # less than mkForce
   services.displayManager.ly.settings = {
     save = true;
     allow_empty_password = false;

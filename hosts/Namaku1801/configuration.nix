@@ -4,8 +4,8 @@
   imports = with inputs; [
     ./hardware-configuration.nix
     ./disko.nix
-    ./forgejo.nix
-    ./caddy.nix
+    # ./forgejo.nix
+    # ./caddy.nix
     ./users.nix
     ./timezone.nix
     ./zfs.nix
@@ -13,9 +13,7 @@
     nixos-hardware.nixosModules.lenovo-thinkpad-t480
     disko.nixosModules.default
     agenix.nixosModules.default
-    (self.nixosModules.defaultWithout [
-      "inputs"
-    ])
+    self.nixosModules.default
     fmway-pkgs.nixosModules.default
     nixvim.nixosModules.nixvim
     nxchad.nixosModules.nixvim
@@ -122,5 +120,4 @@
 
   # Add list DE/WM to login manager
   programs.sway.enable = true;
-  programs.niri.enable = true;
 }

@@ -1,9 +1,10 @@
-{ internal, allModules, _file, ... }:
+{ internal, sources, allModules, _file, ... }:
 { inputs ? {}, lib, ... }:
 {
   inherit _file;
   imports = allModules ++ [
     inputs.fmway-modules.nixosModules.all
+    sources."kaku/hardware/bluetooth"
   ];
 
   nixpkgs.config = {

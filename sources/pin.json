@@ -1,15 +1,25 @@
 {
   "lix-module": {
     "url": "https://git.lix.systems/lix-project/nixos-module/archive/2.93.2-1.tar.gz",
-    "sha256": "sha256-SXUAlxpjPRkArRMHy5+Hdi+PiC+ND9yzzIjiaHmTvQU=",
+    "hash": "sha256-SXUAlxpjPRkArRMHy5+Hdi+PiC+ND9yzzIjiaHmTvQU=",
     "flake": true
   },
   "lix-src": {
     "url": "https://git.lix.systems/lix-project/lix/archive/2.93.2.tar.gz",
-    "sha256": "sha256-J4ycLoXHPsoBoQtEXFCelL4xlq5pT8U9tNWNKm43+YI="
+    "hash": "sha256-J4ycLoXHPsoBoQtEXFCelL4xlq5pT8U9tNWNKm43+YI="
   },
   "flake-compat": {
     "url": "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz",
-    "sha256": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU="
+    "hash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU="
+  },
+  "kaku/services/pipewire": {
+    "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
+    "hash": "sha256-rS6uCR5EaOhJuh+uksObqTkhln+F9Zna0S6DVO4MbDE=",
+    "type": "file"
+  },
+  "kaku/hardware/bluetooth": {
+    "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/hardware/bluetooth.nix",
+    "hash": "sha256-bu5oPCn1BO2F7Wxxwpaqn+QK79NMymKROXdu1OEDK9A=",
+    "type": "file"
   }
 }

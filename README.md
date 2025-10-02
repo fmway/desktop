@@ -26,8 +26,9 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > [!NOTE]
 > **System Information** : 
 > - **Hardware** : [ThinkPad t480](https://github.com/NixOS/nixos-hardware/blob/master/lenovo/thinkpad/t480/default.nix)
-> - **Display Manager** : GDM v48.0 <!--{< rr re.ver3 "v${pkgs.gdm.version}" >}-->
-> - **Desktop Environment / Window Manager** : [GNOME v48.4](https://www.gnome.org/) <!--{< rr re.ver3 "v${pkgs.gnome-shell.version}" >}-->
+> - **Display Manager** : [ly (1.1.2)](https://github.com/fairyglade/ly) <!--{< rr re.ver2 cfg.services.displayManager.ly.package.version >}-->
+>  <!--{# rr re.ver cfg.programs.niri.package.version #}-->
+> - **Window Manager** : [Niri (25.08)](https://github.com/YaLTeR/niri) (disabled by default: sway and hyprland)
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
 >   <!--{# replace_re "${re.ver} \\((.+)\\), ${re.ver} \\((.+)\\), ${re.ver2} \\((.+)\\)" "${ver.h} ($1), ${ver.n} ($2), ${nix.ver} (${nix.name})"  #}-->

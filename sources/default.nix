@@ -9,7 +9,8 @@ let
     else throw "undefined";
     source = fn {
       name = v.name or "source";
-      inherit (v) url sha256;
+      inherit (v) url;
+      sha256 = v.sha256 or v.hash;
     };
   in if v.flake or false then
     getFlake (builtins.toPath source)

@@ -7,10 +7,7 @@ in {
     ./configs
     ./fish.nix
     inputs.zen-browser.homeModules.beta
-    (self.homeManagerModules.defaultWithout [
-      "hyprland"
-      "sway"
-    ])
+    self.homeManagerModules.default
   ] ++ map (name: { lib, pkgs, ... }: {
       options.programs.${name}.profiles = lib.mkOption {
         type = lib.types.attrsOf (lib.types.submodule {

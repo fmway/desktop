@@ -163,11 +163,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1759115770,
-        "narHash": "sha256-o78e9RlMzL1ByQfYIgADLIjgFFoaqE306H2Me75vLMw=",
+        "lastModified": 1759333826,
+        "narHash": "sha256-KfdiXbh7se4jNpEXHe8Gtgy8RToHzeT4tSG8lwqXbQE=",
         "owner": "fmway",
         "repo": "lib",
-        "rev": "0f329c110cf4e1b3dcb5a522e2ebf45d66456173",
+        "rev": "e26df1053fc46a634f3d5278d8a3c8c56b0a65d6",
         "type": "github"
       },
       "original": {
@@ -183,11 +183,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1759062850,
-        "narHash": "sha256-HN6+3UIXGx2sGPU/LQCT2818Fs3xKhrmUAdAcbXch3M=",
+        "lastModified": 1759228446,
+        "narHash": "sha256-oQqKt0cOjnaBofTtqm4zhLugJX6Eh3eiVwAVti6JMv0=",
         "owner": "fmway",
         "repo": "modules",
-        "rev": "72f06dc16f6a437efaf0244205fdd46561f44663",
+        "rev": "e114f8419514120957d547102df22510d5a6bcce",
         "type": "github"
       },
       "original": {
@@ -458,16 +458,42 @@
         ]
       },
       "locked": {
-        "lastModified": 1759101862,
-        "narHash": "sha256-Ybe+/vYCPA520Wm9DveaOJa7TQF2M82AtUKUh82vr7U=",
+        "lastModified": 1759363470,
+        "narHash": "sha256-qazFCflj7aEqI9YRB+qxKeHHrLMRZnKQB0m/AKn9IKg=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "1c802b3efe45625737d36b3d4b9710193fa39e2a",
+        "rev": "5c4a10093d5367af740c04f2bbe3bab7310d9ad0",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "nixvim",
+        "type": "github"
+      }
+    },
+    "noctalia": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "quickshell": [
+          "quickshell"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759329799,
+        "narHash": "sha256-nfojKvHplBkdasVC7IT+KyHBJRaFc4LZszmOOr+wpO0=",
+        "owner": "noctalia-dev",
+        "repo": "noctalia-shell",
+        "rev": "07a94de5e2d2eade32465e5b31cf456509e2aa07",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "noctalia-shell",
         "type": "github"
       }
     },
@@ -552,6 +578,26 @@
         "type": "github"
       }
     },
+    "quickshell": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759303785,
+        "narHash": "sha256-EUXrK7pUIzOQWR1dquZh26A6W8lsY2oiHEEZzQnsarM=",
+        "ref": "refs/heads/master",
+        "rev": "9662234759eb57f2a1057f2a1c667da1bf128c1c",
+        "revCount": 686,
+        "type": "git",
+        "url": "https://git.outfoxxed.me/quickshell/quickshell"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.outfoxxed.me/quickshell/quickshell"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -571,8 +617,10 @@
           "nixpkgs"
         ],
         "nixvim": "nixvim",
+        "noctalia": "noctalia",
         "nur": "nur",
         "nxchad": "nxchad",
+        "quickshell": "quickshell",
         "systems": "systems_2",
         "waydroid_script": "waydroid_script",
         "zen-browser": "zen-browser"

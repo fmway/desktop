@@ -29,6 +29,9 @@ flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
       lib.foldl' (acc: curr: acc // curr self acc) super [
         inputs.h-m-m.overlays.default
         inputs.nur.overlays.default
+        (self: super: {
+          noctalia-shell = inputs.noctalia.packages.${self.system}.default;
+        })
       ];
   };
 
