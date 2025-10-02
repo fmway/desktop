@@ -27,7 +27,7 @@ in
     __functor = self: arg: self // { cmd = self.cmd ++ lib.fmway.flat arg; };
   };
 
-  sub = {
+  mkSub = pkgs: {
     _sub = true;
     _children = [];
     __functor = self: args: let
@@ -36,7 +36,7 @@ in
       if builtins.isString args then 
         if self._desc or "" != "" then let
           key = fixKey self._desc false;
-        in plain self._desc (s.spawn "wlr-which-key" "--initial-keys" key "niri") // { _key = key; _desc = args; } // removeAttrs p [ "_desc" ]
+        in plain self._desc (s.spawn "${lib.getExe pkgs.wlr-which-key}" "--initial-keys" key "niri") // { _key = key; _desc = args; } // removeAttrs p [ "_desc" ]
         else p // { _desc = args; }
       else p // {
         _children = self._children ++ lib.fmway.flat args;
