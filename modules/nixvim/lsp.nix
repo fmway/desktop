@@ -2,38 +2,41 @@
 { config, pkgs, ... }:
 {
   inherit _file;
-  plugins.lsp.luaConfig.pre = lib.mkMerge [
-    (let
-      final = lib.nixvim.toLuaObject (removeAttrs config.plugins.lsp.servers.nixd.settings [ "__raw" ]);
-    in lib.nixvim.mkLuaFn' "myNixd" /* lua */ ''
-      local NIXD_PATH, result = vim.env.NIXD_PATH, vim.tbl_deep_extend("force", { nixpkgs = { expr = "import <nixpkgs> {}", }, options = {}, }, ${final})
-      local NIXD_PATH, result = vim.env.NIXD_PATH, { nixpkgs = { expr = "import <nixpkgs> {}", }, options = {}, }
+  extraConfigLuaPre = let
+    final = lib.nixvim.toLuaObject (removeAttrs config.plugins.lsp.servers.nixd.settings [ "__raw" ]);
+  in lib.nixvim.mkLuaFn' "myNixd" ''
+    local NIXD_PATH, result = vim.env.NIXD_PATH, vim.tbl_deep_extend("force", { nixpkgs = { expr = "import <nixpkgs> {}", }, options = {}, }, ${final})
+    local NIXD_PATH, result = vim.env.NIXD_PATH, { nixpkgs = { expr = "import <nixpkgs> {}", }, options = {}, }
 
-      if NIXD_PATH == nil or NIXD_PATH == "" then return result end
-      NIXD_PATH = NIXD_PATH .. ":" -- fix for single path
+    if NIXD_PATH == nil or NIXD_PATH == "" then return result end
+    NIXD_PATH = NIXD_PATH .. ":" -- fix for single path
 
-      -- format <name>=<flake>#<outputs>....
-      -- FIXME handle extract for flake:<xxx> github:<xxx>, ...
-      NIXD_PATH:gsub("[^:]+", function (e)
-        if e == "" then
-          return
-        end
-        local tmp, name, source, path, res = {}, nil, nil , nil, nil
-        for i in string.gmatch(e, "[^=]+") do table.insert(tmp, i) end
-        name = tmp[1]
-        for i in string.gmatch(tmp[2], "[^#]+") do table.insert(tmp, i) end
-        source, path = tmp[3], tmp[4]
-        local flake = (string.match(source, "^/nix/store/") == nil) and '"'..source..'"' or "builtins.toPath "..source
-        res = { expr = "(builtins.getFlake ("..flake.."))."..path }
-        if name == "pkgs" then
-          result["nixpkgs"] = res
-        else
-          result["options"][name] = res
-        end
-      end)
-      return result
-    '')
-  ];
+    -- format <name>=<flake>#<outputs>....
+    -- FIXME handle extract for flake:<xxx> github:<xxx>, ...
+    NIXD_PATH:gsub("[^:]+", function (e)
+      if e == "" then
+        return
+      end
+      local tmp, name, source, path, res = {}, nil, nil , nil, nil
+      for i in string.gmatch(e, "[^=]+") do table.insert(tmp, i) end
+      name = tmp[1]
+      for i in string.gmatch(tmp[2], "[^#]+") do table.insert(tmp, i) end
+      source, path = tmp[3], tmp[4]
+      local flake = (string.match(source, "^/nix/store/") == nil) and '"'..source..'"' or "builtins.toPath "..source
+      res = { expr = "(builtins.getFlake ("..flake.."))."..path }
+      if name == "pkgs" then
+        result["nixpkgs"] = res
+      else
+        result["options"][name] = res
+      end
+    end)
+    return result
+  '';
+  plugins.lsp.capabilities = lib.mkForce /* lua */ ''
+    -- blink cmp problem
+    require("lz.n").trigger_load("blink.cmp")
+    capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+  '';
   plugins.lsp.servers = {
     lua_ls = {
       settings.workspace.library = [
