@@ -20,8 +20,6 @@ in {
     greasemonkey = [];
 
     c.auto_save.session = true;
-    c.url.start_pages = "https://fmway.id";
-    c.url.default_page= "https://fmway.id";
     
     extraConfig = lib.qutebrowser.parse uncommon;
     searchEngines = rec {
