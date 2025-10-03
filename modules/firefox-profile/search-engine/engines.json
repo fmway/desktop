@@ -41,5 +41,9 @@
   "Catppuccin/Nix Option": {
     "url": "https://nix.catppuccin.com/search/rolling/?query={searchTerms}",
     "definedAliases": [ "@cn", "cn" ]
+  },
+  "Noogle": {
+    "url": "https://noogle.dev/q?term={searchTerms}",
+    "definedAliases": [ "@ng", "ng" ]
   }
 }

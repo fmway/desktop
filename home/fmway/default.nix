@@ -24,7 +24,32 @@ in {
       gnome-browser-connector
     ];
     profiles.namaku = { ... }: {
-      imports = [ self.firefoxProfileModules.default ];
+      imports = [
+        self.firefoxProfileModules.default
+        ({ lib, ... }:
+        {
+          containersForce = true; # force replace the existing containers configuration
+          # color: "blue", "turquoise", "green", "yellow", "orange", "red", "pink", "purple", "toolbar"
+          # icon : "briefcase", "cart", "circle", "dollar", "fence", "fingerprint", "gift", "vacation", "food", "fruit", "pet", "tree", "chill"
+          containers = lib.mkDefault {
+            general = {
+              color = "blue";
+              icon = "fingerprint";
+              id = 1;
+            };
+            UPI = {
+              color = "green";
+              icon = "fruit";
+              id = 2;
+            };
+            fmway = {
+              color = "orange";
+              icon = "fence";
+              id = 3;
+            };
+          };
+        })
+      ];
       extensions.packages = import ./firefox-extension.nix pkgs;
     };
   };
@@ -58,6 +83,13 @@ in {
     userEmail = "fm18lv@gmail.com";
     extraConfig = {
       url."git@github.com:fmway/".insteadOf = "fmway:";
+    };
+  };
+
+  programs.qutebrowser = {
+    settings = {
+      url.start_pages = "https://fmway.me";
+      url.default_page= "https://fmway.me";
     };
   };
 }
