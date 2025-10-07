@@ -183,11 +183,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1759228446,
-        "narHash": "sha256-oQqKt0cOjnaBofTtqm4zhLugJX6Eh3eiVwAVti6JMv0=",
+        "lastModified": 1759835752,
+        "narHash": "sha256-nk8AyMufXofzWAU4p4IkvmsnAWIth/gN6lqvCaE/vnA=",
         "owner": "fmway",
         "repo": "modules",
-        "rev": "e114f8419514120957d547102df22510d5a6bcce",
+        "rev": "9bd86556cad3bee581ed3f6c3ac8304d82d98cac",
         "type": "github"
       },
       "original": {
