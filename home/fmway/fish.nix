@@ -1,4 +1,6 @@
-{
+{ lib, ... }: let
+  inherit (lib.fish) bind bind' c;
+in {
   programs.fish.shellAbbrs = let
     with-cursor = str: {
       setCursor = "!";
@@ -48,4 +50,16 @@
     "gclsgl" = with-cursor "git clone git@gitlab.com:!";
     "gclsc"  = with-cursor "git clone git@codeberg.org:!";
   };
+
+  programs.fish.vim = {
+    enable = true;
+    shared_mode = [ "default" "insert" ];
+    initial_mode = "insert";
+  };
+
+  programs.fish.keybindings = [
+    (bind'.insert.erase "alt-s" {})
+    (bind'.insert.erase "escape" {})
+    (bind .insert "alt-k" (c.prepend "doas") {})
+  ];
 }
