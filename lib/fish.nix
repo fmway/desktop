@@ -52,8 +52,7 @@ in setsBind // {
   c = lib.listToAttrs (map (name: {
     inherit name;
     value = x:
-      "fish_commandline_${name} "
-    + lib.escapeShellArg x;
+      "fish_commandline_${name} \"" + x + "\"";
   }) [ "append" "prepend" ]) // /* FIXME add other commands */ {
     
   };
