@@ -1,27 +1,28 @@
 { internal, _file, lib, ... }: let
-  inherit (lib.nixvim) toKeymaps' mkRawFn;
+  inherit (lib.nixvim) keymap mkRawFn;
 in { ... }:
 {
   inherit _file;
   keymaps = [
-    (toKeymaps' "<" "<gv" { noremap = true; mode = "v"; })
-    (toKeymaps' ">" ">gv" { noremap = true; mode = "v"; })
-    (toKeymaps' "p" "p`[v`]" { noremap = true; mode = ["n" "v"]; })
-    (toKeymaps' "P" "P`[v`]" { noremap = true; mode = ["n" "v"]; })
-    (toKeymaps' "C-t" (mkRawFn ''require("menu").open("default")'') {})
-    (toKeymaps' "<RightMouse>" (mkRawFn ''
+    (keymap.v   "<" "<gv" { noremap = true; })
+    (keymap.v   ">" ">gv" { noremap = true; })
+    (keymap.n.v "p" "p`[v`]" { noremap = true; })
+    (keymap.n.v "P" "P`[v`]" { noremap = true; })
+    (keymap.n   "C-t" (mkRawFn ''require("menu").open("default")'') {})
+    (keymap.n   "<RightMouse>" (mkRawFn ''
       --
       vim.cmd.exec '"normal! \\<RightMouse>"'
 
       local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
       require("menu").open(options, { mouse = true })
     '') {})
-    (toKeymaps' ";" ":" { desc = "CMD enter command mode"; })
-    (toKeymaps' "<C-n>" "<cmd>NvimTreeToggle <CR><ESC>" { mode = "i"; desc = "Toggle NvimTree"; })
-    (toKeymaps' "<A-t>" (mkRawFn ''
+    (keymap.n ";" ":" "CMD enter command mode" {})
+    (keymap.i "<C-n>" "<cmd>NvimTreeToggle <CR><ESC>" "Toggle NvimTree" {})
+    (keymap.n "<A-t>" (mkRawFn ''
       require("nvchad.themes").open { style = "compat", border = true, }
-    '') { desc = "Show themes menu"; })
-    
-    (toKeymaps' "<leader>db" "<CMD>DBUIToggle<CR>" {})
+    '') "Show themes menu" {})
+    (keymap.n "<leader>lx" "<CMD>LspStop<Enter>" "Stop LSP" {})
+    (keymap.n "<leader>ls" "<CMD>LspStart<Enter>" "Start LSP" {})
+    (keymap.n "<leader>lr" "<CMD>LspRestart<Enter>" "Restart LSP" {})
   ];
 }

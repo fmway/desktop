@@ -74,7 +74,6 @@
     nxchad.inputs.nixvim.follows = "nixvim";
     nxchad.inputs.systems.follows = "systems";
     nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.inputs.flake-parts.follows = "flake-parts";
     nixvim.inputs.systems.follows = "systems";
   };

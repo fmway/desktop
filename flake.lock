@@ -444,14 +444,28 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1759977445,
+        "narHash": "sha256-LYr4IDfuihCkFAkSYz5//gT2r1ewcWBYgd5AxPzPLIo=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "2dad7af78a183b6c486702c18af8a9544f298377",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "flake-parts": [
           "flake-parts"
         ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs_2",
         "nuschtosSearch": "nuschtosSearch",
         "systems": [
           "systems"
@@ -565,11 +579,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1759388443,
-        "narHash": "sha256-r5ne4GGL2Df3ico4fAL85hIVNpSSrVqA0oYj2oojgsM=",
+        "lastModified": 1760091630,
+        "narHash": "sha256-ng+NOPkrcV0bIwJ7odqDVvbqczwiyLeXb7ySY2lvRtY=",
         "owner": "fmway",
         "repo": "nxchad",
-        "rev": "6336b63637d196856daccdd2138ff93dd1a3d0f9",
+        "rev": "f3106c206a6227eb3832fc74449f9fd9c592f0b2",
         "type": "github"
       },
       "original": {

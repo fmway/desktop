@@ -1,6 +1,6 @@
 # TODO add options `plugins.xxx`
 { internal, _file, lib, ... }: let
-  inherit (lib.nixvim) toKeymaps toLuaObject mkLuaFn mkRawFn;
+  inherit (lib.nixvim) toLuaObject mkLuaFn mkRawFn keymap';
 in { pkgs, ... }:
 {
   # Depends for git-dev plugins
@@ -285,7 +285,7 @@ in { pkgs, ... }:
   plugins.telescope.extensions.undo.enable = true;
   # plugins.telescope.lazyLoad.settings = {
   #   keys = [
-  #     (toKeymaps "<leader>u" "<CMD>Telescope undo<CR>" {})
+  #     (keymap "<leader>u" "<CMD>Telescope undo<CR>" {})
   #   ];
   # };
   plugins.telescope.keymaps = {
@@ -316,7 +316,7 @@ in { pkgs, ... }:
       event = "BufEnter";
       cmd = ["SmearCursorToggle"];
       keys = [
-        (toKeymaps "<leader>tsc" "<cmd>SmearCursorToggle<cr>" { desc = "Toggle Animation Cursor"; })
+        (keymap' "<leader>tsc" "<cmd>SmearCursorToggle<cr>" "Toggle Animation Cursor" {})
       ];
     };
     # Disable smear-cursor in startup
@@ -331,10 +331,7 @@ in { pkgs, ... }:
       keys = map (x: let
         i = toString x;
         to = if x == 0 then "10" else i;
-      in toKeymaps
-        "g${i}"
-        ''<CMD>lua require("bufferline").go_to_buffer(${to}, true)<CR>''
-        { desc = "Go to tab ${to}"; }
+      in keymap' "g${i}" (mkRawFn ''require("bufferline").go_to_buffer(${to}, true)'') "Go to tab ${to}" {}
       ) (lib.range 0 9);
     };
   };
