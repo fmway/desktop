@@ -14,15 +14,16 @@ in {
           config._module.args.pkgs = pkgs;
         });
       };
+      config.programs.${name} = {
+        nativeMessagingHosts = with pkgs; lib.optionals (osConfig.services.desktopManager.gnome.enable or false) [
+          gnome-browser-connector
+        ];
+      };
     }) [ "floorp" "firefox" "zen-browser" ];
 
   programs.zellij.enable = true;
   programs.zen-browser = {
     enable = true;
-    nativeMessagingHosts = with pkgs ;[
-      firefoxpwa
-      gnome-browser-connector
-    ];
     profiles.namaku = { ... }: {
       imports = [
         self.firefoxProfileModules.default
