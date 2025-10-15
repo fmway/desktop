@@ -17,8 +17,6 @@
       # Mismatched system dependencies will lead to crashes and other issues.
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    waydroid_script.url = "github:casualsnek/waydroid_script";
-    waydroid_script.flake = false;
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.url = "github:cachix/git-hooks.nix";
     zen-browser = {
@@ -28,9 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    h-m-m.url = "github:nadrad/h-m-m";
-    h-m-m.inputs.nixpkgs.follows = "nixpkgs";
-    h-m-m.inputs.systems.follows = "systems";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.follows = "chaotic/nixpkgs";
     catppuccin.url = "github:catppuccin/nix";

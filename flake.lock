@@ -259,29 +259,6 @@
         "type": "github"
       }
     },
-    "h-m-m": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": [
-          "systems"
-        ]
-      },
-      "locked": {
-        "lastModified": 1750409855,
-        "narHash": "sha256-yxyhwFLDDoEscMZGApnPbIkljF4VdajIj1MG+Erp1/U=",
-        "owner": "nadrad",
-        "repo": "h-m-m",
-        "rev": "b8873636844a1c00baaa091a518b89311227f463",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nadrad",
-        "repo": "h-m-m",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -623,7 +600,6 @@
         "fmway-modules": "fmway-modules",
         "fmway-pkgs": "fmway-pkgs",
         "git-hooks": "git-hooks",
-        "h-m-m": "h-m-m",
         "home-manager": "home-manager_2",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": [
@@ -636,7 +612,6 @@
         "nxchad": "nxchad",
         "quickshell": "quickshell",
         "systems": "systems_2",
-        "waydroid_script": "waydroid_script",
         "zen-browser": "zen-browser"
       }
     },
@@ -688,22 +663,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
-        "type": "github"
-      }
-    },
-    "waydroid_script": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1756673819,
-        "narHash": "sha256-Epvl6thT6mJqurZV1FV6Zdd6Kn13ZAC/BUaywVLpOIc=",
-        "owner": "casualsnek",
-        "repo": "waydroid_script",
-        "rev": "fcb15624db0811615ea9800837a836c4777674bf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "casualsnek",
-        "repo": "waydroid_script",
         "type": "github"
       }
     },
