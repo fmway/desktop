@@ -25,7 +25,7 @@ in {
     "sway"
     "btop"
     "qutebrowser"
-    "zed"
+    # "zed"
     "ghostty"
     { lazygit = "teal"; }
     { gh-dash = "teal"; }
