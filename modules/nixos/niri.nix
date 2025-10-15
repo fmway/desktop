@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 {
   qt.enable = true;
-  qt.platformTheme = "gnome";
+  qt.platformTheme = "kde";
   qt.style = "adwaita-dark";
   programs.niri.enable = true;
   programs.dconf.enable = true;
