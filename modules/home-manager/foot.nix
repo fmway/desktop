@@ -4,7 +4,7 @@
     enable = lib.mkDefault true;
     settings = {
       main = {
-        font = "JetBrainsMonoNL NF:style=Bold:size=14";
+        font = "JetBrainsMono Nerd Font:style=Bold:size=14";
         pad = "2x2";
       };
       # disable window title in gnome
