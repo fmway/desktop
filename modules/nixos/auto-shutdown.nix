@@ -1,6 +1,7 @@
 { internal, lib, _file, ... }:
-{ pkgs, config, ... }:
-{
+{ pkgs, config, ... }: let
+  shut_when = lib.attrByPath [ "data" "battery_limit" ] 25 config;
+in {
   inherit _file;
   systemd.services.auto-shutdown.script = lib.mkForce /* bash */ ''
     ctrl_c() {
@@ -24,7 +25,7 @@
     ! [ -e /tmp/notify-shutdown ] || exit
 
     bat-now() {
-      cat /sys/class/power_supply/BAT*/capacity | awk '{sum+=$1} END {print sum/NR}'
+      cat /sys/class/power_supply/BAT*/capacity | awk '{sum+=$1} END {print int(sum/NR)}'
     }
 
     BATTERY_STATUS="$(cat /sys/class/power_supply/AC/online)"
@@ -34,7 +35,7 @@
     NOTIFY_MESSAGE="Mati sia anjing!!!"
     NOTIFY_SEND="$(command -v notify-send)"
 
-    export SHUTDOWN_WITH=${toString (lib.attrByPath [ "data" "battery_limit" ] 25 config)}
+    export SHUTDOWN_WITH=${toString shut_when}
 
     #Detect the name of the display in use
     display=":$(ls /tmp/.X11-unix/* | sed 's#/tmp/.X11-unix/X##' | head -n 1)"
@@ -66,7 +67,7 @@
       SUBSYSTEM=="power_supply", \
       ENV{POWER_SUPPLY_NAME}=="BAT*", \
       ENV{POWER_SUPPLY_STATUS}=="Discharging", \
-      ATTR{capacity}=="${lib.genRegex (lib.attrByPath [ "data" "battery_limit" ] 10 config)}", \
+      ATTR{capacity}=="${lib.genRegex shut_when}", \
       TAG+="systemd", \
       ENV{SYSTEMD_WANTS}="auto-shutdown.service"
   '';
