@@ -73,7 +73,7 @@
     nixvim.inputs.systems.follows = "systems";
   };
 
-  outputs = { home-manager, nxchad, fmway-lib, ... } @ inputs:
+  outputs = { home-manager, nxchad, fmway-modules, fmway-lib, ... } @ inputs:
   fmway-lib.mkFlake {
     src = ./.;
     inherit inputs;
@@ -81,6 +81,7 @@
       sources = import ./sources;
       lib = [
         home-manager.lib
+        fmway-modules.lib
         {
           inherit (nxchad.lib) nixvim;
         }
