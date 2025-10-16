@@ -2,8 +2,15 @@
 {
   config = lib.mkMerge [
     {
+      extraConfigLuaPre = ''
+        if vim.g.neovide then
+            vim.keymap.set({ "n", "v", "i" }, "<C-=>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.02<CR>")
+            vim.keymap.set({ "n", "v", "i" }, "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.02<CR>")
+            vim.keymap.set({ "n", "v", "i" }, "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>")
+        end
+      '';
       opts = {
-        guifont = "JetBrainsMono Nerd Font:h14";
+        guifont = "JetBrainsMono Nerd Font:h14:b";
       };
       globals = {
         neovide_cursor_vfx_mode = [
