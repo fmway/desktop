@@ -24,13 +24,7 @@
     ! [ -e /tmp/notify-shutdown ] || exit
 
     bat-now() {
-      BAT="$(cat /sys/class/power_supply/BAT0/capacity)"
-
-      if [ -e /sys/class/power_supply/BAT1 ]; then
-        BAT1="$(cat /sys/class/power_supply/BAT1/capacity)"
-        BAT="$(( (BAT + BAT1) / 2 ))"
-      fi
-      echo "$BAT"
+      cat /sys/class/power_supply/BAT*/capacity | awk '{sum+=$1} END {print sum/NR}'
     }
 
     BATTERY_STATUS="$(cat /sys/class/power_supply/AC/online)"
@@ -46,7 +40,7 @@
     display=":$(ls /tmp/.X11-unix/* | sed 's#/tmp/.X11-unix/X##' | head -n 1)"
 
     #Detect the user using such display
-    user=$(who | grep seat0 | awk '{print $1}' | head -n 1)
+    user=$(who | grep -e 'seat0\|tty1' | awk '{print $1}' | head -n 1)
 
     #Detect the id of the user
     uid=$(id -u $user)
