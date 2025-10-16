@@ -32,11 +32,6 @@
     end)
     return result
   '';
-  plugins.lsp.capabilities = lib.mkForce /* lua */ ''
-    -- blink cmp problem
-    require("lz.n").trigger_load("blink.cmp")
-    capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
-  '';
   plugins.lsp.servers = {
     lua_ls = {
       settings.workspace.library = [
