@@ -66,7 +66,7 @@ in {
     ACTION=="change", \
       SUBSYSTEM=="power_supply", \
       ENV{POWER_SUPPLY_NAME}=="BAT*", \
-      ENV{POWER_SUPPLY_STATUS}=="Discharging", \
+      ENV{POWER_SUPPLY_STATUS}=="Discharging|Not charging", \
       ATTR{capacity}=="${lib.genRegex shut_when}", \
       TAG+="systemd", \
       ENV{SYSTEMD_WANTS}="auto-shutdown.service"
