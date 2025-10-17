@@ -3,13 +3,8 @@
   shut_when = lib.attrByPath [ "data" "battery_limit" ] 25 config;
 in {
   inherit _file;
-  systemd.services.auto-shutdown.script = lib.mkForce /* bash */ ''
-    ctrl_c() {
-      rm -rf /tmp/notify-shutdown
-      exit
-    }
-    trap ctrl_c SIGINT
-    export PATH=$PATH:${lib.makeBinPath (with pkgs;[
+  systemd.services.auto-shutdown = {
+    path = with pkgs;[
       systemd
       libnotify
       gnugrep
@@ -18,47 +13,52 @@ in {
       gawk
       ps
       sysvtools
-    ])}
+    ];
+    environment = {
+      SHUTDOWN_WITH = toString shut_when;
+    };
+  };
+  systemd.services.auto-shutdown.script = lib.mkForce /* bash */ ''
+    # simple lock program
+    if pidof -o %PPID -x "$0" >/dev/null; then
+      echo "ERROR: Script $0 already running."
+      exit 1
+    fi
+
+    ctrl_c() { exit 1; }
+    trap ctrl_c SIGINT
 
     # reference: https://bbs.archlinux.org/viewtopic.php?pid=1280941#p1280941
-    #
-    ! [ -e /tmp/notify-shutdown ] || exit
+    BATTERY_STATUS="$(cat /sys/class/power_supply/AC/online)"
+
+    NOTIFY_TITLE="Baterai sekarat" NOTIFY_ICON=battery_empty NOTIFY_MESSAGE="Mati sia anjing!!!"
+    NOTIFY_SEND="$(command -v notify-send)"
 
     bat-now() {
       cat /sys/class/power_supply/BAT*/capacity | awk '{sum+=$1} END {print int(sum/NR)}'
     }
 
-    BATTERY_STATUS="$(cat /sys/class/power_supply/AC/online)"
+    # thanks to: https://unix.stackexchange.com/questions/2881/show-a-notification-across-all-running-x-displays#answer-748296
+    send-to() {
+      local name busroute; name="$1"; shift; printf -v args " '%s'" "$@"
+      busroute="/run/user/$(id -u "$name")/bus" || return 1
+      su "$name" -c "env DBUS_SESSION_BUS_ADDRESS='unix:path=$busroute' $NOTIFY_SEND$args"
+    }
 
-    NOTIFY_TITLE="Baterai sekarat"
-    NOTIFY_ICON=battery_empty
-    NOTIFY_MESSAGE="Mati sia anjing!!!"
-    NOTIFY_SEND="$(command -v notify-send)"
-
-    export SHUTDOWN_WITH=${toString shut_when}
-
-    #Detect the name of the display in use
-    display=":$(ls /tmp/.X11-unix/* | sed 's#/tmp/.X11-unix/X##' | head -n 1)"
-
-    #Detect the user using such display
-    user=$(who | grep -e 'seat0\|tty1' | awk '{print $1}' | head -n 1)
-
-    #Detect the id of the user
-    uid=$(id -u $user)
-
-    echo "USER: $user"
-    echo "DISPLAY: $display"
-    echo "UID: $uid"
+    send-all() {
+      for name in $(who | cut -f1 -d" " | sort -u); do
+        send-to "$name" "$@" &
+      done
+      wait
+    }
 
     if [ "$(bat-now)" -le "$SHUTDOWN_WITH" ] && [ "$BATTERY_STATUS" -eq 0 ]; then
-      touch /tmp/notify-shutdown
-      su "''${user}" -c "env DISPLAY=$display DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus ''${NOTIFY_SEND} --urgency=critical --hint=int:transient:1 --icon $NOTIFY_ICON '$NOTIFY_TITLE' '$NOTIFY_MESSAGE'"
+      send-all --urgency=critical --hint=int:transient:1 --icon "$NOTIFY_ICON" "$NOTIFY_TITLE" "$NOTIFY_MESSAGE"
       sleep 60s
       BATTERY_STATUS="$(cat /sys/class/power_supply/AC/online)"
       if [ "$BATTERY_STATUS" -eq 0  ]; then
         exec systemctl poweroff -i
       fi
-      rm /tmp/notify-shutdown
     fi
   '';
 
