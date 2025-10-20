@@ -1,0 +1,20 @@
+--- a/config.in
++++ b/config.in
+@@ -22,8 +22,8 @@
+ 
+ ### Output configuration
+ #
+-# Default wallpaper (more resolutions are available in @datadir@/backgrounds/scroll/)
+-# output * bg @datadir@/backgrounds/scroll/Sway_Wallpaper_Blue_1920x1080.png fill
++# Default wallpaper
++#output * bg ~/.config/scroll/backgrounds/Sway_Wallpaper_Blue_1920x1080.png fill
+ #
+ # Example configuration:
+ #
+@@ -572,5 +572,3 @@
+         scroller #2F343AFF #055E20FF #FFFFFFFF
+     }
+ }
+-#
+-# include @sysconfdir@/scroll/config.d/*
+
