@@ -5,13 +5,7 @@
   # programs.git.difftastic.enable = true; # git diff with difftastic
   # programs.git.diff-so-fancy.enable = true; # git diff with diff-so-fancy
   programs.git.signing.format = "ssh";
-  programs.git.aliases = {
-    a = "add";
-    cm = "commit";
-    ch = "checkout";
-    s = "status";
-  };
-  programs.git.extraConfig = {
+  programs.git.settings = {
     url = let
       sites = {
         "github.com" = "gh" ;
@@ -21,6 +15,13 @@
     in lib.foldl' (acc: x: acc // {
       "https://${x}/".insteadOf = "${sites.${x}}:";
       "git@${x}:".insteadOf = "${sites.${x}}s:";
-    }) {} (lib.attrNames sites);
+    }) {
+      alias = {
+        a = "add";
+        cm = "commit";
+        ch = "checkout";
+        s = "status";
+      };
+    } (lib.attrNames sites);
   };
 }

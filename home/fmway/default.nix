@@ -79,12 +79,10 @@ in {
       "caps:none" # disable capslock
     ];
   };
-  programs.git = {
-    userName = "fmway";
-    userEmail = "fm18lv@gmail.com";
-    extraConfig = {
-      url."git@github.com:fmway/".insteadOf = "fmway:";
-    };
+  programs.git.settings = {
+    user.name = "fmway";
+    user.email = "fm18lv@gmail.com";
+    url."git@github.com:fmway/".insteadOf = "fmway:";
   };
 
   programs.qutebrowser = {
