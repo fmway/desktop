@@ -1,11 +1,11 @@
 # TODO add options `plugins.xxx`
 { internal, _file, lib, ... }: let
-  inherit (lib.nixvim) toLuaObject mkLuaFn mkRawFn keymap';
+  inherit (lib.nixvim) mkLuaFn mkRawFn keymap' k lz-n;
 in { pkgs, ... }:
 {
+  inherit _file;
   # Depends for git-dev plugins
   globals.git_username.__raw = "get_git_username()";
-  inherit _file;
   opts.relativenumber = true;
   nvchad.config.colorify.mode = "bg";
   extraPlugins = with pkgs.vimPlugins; [
@@ -81,83 +81,45 @@ in { pkgs, ... }:
     end
   '';
 
-  plugins.lz-n.plugins = [
-    # (let
-    #   opts = {};
-    # in {
-    #   __unkeyed-1 = "kitty-scrollback-nvim";
-    #   cmd = [ "KittyScrollbackGenerateKittens" "KittyScrollbackCheckHealth" "KittyScrollbackGenerateCommandLineEditing" ];
-    #   event = [ "User KittyScrollbackLaunch" ];
-    #   after.__raw = ''
-    #     function()
-    #       require("kitty-scrollback").setup(${lib.optionalString (opts != {}) (toLuaObject opts)})
-    #     end
-    #   '';
-    # })
-    (let
+  plugins.lz-n.plugins = lz-n.expand [
+    (opts: k "showkeys" {
       opts = {
         timeout = 2;
         maxkeys = 4;
         show_count = true;
         position = "top-right"; # bottom-left, bottom-right, bottom-center, top-left, top-right, top-center
       };
-    in {
-      __unkeyed-1 = "showkeys";
       # event = [ "BufEnter" ];
       cmd = [ "ShowkeysToggle" ];
       after = mkRawFn ''
-        require("showkeys").setup(${toLuaObject opts})
+        require("showkeys").setup(${opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>st";
-          __unkeyed-2 = mkRawFn ''
-            require("showkeys").toggle()
-          '';
-        }
+        ["<leader>st" (mkRawFn "require('showkeys').toggle()")]
       ];
     })
-    (let
+    (opts: k "timerly" {
       opts = {};
-    in {
-      __unkeyed-1 = "timerly";
       cmd = [ "TimerlyToggle" ];
       after = mkRawFn ''
-        require("timerly").setup(${toLuaObject opts})
+        require("timerly").setup(${opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>sw";
-          __unkeyed-2 = mkRawFn ''
-            require("timerly").toggle()
-          '';
-        }
+        ["<leader>sw" (mkRawFn ''require("timerly").toggle()'')]
       ];
     })
-    (let
+    (opts: k "typr" {
       opts = {};
-    in {
-      __unkeyed-1 = "typr";
       cmd = [ "Typr" "TyprStats" ];
       after = mkRawFn ''
-        require("typr").setup(${toLuaObject opts})
+        require("typr").setup(${opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>ty";
-          __unkeyed-2 = mkRawFn ''
-            require("typr").open()
-          '';
-        }
-        {
-          __unkeyed-1 = "<leader>td";
-          __unkeyed-2 = mkRawFn ''
-            require("typr.stats").open()
-          '';
-        }
+        ["<leader>ty" (mkRawFn "require('typr').open()")]
+        ["<leader>td" (mkRawFn "require('typr.stats').open()")]
       ];
     })
-    (let
+    (opts: k "git-dev.nvim" {
       opts = {
         read_only = false;
         verbose = true;
@@ -170,39 +132,30 @@ in { pkgs, ... }:
           end
         '';
       };
-    in {
-      __unkeyed-1 = "git-dev.nvim";
       cmd = [ "GitDevClean" "GitDevCleanAll" "GitDevCloseBuffers" "GitDevOpen" "GitDevRecents" "GitDevToggleUI" "GitDevXDGHandle" ];
       after = mkRawFn ''
-        require("git-dev").setup {${toLuaObject opts}}
+        require("git-dev").setup (${opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>go";
-          __unkeyed-2 = mkRawFn ''
+        (k "<leader>go" {
+          __raw = ''
             local repo = vim.fn.input "Repository: "
             if repo ~= "" then
               require("git-dev").open(repo)
             end
           '';
           desc = "[O]pen a remote git repository";
-        }
-        {
-          __unkeyed-1 = "<leader>gc";
-          __unkeyed-2 = mkRawFn ''
-            require("git-dev").close_buffers()
-          '';
+        })
+        (k "<leader>gc" {
+          __raw = "require('git-dev').close_buffers()";
           mode = "n";
           desc = "[C]lose buffers of current repository";
-        }
-        {
-          __unkeyed-1 = "<leader>gC";
-          __unkeyed-2 = mkRawFn ''
-            require("git-dev").clean()
-          '';
+        })
+        (k "<leader>gC" {
+          __raw = "require('git-dev').clean()";
           mode = "n";
           desc = "[C]lean current repository";
-        }
+        })
       ];
     })
   ];
@@ -231,13 +184,10 @@ in { pkgs, ... }:
       "ToggleTermSetName"
     ];
     lazyLoad.settings.keys = [
-      {
-        __unkeyed-1 = "<leader>lg";
-        __unkeyed-2 = mkRawFn ''
-          _lazygit_toggle()
-        '';
+      (k "<leader>lg" {
+        __raw = "_lazygit_toggle()";
         desc = "Lazygit Toggle";
-      }
+      })
     ];
     settings = {
       direction = "float";
