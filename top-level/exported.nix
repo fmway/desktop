@@ -12,7 +12,7 @@
     "nix-gc"
   ];
 
-  excludes.darwin = [
-    "nix-gc"
-  ];
+  # excludes.darwin = [
+  #   "nix-gc"
+  # ];
 }
