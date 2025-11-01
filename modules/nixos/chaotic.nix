@@ -5,7 +5,7 @@
   ];
 
   services.scx.enable = lib.mkDefault true;
-  services.scx.package = lib.mkDefault (pkgs.scx_git or pkgs.scx).full;
+  services.scx.package = lib.mkDefault pkgs.scx.full;
   services.scx.scheduler = lib.mkDefault "scx_bpfland";
   services.scx.extraArgs = [ "-f" "-k" "-p" ];
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos;
