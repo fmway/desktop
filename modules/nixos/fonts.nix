@@ -9,7 +9,7 @@
       # clearlyU
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       roboto
       liberation_ttf
       dejavu_fonts
