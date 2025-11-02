@@ -275,7 +275,7 @@ in [
     (node "Mod+I"            { hotkey-overlay-title = "Lock the screen"; }
       (spawn (lib.getExe pkgs.scripts.delock)))
     (node "Mod+Shift+I"      { hotkey-overlay-title = "Lock the screen (alt)"; }
-      (spawn "noctalia-shell" "ipc" "call" "lockScreen" "toggle"))
+      (spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"))
 
     (plain "Mod+Shift+Q" (flag "close-window"))
 
