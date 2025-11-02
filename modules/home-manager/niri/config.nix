@@ -289,9 +289,9 @@ in [
     (plain "Mod+Shift+F" (flag "fullscreen-window"))
 
     # (plain "Mod+C"       (spawn "cliphist-fuzzel-img"))
-    (plain "Mod+C"       (spawn "noctalia-shell" "ipc" "call" "launcher" "clipboard"))
-    (plain "Mod+Shift+C" (flag "center-column"))
-    (plain "Mod+Ctrl+C"  (flag "center-visible-columns"))
+    (plain "Mod+V"        (spawn "noctalia-shell" "ipc" "call" "launcher" "clipboard"))
+    (plain "Mod+C"        (flag "center-column"))
+    (plain "Mod+Shift+C"  (flag "center-visible-columns"))
 
     (plain "Mod+Minus" (leaf "set-column-width" "-10%"))
     (plain "Mod+Equal" (leaf "set-column-width" "+10%"))
