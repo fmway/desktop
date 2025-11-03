@@ -61,7 +61,7 @@
     devenv # also this
     systemctl-tui # management systemd using tui
     # nixpacks # this is simplify docker with toml configuration
-    du-dust # du alternative
+    dust # du alternative
     fzf # fuzzy search
     # appimage-run # to run AppImage
     yq # yaml and toml parser
