@@ -393,7 +393,7 @@ in [
     (leaf "honor-xdg-activation-with-invalid-serial")
   )
 
-  (spawn-at-startup (lib.getExe pkgs.xwayland-satellite))
+  # (spawn-at-startup (lib.getExe pkgs.xwayland-satellite))
   # (spawn-at-startup (lib.getExe pkgs.mako))
   # (spawn-at-startup
   #   "wl-clip-persist" "--clipboard" "regular")
@@ -404,8 +404,7 @@ in [
   #   "wl-paste" "--type" "text" "--watch"
   #     "clipman" "store" "--no-persist" "--max-items" "500")
   (spawn-at-startup "noctalia-shell")
-  (spawn-at-startup
-    "foot" "--server")
+  (spawn-at-startup "foot" "--server")
 
   # already did in noctalia-shell
   # (spawn-at-startup
