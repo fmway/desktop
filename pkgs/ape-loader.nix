@@ -3,7 +3,7 @@
 _: let
   pname = "ape-loader";
   version = "4.0.2";
-  arch = pkgs.hostPlatform.linuxArch;
+  arch = pkgs.stdenv.hostPlatform.linuxArch;
 in pkgs.stdenv.mkDerivation {
   inherit pname version;
   src = pkgs.fetchurl {
