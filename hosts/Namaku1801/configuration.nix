@@ -6,6 +6,7 @@
     ./disko.nix
     # ./forgejo.nix
     # ./caddy.nix
+    # ./nginx.nix
     ./users.nix
     ./timezone.nix
     ./zfs.nix
