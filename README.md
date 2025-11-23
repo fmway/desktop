@@ -33,4 +33,4 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > - **Home Manager** : Yes, as NixOS Module
 >   <!--{# replace_re "${re.ver} \\((.+)\\), ${re.ver} \\((.+)\\), ${re.ver2} \\((.+)\\)" "${ver.h} ($1), ${ver.n} ($2), ${nix.ver} (${nix.name})"  #}-->
 > - **Version** : 25.11 (Home Manager), 25.11 (NixOS), 2.31.2 (Nix)
-> - **Kernel** : 6.17.7 (linux-cachyos) <!--{< rm [ (rver kernel.version) (rbet "(" ")" kernel.name) ] >}-->
+> - **Kernel** : 6.17.8 (linux-cachyos) <!--{< rm [ (rver kernel.version) (rbet "(" ")" kernel.name) ] >}-->
