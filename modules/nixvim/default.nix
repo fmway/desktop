@@ -12,6 +12,7 @@
     "direnvrc" = "bash";
   };
   filetype.pattern = {
+    ".*%.tmux" = "tmux";
     ".*%.blade%.php" = "blade";
     ".*/ghostty/config" = "toml";
     ".*/ghostty/themes/.*%.conf" = "dosini";
