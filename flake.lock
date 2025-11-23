@@ -469,11 +469,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763897760,
-        "narHash": "sha256-qq032jUUN+ta7GZ/4qCmRO9yoxQhVzW019+S2mUkPjw=",
+        "lastModified": 1763899714,
+        "narHash": "sha256-qsp91fwNj5SoqrZKGFqBMRZcEbrP6v7UoWaCxTQoJes=",
         "owner": "noctalia-dev",
         "repo": "noctalia-shell",
-        "rev": "7400801dbc8cce23bfd155bc6788062fefeea242",
+        "rev": "faa074c330581cc4a065e592717045ba4fe1fc5d",
         "type": "github"
       },
       "original": {
@@ -563,26 +563,6 @@
         "type": "github"
       }
     },
-    "quickshell": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1763629934,
-        "narHash": "sha256-jWz10RbNAyylJbH4cUTLS/CsDjkd8gxfT8OsIgQIgEg=",
-        "ref": "refs/heads/master",
-        "rev": "ed036d514b0fdbce03158a0b331305be166f4555",
-        "revCount": 708,
-        "type": "git",
-        "url": "https://git.outfoxxed.me/quickshell/quickshell"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.outfoxxed.me/quickshell/quickshell"
-      }
-    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -604,7 +584,6 @@
         "noctalia": "noctalia",
         "nur": "nur",
         "nxchad": "nxchad",
-        "quickshell": "quickshell",
         "systems": "systems_2",
         "zen-browser": "zen-browser"
       }

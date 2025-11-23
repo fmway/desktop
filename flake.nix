@@ -4,19 +4,7 @@
   # Inputs
   inputs = {
     noctalia.url = "github:noctalia-dev/noctalia-shell";
-    noctalia.inputs = {
-      quickshell.follows = "quickshell";
-      nixpkgs.follows = "nixpkgs";
-      systems.follows = "systems";
-    };
-    quickshell = {
-      # add ?ref=<tag> to track a tag
-      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
-
-      # THIS IS IMPORTANT
-      # Mismatched system dependencies will lead to crashes and other issues.
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    noctalia.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.url = "github:cachix/git-hooks.nix";
     zen-browser = {
