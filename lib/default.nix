@@ -98,4 +98,37 @@ in {
     toLuaObject' = x: if isNull x then "" else se.toLuaObject x;
     inherit k lz-n;
   });
+
+  mkFixFontsDir = pkgs: list-conflicted: packages: let res = builtins.foldl' (a: c: let
+    is_conflict = builtins.elem c.pname list-conflicted;
+    package = if is_conflict then c.overrideAttrs {
+      # remove fonts.dir on both packages
+      fixupPhase = "rm -f $out/share/fonts/X11/misc/fonts.dir";
+    } else c;
+    font_dir = lib.fileContents "${c}/share/fonts/X11/misc/fonts.dir";
+  in a // {
+    packages = a.packages ++ [package];
+    fonts-dirs = a.fonts-dirs ++ lib.optional is_conflict font_dir;
+  }) {
+    fonts-dirs = [];
+    packages = [
+      # concat fonts.dir and store in another derivation
+      (pkgs.writeTextFile {
+        text = let
+          result = builtins.foldl' (a: c: let
+            # split text
+            split_txt = lib.splitString "\n" c;
+          in {
+            # sum first elem
+            sum = builtins.fromJSON (lib.head split_txt) + a.sum;
+            context = a.context + builtins.concatStringsSep "\n" (lib.tail split_txt) + "\n";
+          }) { sum = 0; context = ""; } res.fonts-dirs;
+
+          # and then concat all
+        in "${toString result.sum}\n${result.context}";
+        destination = "/share/fonts/X11/misc/fonts.dir";
+        name = "fonts.dir";
+      })
+    ];
+  } packages; in res.packages;
 }

@@ -1,5 +1,7 @@
-{ pkgs, config, ... }:
-{
+{ internal, lib, ... }:
+{ pkgs, config, ... }: let
+  fixFontsDir = lib.mkFixFontsDir pkgs;
+in {
   fonts = {
     # add fonts
     fontDir.enable = true;
@@ -121,7 +123,7 @@
     };
     aggregatedFonts = pkgs.buildEnv {
       name = "system-fonts";
-      paths = config.fonts.packages;
+      paths = fixFontsDir [ "font-cursor-misc" "font-misc-misc" ] config.fonts.packages;
       pathsToLink = [ "/share/fonts" ];
     };
   in {
