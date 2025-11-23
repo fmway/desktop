@@ -403,8 +403,8 @@ in [
   # (spawn-at-startup
   #   "wl-paste" "--type" "text" "--watch"
   #     "clipman" "store" "--no-persist" "--max-items" "500")
-  (spawn-at-startup "noctalia-shell")
-  (spawn-at-startup "foot" "--server")
+  # (spawn-at-startup "noctalia-shell")
+  # (spawn-at-startup "foot" "--server")
 
   # already did in noctalia-shell
   # (spawn-at-startup
