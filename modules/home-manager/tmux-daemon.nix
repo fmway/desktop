@@ -35,7 +35,7 @@ in {
         };
         Service = {
           Type = "oneshot";
-          ExecStart = "${pkgs.bash}/bin/bash -c '${tmux} new -d;${tmux} kill-session'";
+          ExecStart = "${pkgs.bash}/bin/bash -c 'sleep .5;${tmux} new -d;${tmux} kill-session'";
         };
         Install.WantedBy = ["tmux-daemon.service"];
       };
