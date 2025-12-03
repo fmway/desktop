@@ -1,11 +1,8 @@
 { internal, lib, ... }:
 { pkgs, inputs, config, ... }: let
   cfg = config.wayland.windowManager.niri;
+  noctalia-shell = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
-  nixpkgs.overlays = [
-    inputs.noctalia.overlays.default
-  ];
-
   wayland.windowManager.niri = {
     enable = true;
     config = import ./config.nix { inherit lib pkgs; };
@@ -24,7 +21,7 @@ in {
   home.activation = {
     copyNoctalia = lib.hm.dag.entryAfter ["writeBoundary"] /* sh */ ''
       [ ! -e "$HOME/.local/share/noctalia" ] || rm -rf "$HOME/.local/share/noctalia"
-      cp --dereference -r "${pkgs.noctalia-shell}/share/noctalia-shell" "$HOME/.local/share/noctalia"
+      cp --dereference -r "${noctalia-shell}/share/noctalia-shell" "$HOME/.local/share/noctalia"
       chmod +rw -R "$HOME/.local/share/noctalia"
     '';
   };
