@@ -18,8 +18,8 @@
     }) y);
   }) [ "leaf" "plain" "node" "flag" ]);
 in
-  m.leafize [ "spawn" "spawn-sh" "spawn-at-startup" "proportion" "match" ] //
-  m.plainize [ "window-rule" ] //
+  m.leafize [ "spawn" "spawn-sh" "spawn-at-startup" "proportion" "match" "exclude" "include" ] //
+  m.plainize [ "window-rule" "layer-rule" "environment" "binds" ] //
 {
   sh = x: if lib.isDerivation x then "sh ${x}" else {
     cmd = [ x ];

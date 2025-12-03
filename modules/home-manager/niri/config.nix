@@ -1,6 +1,8 @@
 { lib, pkgs, ... }: let
   inherit (lib.kdl) leaf plain node flag HJKL M seq;
-  inherit (lib.niri) spawn spawn-sh window-rule proportion match spawn-at-startup sh sub bind;
+  inherit (lib.niri) spawn spawn-sh window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule;
+  sub = mkSub pkgs;
+  ipc = [ "noctalia-shell" "ipc" "call" ];
   resize-state = [
     (proportion 0.33333)
     (proportion 0.5)
@@ -21,6 +23,8 @@
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     SDL_VIDEODRIVER = "wayland";
+    _JAVA_AWT_WM_NONREPARENTING =  1;
+    PROTON_ENABLE_WAYLAND = 1;
   };
 
   dmenuan = pkgs.writeScript "dmenuan.sh" /* fish */ ''
@@ -219,7 +223,12 @@ in [
     (match { app-id = "floating-window"; })
     (match { app-id = "scrcpy"; })
     (match { app-id = "nz.co.mega."; })
-    (leaf "exclude" { app-id = "nz.co.mega."; title = "Transfer manager"; })
+    (exclude { app-id = "nz.co.mega."; title = "Transfer manager"; })
+    (match { app-id = "tuned-gui"; })
+    (match { app-id = "org.kde.kdeconnect.daemon"; })
+    (match { app-id = "zoom"; })
+    (exclude { app-id = "zoom"; title = "Meeting"; })
+    (match { title  = "Beeper"; })
     (leaf "open-floating" true)
   )
 
@@ -251,17 +260,16 @@ in [
   #   (match { app-id =  })
   # )
 
-  (plain "layer-rule"
+  (layer-rule
     (match { namespace = "^quickshell-wallpaper$"; })
     (match { namespace = "^quickshell-overview$"; })
     (match { namespace = "^swww-daemon$"; })
+    (match { namespace = "^noctalia-overview*"; })
     (leaf "place-within-backdrop" true)
   )
 
   # Keybindings section
-  (plain "binds"
-    (plain "Mod+Slash"
-      (spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"))
+  (binds
     (plain "Mod+Shift+Slash" (flag "show-hotkey-overlay"))
     (node "Mod+Return"       { hotkey-overlay-title = "Open a Terminal: footclient"; }
       (spawn
@@ -274,8 +282,6 @@ in [
       (spawn "${dmenuan}"))
     (node "Mod+I"            { hotkey-overlay-title = "Lock the screen"; }
       (spawn (lib.getExe pkgs.scripts.delock)))
-    (node "Mod+Shift+I"      { hotkey-overlay-title = "Lock the screen (alt)"; }
-      (spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"))
 
     (plain "Mod+Shift+Q" (flag "close-window"))
 
@@ -289,9 +295,7 @@ in [
     (plain "Mod+Shift+F" (flag "fullscreen-window"))
 
     # (plain "Mod+C"       (spawn "cliphist-fuzzel-img"))
-    (plain "Mod+V"        (spawn "noctalia-shell" "ipc" "call" "launcher" "clipboard"))
     (plain "Mod+C"        (flag "center-column"))
-    (plain "Mod+Shift+C"  (flag "center-visible-columns"))
 
     (plain "Mod+Minus" (leaf "set-column-width" "-10%"))
     (plain "Mod+Equal" (leaf "set-column-width" "+10%"))
@@ -318,7 +322,6 @@ in [
 
     # The quit action will show a confirmation dialog to avoid accidental exits.
     (plain "Mod+Shift+E"     (flag "quit"))
-    (plain "Ctrl+Alt+Delete" (spawn "noctalia-shell" "ipc" "call" "sessionMenu" "toggle"))
 
     # Powers off the monitors. To turn them back on, do any input like
     # moving the mouse or pressing any other key.
@@ -326,13 +329,13 @@ in [
 
     # fn section
     # (node "XF86AudioRaiseVolume" { allow-when-locked = true; }
-    #   (spawn "noctalia-shell" "ipc" "call" "volume" "increase"))
+    #   (spawn ipc "volume" "increase"))
     # (node "XF86AudioLowerVolume" { allow-when-locked = true; }
-    #   (spawn "noctalia-shell" "ipc" "call" "volume" "decrease"))
+    #   (spawn ipc "volume" "decrease"))
     # (node "XF86AudioMute"        { allow-when-locked = true; }
-    #   (spawn "noctalia-shell" "ipc" "call" "volume" "muteOutput"))
+    #   (spawn ipc "volume" "muteOutput"))
     # (node "XF86AudioMicMute"      { allow-when-locked = true; }
-    #   (spawn "noctalia-shell" "ipc" "call" "volume" "muteInput"))
+    #   (spawn ipc "volume" "muteInput"))
     (node "XF86AudioRaiseVolume" { allow-when-locked = true; }
       (spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.02+"))
     (node "XF86AudioLowerVolume" { allow-when-locked = true; }
@@ -342,9 +345,9 @@ in [
     (node "XF86AudioMicMute"      { allow-when-locked = true; }
       (spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"))
     (plain "XF86MonBrightnessUp"
-      (spawn "noctalia-shell" "ipc" "call" "brightness" "increase"))
+      (spawn ipc "brightness" "increase"))
     (plain "XF86MonBrightnessDown"
-      (spawn "noctalia-shell" "ipc" "call" "brightness" "decrease"))
+      (spawn ipc "brightness" "decrease"))
     # (plain "XF86MonBrightnessUp"
     #   (spawn (lib.getExe pkgs.brightnessctl) "s" "+2%"))
     # (plain "XF86MonBrightnessDown"
@@ -377,6 +380,30 @@ in [
     (node "Mod+WheelScrollUp"        { cooldown-ms = 150; } (flag "focus-workspace-up"))
     (node "Mod+Ctrl+WheelScrollDown" { cooldown-ms = 150; } (flag "move-column-to-workspace-down"))
     (node "Mod+Ctrl+WheelScrollUp"   { cooldown-ms = 150; } (flag "move-column-to-workspace-up"))
+
+    # noctalia features
+    (plain "Ctrl+Alt+Delete"
+      (spawn ipc "sessionMenu" "toggle"))
+    (node "Mod+Shift+I" { hotkey-overlay-title = "Lock the screen (alt)"; }
+      (spawn ipc "lockScreen" "lock"))
+    (plain "Mod+Slash"
+      (spawn ipc "launcher" "toggle"))
+    (plain "Mod+Shift+C"
+      (spawn ipc "launcher" "calculator"))
+    (plain "Mod+Semicolon"
+      (spawn ipc "launcher" "emoji"))
+    (plain "Mod+V"
+      (spawn ipc "launcher" "clipboard"))
+
+    # submap
+    (sub "Mod+B" "Custom Binds"
+      (bind "b" "Toggle Bar"
+        (sh ipc "bar" "toggle"))
+      (bind "c" "Change Wallpaper"
+        (sh ipc "wallpaper" "toggle"))
+      (bind "r" "Random Wallpaper"
+        (sh ipc "wallpaper" "random"))
+    )
   )
 
   (plain "hotkey-overlay"
@@ -403,8 +430,8 @@ in [
   # (spawn-at-startup
   #   "wl-paste" "--type" "text" "--watch"
   #     "clipman" "store" "--no-persist" "--max-items" "500")
-  # (spawn-at-startup "noctalia-shell")
-  # (spawn-at-startup "foot" "--server")
+  (spawn-at-startup "noctalia-shell")
+  (spawn-at-startup "foot" "--server")
 
   # already did in noctalia-shell
   # (spawn-at-startup
@@ -427,4 +454,5 @@ in [
   # (spawn-at-startup "uwsm" "finalize")
   (spawn-at-startup "systemctl" "--user" "start" "hyprpolkitagent")
   # (spawn-at-startup (lib.getExe' pkgs.dbus "dbus-update-activation-environment") "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "XDG_SESSION_TYPE" "NIXOS_Ozone_WL")
+  (include "./noctalia.kdl")
 ]
