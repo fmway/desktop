@@ -1,7 +1,10 @@
 { internal, lib, ... }:
-{ pkgs, config, ... }: let
+{ pkgs, inputs, config, ... }: let
   cfg = config.wayland.windowManager.niri;
 in {
+  nixpkgs.overlays = [
+    inputs.noctalia.overlays.default
+  ];
 
   wayland.windowManager.niri = {
     enable = true;

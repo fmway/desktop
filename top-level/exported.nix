@@ -4,6 +4,7 @@
     "inputs"
     "gnome"
     "nix-gc"
+    "ape-loader"
   ];
 
   excludes.home-manager = [

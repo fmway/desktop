@@ -1,10 +1,9 @@
 # register APE format to binfmt
 # ref: https://git.sr.ht/~jack/cosmo.nix/tree/master/item/modules/ape-loader.nix
-{ internal, config, selfConfig ? config, ... }:
 { pkgs, inputs, ... }:
 {
   nixpkgs.overlays = [
-    selfConfig.flake.overlays.ape-loader
+    inputs.fmway-conf.overlays.ape-loader
   ];
   boot.binfmt.registrations = let
     template = magicOrExtension: {
