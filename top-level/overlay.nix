@@ -2,8 +2,10 @@
   dir = builtins.toPath ../pkgs;
   listDir = lib.attrNames (
     lib.filterAttrs (k: v:
-      (v == "directory" && lib.pathIsRegularFile "${dir}/${k}/default.nix") ||
-      (v == "regular" && lib.hasSuffix ".nix" k)
+      (!lib.hasPrefix "_" k) && (
+        (v == "directory" && lib.pathIsRegularFile "${dir}/${k}/default.nix") ||
+        (v == "regular" && lib.hasSuffix ".nix" k)
+      )
     ) (builtins.readDir dir)
   );
   fetcheds = let
@@ -33,6 +35,8 @@ flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
           h-m-m = import sources.h-m-m { pkgs = self; version = "0.0.1-dev"; };
         })
       ];
+
+    scroll = import ../pkgs/_scroll { inherit lib; };
   };
 
   perSystem = { pkgs, config, system, ... }: {
@@ -41,6 +45,7 @@ flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
       self.overlays.default
       agenix.overlays.default
       self.overlays.externalPackages
+      self.overlays.scroll
     ];
 
     packages = lib.listToAttrs (map (x: let
@@ -48,7 +53,7 @@ flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
     in {
       inherit name;
       value = pkgs.${name};
-    }) listDir);
+    }) listDir) // { scroll = pkgs.scroll; };
 
     legacyPackages = pkgs;
   };

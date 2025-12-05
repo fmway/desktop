@@ -1,9 +1,10 @@
-{ internal, self, pkgs ? self, super, lib, inputs, ... }: let
-  mkScrollPkg = fn: let
+{ lib }: self: super: let
+  pkgs = self;
+  mkScrollPkg = pname: fn: let
     unwrapped = super.sway-unwrapped.overrideAttrs (finalAttrs: prevAttrs: let
       args = if lib.isAttrs fn then fn else let x = fn prevAttrs; in if lib.isAttrs x then x else fn finalAttrs prevAttrs;
     in args // {
-      pname = "scroll";
+      inherit pname;
       patches = let
         replaces = {
           "fix-paths.patch" = pkgs.replaceVars ./fix-paths.patch {
@@ -51,13 +52,17 @@
         '';
       };
     });
-  in super.sway.override {
-    sway-unwrapped = unwrapped;
-  } // {
-    inherit unwrapped;
+    final = super.sway.override {
+      sway-unwrapped = self."${pname}-unwrapped";
+    } // {
+      buildScrollPackage = mkScrollPkg;
+    };
+  in {
+    "${pname}" = final;
+    "${pname}-unwrapped" = unwrapped;
   };
 
-in _: mkScrollPkg (f: p: {
+in mkScrollPkg "scroll" (f: p: {
   version = "1.12.1";
   src = pkgs.fetchFromGitHub {
     owner = "dawsers";
@@ -65,6 +70,4 @@ in _: mkScrollPkg (f: p: {
     rev = f.version;
     hash = "sha256-DBXRF1gG+g3F43oF1M+1W/b1vFp8QnI7IhtWQWD+xIc=";
   };
-}) // {
-  buildScrollPackage = mkScrollPkg;
-}
+})
