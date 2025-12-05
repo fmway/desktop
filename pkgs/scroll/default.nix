@@ -6,8 +6,8 @@
       pname = "scroll";
       patches = let
         replaces = {
-          "fix-paths.patch" = replaceVars ./fix-paths.patch {
-            inherit swaybg;
+          "fix-paths.patch" = pkgs.replaceVars ./fix-paths.patch {
+            inherit (pkgs) swaybg;
           };
           "load-configuration-from-etc.patch" = ./load-configuration-from-etc.patch;
           "sway-config-nixos-paths.patch" = ./sway-config-nixos-paths.patch;
@@ -16,11 +16,26 @@
       in map (x: let file = lib.fmway.getFilename (x.drvAttrs.src or x); in
         replaces.${file} or x
       ) (args.patches or prevAttrs.patches or []);
-      buildInputs = args.buildInputs or prevAttrs.buildInputs or [] ++ [
+      nativeBuildInputs = prevAttrs.nativeBuildInputs or [] ++ (with pkgs; [
+        glslang
+        lcms
+        hwdata
+        libliftoff
+      ]);
+      buildInputs = args.buildInputs or prevAttrs.buildInputs or [] ++ (with pkgs; [
         lua5_4
-      ];
+        libgbm
+        vulkan-loader
+        seatd
+        lcms
+        libdisplay-info
+        libliftoff
+        libxcb-render-util
+        libxcb-errors
+        xwayland
+      ]);
       passthru.tests = args.tests or {} // {
-        version = testers.testVersion {
+        version = pkgs.testers.testVersion {
           package = finalAttrs.finalPackage;
           command = "scroll --version";
           version = "scroll version ${finalAttrs.version}";
@@ -42,14 +57,13 @@
     inherit unwrapped;
   };
 
-  inherit (pkgs) swaybg replaceVars lua5_4 fetchFromGitHub testers;
 in _: mkScrollPkg (f: p: {
-  version = "1.11.7";
-  src = fetchFromGitHub {
+  version = "1.12.1";
+  src = pkgs.fetchFromGitHub {
     owner = "dawsers";
     repo = "scroll";
     rev = f.version;
-    hash = "sha256-DkRDi99jirGsbZMR0rMuQbsGCIFnhJS7xyCh9o/Duc8=";
+    hash = "sha256-DBXRF1gG+g3F43oF1M+1W/b1vFp8QnI7IhtWQWD+xIc=";
   };
 }) // {
   buildScrollPackage = mkScrollPkg;
