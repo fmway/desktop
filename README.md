@@ -28,9 +28,9 @@ This is my NixOS configuration, applied to my current machine. You can apply, ed
 > - **Hardware** : [ThinkPad t480](https://github.com/NixOS/nixos-hardware/blob/master/lenovo/thinkpad/t480/default.nix)
 > - **Display Manager** : [ly (1.2.0)](https://github.com/fairyglade/ly) <!--{< rr re.ver2 cfg.services.displayManager.ly.package.version >}-->
 >  <!--{# rr re.ver cfg.programs.niri.package.version #}-->
-> - **Window Manager** : [Niri (25.08)](https://github.com/YaLTeR/niri) (disabled by default: sway and hyprland)
+> - **Window Manager** : [Niri (25.11)](https://github.com/YaLTeR/niri) (disabled by default: sway and hyprland)
 > - **Flakes** : Yes
 > - **Home Manager** : Yes, as NixOS Module
 >   <!--{# replace_re "${re.ver} \\((.+)\\), ${re.ver} \\((.+)\\), ${re.ver2} \\((.+)\\)" "${ver.h} ($1), ${ver.n} ($2), ${nix.ver} (${nix.name})"  #}-->
-> - **Version** : 25.11 (Home Manager), 25.11 (NixOS), 2.31.2 (Nix)
-> - **Kernel** : 6.17.8 (linux-cachyos) <!--{< rm [ (rver kernel.version) (rbet "(" ")" kernel.name) ] >}-->
+> - **Version** : 26.05 (Home Manager), 26.05 (NixOS), 2.31.2 (Nix)
+> - **Kernel** : 6.12.60 (linux) <!--{< rm [ (rver kernel.version) (rbet "(" ")" kernel.name) ] >}-->
