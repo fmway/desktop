@@ -14,7 +14,7 @@
   },
   "kaku/services/pipewire": {
     "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
-    "hash": "sha256-rS6uCR5EaOhJuh+uksObqTkhln+F9Zna0S6DVO4MbDE=",
+    "hash": "sha256-hH0fs6DiEBNIQ/VhzNEa4B5Yre+F/MRQ1eFa/nf5Ong=",
     "type": "file"
   },
   "kaku/hardware/bluetooth": {

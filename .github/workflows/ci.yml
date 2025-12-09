@@ -37,40 +37,10 @@ jobs:
       with:
         name: nix-conf
         path: nix.conf
-  noctalia:
-    runs-on: ubuntu-latest
-    needs: [ generate-nixconf ]
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.head_ref }}
-    - uses: wimpysworld/nothing-but-nix@main
-    - uses: actions/download-artifact@v4
-      with:
-        name: nix-conf
-    - name: Read nix.conf
-      id: nix
-      run: ${{ env.read-nix-conf }}
-    - uses: DeterminateSystems/nix-installer-action@main
-      with:
-        github-token: ${{ secrets.GH_TOKEN }}
-        extra-conf: |
-          ${{ steps.nix.outputs.CONF }}
-    - uses: cachix/cachix-action@master
-      with:
-        name: fmcachix
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-        skipAddingSubstituter: true
-    - name: Build
-      run: nix build .#noctalia-shell --verbose
-    - name: Info
-      run: nix path-info -Sh ./result
-    - run: nix-collect-garbage -d
   nixos:
     runs-on: ubuntu-latest
     needs:
     - generate-nixconf
-    - noctalia
     steps:
     - uses: actions/checkout@v4
       with:
