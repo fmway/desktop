@@ -5,6 +5,7 @@
     "gnome"
     "nix-gc"
     "ape-loader"
+    "chaotic"
   ];
 
   excludes.home-manager = [

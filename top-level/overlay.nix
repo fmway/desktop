@@ -33,6 +33,7 @@ flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
         inputs.nur.overlays.default
         (self: super: {
           h-m-m = import sources.h-m-m { pkgs = self; version = "0.0.1-dev"; };
+          zed_git = inputs.zed.packages.${self.stdenv.hostPlatform.system}.default;
         })
       ];
 

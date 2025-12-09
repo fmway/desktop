@@ -5,6 +5,7 @@
   inputs = {
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia.inputs.nixpkgs.follows = "nixpkgs";
+    zed.url = "github:zed-industries/zed";
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.url = "github:cachix/git-hooks.nix";
     zen-browser = {
@@ -15,7 +16,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixpkgs.follows = "chaotic/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
     # TODO implement impermanence
@@ -47,7 +48,6 @@
     nur.url = "github:nix-community/nur";
     nur.inputs.flake-parts.follows = "flake-parts";
     nur.inputs.nixpkgs.follows = "nixpkgs";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     systems.url = "github:nix-systems/default";
     nxchad.url = "github:fmway/nxchad";
     nxchad.inputs.nixpkgs.follows = "nixpkgs";

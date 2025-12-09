@@ -41,6 +41,8 @@
     v = (if builtins.isString environment.${k} then x: x else builtins.toJSON) environment.${k};
   in leaf k v) (builtins.attrNames environment);
 in [
+  (plain "xwayland-satellite"
+    (leaf "path" (lib.getExe pkgs.xwayland-satellite)))
   (flag "prefer-no-csd")
   (leaf "screenshot-path" "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png")
   (plain "input"
