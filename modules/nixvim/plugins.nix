@@ -1,6 +1,6 @@
 # TODO add options `plugins.xxx`
 { internal, _file, lib, ... }: let
-  inherit (lib.nixvim) toLuaObject mkLuaFn mkRawFn keymap';
+  inherit (lib.nixvim) toLuaObject mkLuaFn mkRawFn mkRaw keymap';
 in { pkgs, ... }:
 {
   # Depends for git-dev plugins
@@ -14,6 +14,8 @@ in { pkgs, ... }:
     nvzone-minty
     nvzone-typr
     vim-startuptime
+    showkeys
+    timerly
     # vim-markdown-composer
     # kitty-scrollback-nvim
     (pkgs.vimUtils.buildVimPlugin rec {
@@ -30,40 +32,6 @@ in { pkgs, ... }:
         description = "Open remote git repositories in the comfort of Neovim";
         homepage = "https://github.com/moyiz/git-dev.nvim";
         license = lib.licenses.bsd3;
-      };
-    })
-    (pkgs.vimUtils.buildVimPlugin {
-      pname = "showkeys";
-      version = "1.0.0";
-      src = pkgs.fetchFromGitHub {
-        owner = "nvzone";
-        repo = "showkeys";
-        rev = "8daf5abb5fece0c9e1fa2c5679aaf226a80f5c38";
-        hash = "sha256-0ZONzsCWJzzCYnZpr/O8t9Rmkc4A5+i7X7bkjEk5xmc=";
-      };
-    })
-    (pkgs.vimUtils.buildVimPlugin {
-      pname = "timerly";
-      version = "unstable-2025-04-16";
-
-      src = pkgs.fetchFromGitHub {
-        owner = "nvzone";
-        repo = "timerly";
-        rev = "17299a4d332c483ce09052fe8478b41b992f2594";
-        hash = "sha256-olax+zPVIOYEjK7n8cVHS6Ss3o2KdnsbcK2kZVHi3lk=";
-      };
-
-      dependencies = [
-        nvzone-volt
-      ];
-
-      meta = {
-        description = "Beautiful countdown timer plugin for Neovim";
-        homepage = "https://github.com/nvzone/timerly";
-        license = lib.licenses.gpl3Only;
-        maintainers = with lib.maintainers; [ ];
-        mainProgram = "timerly";
-        platforms = lib.platforms.all;
       };
     })
   ];
@@ -97,12 +65,7 @@ in { pkgs, ... }:
         require("showkeys").setup(${toLuaObject opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>st";
-          __unkeyed-2 = mkRawFn ''
-            require("showkeys").toggle()
-          '';
-        }
+        (keymap' "<leader>st" (mkRawFn ''require("showkeys").toggle()'') "Toggle ShowKeys" {})
       ];
     })
     (let
@@ -114,12 +77,7 @@ in { pkgs, ... }:
         require("timerly").setup(${toLuaObject opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>sw";
-          __unkeyed-2 = mkRawFn ''
-            require("timerly").toggle()
-          '';
-        }
+        (keymap' "<leader>sw" (mkRawFn ''require("timerly").toggle()'') "Toggle Timerly" {})
       ];
     })
     (let
@@ -131,18 +89,8 @@ in { pkgs, ... }:
         require("typr").setup(${toLuaObject opts})
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>ty";
-          __unkeyed-2 = mkRawFn ''
-            require("typr").open()
-          '';
-        }
-        {
-          __unkeyed-1 = "<leader>td";
-          __unkeyed-2 = mkRawFn ''
-            require("typr.stats").open()
-          '';
-        }
+        (keymap' "<leader>ty" (mkRawFn ''require("typr").open()'') "Open Typr" {})
+        (keymap' "<leader>td" (mkRawFn ''require("typr.stats").open()'') "Show Typr Stats" {})
       ];
     })
     (let
@@ -165,32 +113,17 @@ in { pkgs, ... }:
         require("git-dev").setup {${toLuaObject opts}}
       '';
       keys = [
-        {
-          __unkeyed-1 = "<leader>go";
-          __unkeyed-2 = mkRawFn ''
+        (keymap' "<leader>go" (mkRawFn ''
             local repo = vim.fn.input "Repository: "
             if repo ~= "" then
               require("git-dev").open(repo)
             end
-          '';
-          desc = "[O]pen a remote git repository";
-        }
-        {
-          __unkeyed-1 = "<leader>gc";
-          __unkeyed-2 = mkRawFn ''
-            require("git-dev").close_buffers()
-          '';
-          mode = "n";
-          desc = "[C]lose buffers of current repository";
-        }
-        {
-          __unkeyed-1 = "<leader>gC";
-          __unkeyed-2 = mkRawFn ''
-            require("git-dev").clean()
-          '';
-          mode = "n";
-          desc = "[C]lean current repository";
-        }
+          '')
+          "[O]pen a remote git repository"
+          {}
+        )
+        (keymap'.n "<leader>gc" (mkRawFn ''require("git-dev").close_buffers()'') "[C]lose buffers of current repository" {})
+        (keymap'.n "<leader>gC" (mkRawFn ''require("git-dev").clean()'') "[C]lean current repository" {})
       ];
     })
   ];
@@ -219,13 +152,7 @@ in { pkgs, ... }:
       "ToggleTermSetName"
     ];
     lazyLoad.settings.keys = [
-      {
-        __unkeyed-1 = "<leader>lg";
-        __unkeyed-2 = mkRawFn ''
-          _lazygit_toggle()
-        '';
-        desc = "Lazygit Toggle";
-      }
+      (keymap' "<leader>lg" (mkRaw "_lazygit_toggle") "Lazygit Toggle" {})
     ];
     settings = {
       direction = "float";
