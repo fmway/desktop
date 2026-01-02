@@ -4,6 +4,8 @@ let
   configurationLimit = lib.mkDefault 25;
 in {
   boot = {
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+    zfs.package = lib.mkDefault pkgs.zfs_unstable;
     loader = {
       efi.canTouchEfiVariables = lib.mkDefault config.boot.loader.systemd-boot.enable;
 
