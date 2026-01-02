@@ -152,7 +152,7 @@ in { pkgs, ... }:
       "ToggleTermSetName"
     ];
     lazyLoad.settings.keys = [
-      (keymap' "<leader>lg" (mkRaw "_lazygit_toggle") "Lazygit Toggle" {})
+      (keymap' "<leader>lg" (mkRawFn "_lazygit_toggle()") "Lazygit Toggle" {})
     ];
     settings = {
       direction = "float";
