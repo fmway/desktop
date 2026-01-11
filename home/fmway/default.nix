@@ -9,10 +9,8 @@ in {
     inputs.zen-browser.homeModules.beta
     self.homeManagerModules.default
   ] ++ map (name: { lib, pkgs, ... }: {
-      options.programs.${name}.profiles = lib.mkOption {
-        type = lib.types.attrsOf (lib.types.submodule {
-          config._module.args.pkgs = pkgs;
-        });
+      options = lib.mkNestedModule [ "programs" name "profiles" ] {
+        config._module.args.pkgs = pkgs;
       };
       config.programs.${name} = {
         nativeMessagingHosts = with pkgs; lib.optionals (osConfig.services.desktopManager.gnome.enable or false) [

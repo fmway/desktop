@@ -4,6 +4,9 @@
       "[${toString min}-${toString val}]"
     else "${toString min}";
 in {
+  mkNestedModule = path: module: lib.setAttrByPath path (lib.mkOption {
+    type = lib.types.attrsOf (lib.types.submodule module);
+  });
   genRegex = x: assert lib.isInt x && x <= 100; let
     dig  = builtins.floor (x / 10);
     rest = lib.mod x 10;
