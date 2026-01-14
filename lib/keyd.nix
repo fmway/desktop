@@ -1,7 +1,7 @@
 { lib, ... }: let
   #======================== KEYWORDS ============================
   characters = "1234567890-=qwertyuiop[]asdfghjkl;'\\zxcvbnm,./"; # without shift include
-  controls = [ "alt" "meta" "shift" "control" ];
+  controls = [ "Alt" "Meta" "Shift" { name = "Control"; alias = [ "Ctrl" ]; } { name = "AltGr"; fn = "G"; } ];
   others = [
     "home" "end" "pageup" "pagedown"
     "up" "down" "left" "right"
@@ -44,7 +44,7 @@
   };
   defaultCheck = _: { assertion = true; message = ""; };
   listToObj = lib.foldl' (a: c: a // { ${c} = c; }) {};
-  defaultLayers = listToObj (lib.foldl' (acc: c: acc ++ [ c "left${c}" "right${c}" ]) [ "altgr" ] controls);
+  defaultLayers = listToObj (lib.foldl' (acc: c: let key = lib.toLower (c.name or c); in acc ++ [ key "left${key}" "right${key}" ]) [] controls);
 
   keys =
     listToObj (lib.splitString "" characters)
@@ -53,19 +53,28 @@
     //
     listToObj others
     ;
-  functions = lib.listToAttrs (map (x: let
-    name = lib.toUpper (lib.fmway.firstChar x);
-  in {
-    inherit name;
+  extractAlias = fn: x: let
+    name = x.name or x;
+    fn' = if isNull fn then x.fn or (lib.fmway.firstChar name) else fn;
+    rest = map (extractAlias fn) x.alias;
+  in [
+    { name = name; fn = fn'; }
+    { name = (lib.toLower name); fn = fn'; }
+    fn'
+  ] ++ lib.optionals (x ? alias) rest;
+  functions = let
+    list = lib.flatten (map (extractAlias null) controls);
+  in builtins.trace (builtins.toJSON list) lib.listToAttrs (map (x: {
+    name = x.name or x;
     value = {
-      __name = name;
+      __name = x.fn or x.name or x;
       chains = [];
       __functor = self: args: self // {
         chains = self.chains ++ [args];
       };
       __toString = self: lib.concatStringsSep "-" ([self.__name] ++ self.chains);
     };
-  }) (controls ++ [ "G" /* for AltGr */ ]));
+  }) list);
   actions = lib.flip lib.removeAttrs [ "__idx" ] (lib.foldl' (acc: curr: acc // (
     if builtins.isString curr then {
       ${curr} = mkAction defaultCheck acc.__idx curr [];
