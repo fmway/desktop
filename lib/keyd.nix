@@ -64,7 +64,7 @@
   ] ++ lib.optionals (x ? alias) rest;
   functions = let
     list = lib.flatten (map (extractAlias null) controls);
-  in builtins.trace (builtins.toJSON list) lib.listToAttrs (map (x: {
+  in lib.listToAttrs (map (x: {
     name = x.name or x;
     value = {
       __name = x.fn or x.name or x;
