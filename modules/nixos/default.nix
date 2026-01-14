@@ -16,6 +16,5 @@
   # emulate /bin
   services.envfs.enable = true;
 
-  # disable caps lock
-  services.xserver.xkb.options = lib.mkAfter "grp:shifts_toggle,caps:none";
+  services.xserver.xkb.options = lib.mkAfter "grp:shifts_toggle";
 }

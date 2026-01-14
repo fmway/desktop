@@ -2,7 +2,7 @@
   kb_layout = "us";
   kb_variant = "";
   kb_model = "qwerty";
-  kb_options = "grp:shifts_toggle, caps:none";
+  kb_options = "grp:shifts_toggle";
   kb_rules = "";
 
   follow_mouse = 1;

@@ -46,12 +46,12 @@ in [
   (flag "prefer-no-csd")
   (leaf "screenshot-path" "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png")
   (plain "input"
-    (plain "keyboard"
-      (plain "xkb"
-        # For more information, see xkeyboard-config(7).
-        (leaf "options" "grp:shifts_toggle, caps:none")
-      )
-    )
+    # (plain "keyboard"
+    #   (plain "xkb"
+    #     # For more information, see xkeyboard-config(7).
+    #     (leaf "options" "grp:shifts_toggle, caps:none")
+    #   )
+    # )
 
     (plain "touchpad"
       (flag "tap")

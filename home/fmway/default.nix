@@ -74,7 +74,6 @@ in {
     # xkb options
     keyboard.options = [
       "grp:shifts_toggle"
-      "caps:none" # disable capslock
     ];
   };
   programs.git.settings = {
