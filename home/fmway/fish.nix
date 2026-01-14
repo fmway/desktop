@@ -1,5 +1,6 @@
 { lib, ... }: let
-  inherit (lib.fish) bind bind' c;
+  inherit (lib.fish) bind bind';
+  c = lib.fish.c // { prepend' = x: "fish_smart_prepend \"" + x + "\""; };
 in {
   programs.fish.shellAbbrs = let
     with-cursor = str: {
@@ -58,8 +59,12 @@ in {
   };
 
   programs.fish.keybindings = [
-    (bind'.insert.erase "alt-s" {})
-    (bind'.insert.erase "escape" {})
-    (bind .insert "alt-k" (c.prepend "doas") {})
+    (bind'.insert.erase           "alt-s" {})
+    (bind'.insert.erase           "escape" {})
+    (bind .insert "alt-k"         (c.prepend "doas") {})
+    (bind'.insert "ctrl-shift-b"  (c.append   " --builders 'ssh://eu.nixbuild.net x86_64-linux - 100 1 big-parallel,benchmark'") "end-of-line" {})
+    (bind'.insert "alt-i"         (c.prepend' "systemd-inhibit --what=idle") "end-of-line" {})
+    (bind'.insert "ctrl-p,v"      (c.prepend' "env ") {})
+    (bind'.visual "c,c"           "__fish_codesnap" "end-selection" { setsMode = "default"; })
   ];
 }
