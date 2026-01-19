@@ -58,13 +58,18 @@ in {
     initial_mode = "insert";
   };
 
-  programs.fish.keybindings = [
-    (bind'.insert.erase           "alt-s" {})
-    (bind'.insert.erase           "escape" {})
-    (bind .insert "alt-k"         (c.prepend "doas") {})
-    (bind'.insert "ctrl-shift-b"  (c.append   " --builders 'ssh://eu.nixbuild.net x86_64-linux - 100 1 big-parallel,benchmark'") "end-of-line" {})
-    (bind'.insert "alt-i"         (c.prepend' "systemd-inhibit --what=idle") "end-of-line" {})
-    (bind'.insert "ctrl-p,v"      (c.prepend' "env ") {})
-    (bind'.visual "c,c"           "__fish_codesnap" "end-selection" { setsMode = "default"; })
+  programs.fish.keybindings = functions: with functions; [
+    (bind'.insert.erase           "alt-s")
+    (bind'.insert.erase           "escape")
+    (bind .insert "alt-k"         (fish_commandline_prepend "doas"))
+    (bind'.insert "alt-i"         (fish_smart_prepend       "systemd-inhibit --what=idle") end-of-line)
+    (bind'.insert "ctrl-p,v"      (fish_smart_prepend       "env "))
+    (bind'.visual "c,c"           __fish_codesnap end-selection { setsMode = "default"; })
+    (bind'.insert "ctrl-shift-b"  /* fish */ ''
+      if string match -rq "^(?:\\s*(?:sudo|doas|please)\\s+)?nix" -- (commandline -b | string collect | head -n2 | string join " ")
+        fish_commandline_append   "--builders 'ssh://eu.nixbuild.net x86_64-linux - 100 1 big-parallel,benchmark'"
+        commandline -f end-of-line
+      end
+    '')
   ];
 }

@@ -138,11 +138,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767314914,
-        "narHash": "sha256-bRgPxV3+t8czV7Y7u0m5bxtE0McTw8POK1Vqix9eEMk=",
+        "lastModified": 1768833042,
+        "narHash": "sha256-sItzM6M0juc6tigc4m43uf18s0maFubxuVvfrQjFuGQ=",
         "owner": "fmway",
         "repo": "lib",
-        "rev": "83f9e07d44ed3dac8f5bc30f8702ba415841f162",
+        "rev": "935538e77cb17525b84df22efd1b925a9bf776d2",
         "type": "github"
       },
       "original": {
@@ -155,14 +155,19 @@
       "inputs": {
         "fmway-lib": [
           "fmway-lib"
+        ],
+        "nixpkgs": [
+          "fmway-modules",
+          "fmway-lib",
+          "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1765283158,
-        "narHash": "sha256-m8ca730FV/LgzwN22T0xKVeyijTlMZSdyKp0izNbsVw=",
+        "lastModified": 1768856806,
+        "narHash": "sha256-ybjlGoR5T7UEEaCrgBMTHKjnTP8DTrHLtLVLt91M9wM=",
         "owner": "fmway",
         "repo": "modules",
-        "rev": "ae58ff64c08972d9e32cd0c0076606d1e5cb81d0",
+        "rev": "a4d87f251980bce6e48bebf598a1c8ea45302ca5",
         "type": "github"
       },
       "original": {
