@@ -1,11 +1,23 @@
 { inputs, config, ... }:
 {
   perSystem = { pkgs, lib, ... }: {
-    apps = {
+    apps = lib.fmway.stringification' {
+      get-keys-keyd = {
+        type = "app";
+        program = pkgs.writeScript "update-keys-keyd.fish" /* fish */ ''
+          #!${lib.getExe pkgs.fish}
+          ${lib.mkFishPath (with pkgs; [ keyd ])}
+
+          echo "{ lib, ... }:"
+          echo "lib.flip lib.genAttrs (name: name) ["
+          keyd list-keys | while read line; printf '  "%s"\n' $(if [ "$line" = '"' ] || [ "$line" = \\ ]; echo \\$line; else; echo $line; end); end
+          echo "]"
+        '';
+      };
       # generate stubby certs
       updateStubbyCert = {
         type = "app";
-        program = pkgs.writeScriptBin "update-stubby-cert.fish" /* fish */ ''
+        program = pkgs.writeScript "update-stubby-cert.fish" /* fish */ ''
           #!${lib.getExe pkgs.fish}
           ${lib.mkFishPath (with pkgs; [
             jq
@@ -36,7 +48,7 @@
         type = "app";
         program = let
           settings = config.flake.nixConfig;
-        in pkgs.writeScriptBin "gen-nix-conf.sh" /* sh */ ''
+        in pkgs.writeScript "gen-nix-conf.sh" /* sh */ ''
           #!${lib.getExe pkgs.bash}
 
           ${lib.concatStringsSep "" (map (x: /* sh */ ''
@@ -52,7 +64,7 @@
           substituters = nixConfig.substituters or [];
           trusted-public-keys = nixConfig.trusted-public-keys or [];
           experimental-features = nixConfig.experimental-features or [];
-        in pkgs.writeScriptBin "nixConf.sh" /* sh */ ''
+        in pkgs.writeScript "nixConf.sh" /* sh */ ''
           #!${lib.getExe pkgs.bash}
           FLAKE=''${1:-$PWD/flake.nix}
           if cat $FLAKE | grep "nixConfig = " &>/dev/null; then

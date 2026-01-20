@@ -1,15 +1,6 @@
-{ lib, ... }: let
+{ lib, self, ... }: let
   #======================== KEYWORDS ============================
-  characters = "1234567890-=qwertyuiop[]asdfghjkl;'\\zxcvbnm,./"; # without shift include
   controls = [ "Alt" "Meta" "Shift" { name = "Control"; alias = [ "Ctrl" ]; } { name = "AltGr"; fn = "G"; } ];
-  others = [
-    "home" "end" "pageup" "pagedown"
-    "up" "down" "left" "right"
-    "capslock" "tab" "esc"
-    "insert" "delete" "backspace"
-    "wakeup" # fn button
-    "mute" "volumedown" "volumeup" "micmute" "brightnessdown" "brightnessup" "switchvideomode" "wlan" "config" "bluetooth" "favorites"
-  ] ++ lib.kdl.seq 1 15 (x: "f${toString x}"); # FIXME add others
 
   _actions = [
     { __nullish = [ "repeat" ]; __macroer = [ "clear" ]; }
@@ -46,13 +37,6 @@
   listToObj = lib.foldl' (a: c: a // { ${c} = c; }) {};
   defaultLayers = listToObj (lib.foldl' (acc: c: let key = lib.toLower (c.name or c); in acc ++ [ key "left${key}" "right${key}" ]) [] controls);
 
-  keys =
-    listToObj (lib.splitString "" characters)
-    //
-    defaultLayers
-    //
-    listToObj others
-    ;
   extractAlias = fn: x: let
     name = x.name or x;
     fn' = if isNull fn then x.fn or (lib.fmway.firstChar name) else fn;
@@ -113,9 +97,9 @@
     }
   ;
 in {
-  inherit actions keys functions;
+  inherit actions functions;
   parse = fn: let
-    res = fn (actions // keys // functions // fix' res);
+    res = fn (actions // self.keys // functions // fix' res);
   in fix res;
 }
 
