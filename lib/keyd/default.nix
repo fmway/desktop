@@ -1,6 +1,14 @@
-{ lib, self, ... }: let
+{ lib, ... }: let
   #======================== KEYWORDS ============================
   controls = [ "Alt" "Meta" "Shift" { name = "Control"; alias = [ "Ctrl" ]; } { name = "AltGr"; fn = "G"; } ];
+  others = [
+    "home" "end" "pageup" "pagedown"
+    "up" "down" "left" "right"
+    "capslock" "tab" "esc"
+    "insert" "delete" "backspace"
+    "wakeup" # fn button
+    "mute" "volumedown" "volumeup" "micmute" "brightnessdown" "brightnessup" "switchvideomode" "wlan" "config" "bluetooth" "favorites"
+  ] ++ lib.kdl.seq 1 15 (x: "f${toString x}"); # FIXME add others
 
   _actions = [
     { __nullish = [ "repeat" ]; __macroer = [ "clear" ]; }
@@ -99,7 +107,7 @@
 in {
   inherit actions functions;
   parse = fn: let
-    res = fn (actions // self.keys // functions // fix' res);
+    res = fn (actions // lib.keyd.keys // functions // fix' res);
   in fix res;
 }
 
