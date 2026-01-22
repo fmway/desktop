@@ -1,5 +1,5 @@
 { internal, sources, allModules, _file, ... }:
-{ inputs ? {}, lib, ... }:
+{ inputs ? {}, lib, pkgs, ... }:
 {
   inherit _file;
   imports = allModules ++ [
@@ -11,7 +11,9 @@
     allowUnfree = true;
   };
 
-  programs.adb.enable = lib.mkDefault true;
+  environment.systemPackages = with pkgs; [
+    android-tools
+  ];
 
   # emulate /bin
   services.envfs.enable = true;
