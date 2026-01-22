@@ -23,13 +23,13 @@
     "type": "file"
   },
   "h-m-m": {
-    "url": "https://github.com/nadrad/h-m-m/archive/b8873636844a1c00baaa091a518b89311227f463.tar.gz",
-    "mainUrl": "https://github.com/nadrad/h-m-m/archive/main.tar.gz",
-    "hash": "sha256-yxyhwFLDDoEscMZGApnPbIkljF4VdajIj1MG+Erp1/U="
+    "url": "https://codeload.github.com/nadrad/h-m-m/tar.gz/refs/heads/main",
+    "hash": "sha256-yxyhwFLDDoEscMZGApnPbIkljF4VdajIj1MG+Erp1/U=",
+    "mainUrl": "https://github.com/nadrad/h-m-m/archive/main.tar.gz"
   },
   "waydroid-script": {
-    "url": "https://github.com/casualsnek/waydroid_script/archive/fcb15624db0811615ea9800837a836c4777674bf.tar.gz",
-    "mainUrl": "https://github.com/casualsnek/waydroid_script/archive/main.tar.gz",
-    "hash": "sha256-Epvl6thT6mJqurZV1FV6Zdd6Kn13ZAC/BUaywVLpOIc="
+    "url": "https://codeload.github.com/casualsnek/waydroid_script/tar.gz/refs/heads/main",
+    "hash": "sha256-zSHZlhHJHWZRE3I5pYWhD4o8aNpa8rTiEtl2qJTuRjw=",
+    "mainUrl": "https://github.com/casualsnek/waydroid_script/archive/main.tar.gz"
   }
 }

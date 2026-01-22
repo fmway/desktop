@@ -1,7 +1,12 @@
 { inputs, config, ... }:
 {
   perSystem = { pkgs, lib, ... }: {
+    nixpkgs.overlays = [ inputs.fmway-lib.overlays.updater ];
     apps = lib.fmway.stringification' {
+      fetch-sources = {
+        type = "app";
+        program = lib.getExe pkgs.fetch-sources;
+      };
       get-keys-keyd = {
         type = "app";
         program = pkgs.writeScript "update-keys-keyd.fish" /* fish */ ''

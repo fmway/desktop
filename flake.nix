@@ -66,7 +66,6 @@
     src = ./.;
     inherit inputs;
     specialArgs = {
-      sources = import ./sources;
       lib = [
         home-manager.lib
         fmway-modules.lib
