@@ -8,9 +8,11 @@
     name = removeSuffix' allowed-exts x;
     value = pkgs.writeScriptBin name (parse (builtins.readFile "${dir}/${x}"));
   }) list);
-in x: result // {
   all = pkgs.symlinkJoin {
     name = "my-script";
     paths = lib.attrValues result;
+    passthru = result // {
+      inherit all;
+    };
   };
-}
+in x: all
