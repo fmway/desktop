@@ -52,7 +52,6 @@
     # nurl # ?
     rclone
     cachix # unofficial binary cache server (another binary cache in cache.nixos.org)
-    nixfmt-rfc-style # fmt for nix
     nmap # hem...
     # wayvnc # vnc for wayland / especially wlroots
     flyctl # fly.io management in terminal
