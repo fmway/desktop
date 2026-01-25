@@ -29,7 +29,7 @@
 
   dmenuan = pkgs.writeScript "dmenuan.sh" /* fish */ ''
     #!${lib.getExe pkgs.fish}
-    set menu (${dmenu_path} | ${fuzzel} -d | xargs)
+    set menu (${dmenu_path} | ${fuzzel} --layer overlay -d | xargs)
     
     if not [ -z "$menu" ]
       niri msg action spawn -- $menu &
@@ -279,7 +279,7 @@ in [
     (node "Mod+Shift+Return" { hotkey-overlay-title = "Open a Terminal: foot"; }
       (spawn (lib.getExe pkgs.foot)))
     (node "Mod+D"            { hotkey-overlay-title = "Run an Application:fuzzel"; } 
-      (spawn fuzzel))
+      (spawn fuzzel "--layer" "overlay"))
     (plain "Mod+Shift+D"
       (spawn "${dmenuan}"))
     (node "Mod+I"            { hotkey-overlay-title = "Lock the screen"; }
