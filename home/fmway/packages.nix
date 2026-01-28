@@ -16,7 +16,7 @@
 
     # gui
     telegram-desktop
-    discord
+    # discord
     upscayl # image upscaler
     gthumb
     # element-desktop-wayland # matrix client
