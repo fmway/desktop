@@ -41,7 +41,6 @@ in {
     "nfi"   = "nix flake init";
     "nfnt"  = "nix flake new --template";
     "nfn"   = "nix flake new";
-    "nn"    = "nvim +\"tcd $GITHUB/fmway/myOS\"";
 
     "gclg"   = with-cursor "git clone https://github.com/!";
     "gclgl"  = with-cursor "git clone https://gitlab.com/!";

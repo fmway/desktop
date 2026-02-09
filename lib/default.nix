@@ -134,4 +134,27 @@ in {
       })
     ];
   } packages; in res.packages;
+
+  mkNuSecretReplacements = pkgs: {
+    extras ? [ ],
+    reader ? { },
+  }: set: output: let
+    script = pkgs.writeScript "nushell-secret-replacement.nu" (''
+      #!/bin/env -S ${lib.getExe pkgs.nushell} -n --stdin
+
+      ${lib.concatMapStringsSep "\n" lib.fileContents extras}
+    '' + (let s = lib.fileContents ./secretreplacement.nu; in
+      if reader == {} then s
+      else
+        builtins.replaceStrings [ "let reader = { default: {|file| open $file}, }" ] [ ("let reader = { default: {|file| open $file}, } | merge " + lib.hm.nushell.toNushell {} reader) ] s
+    ) + "\n" + ''
+      def main [] {
+        $in | from json | replace secret | to json
+      }
+    '');
+  in ''
+    ${script} > "${output}" <<'EOF'
+      ${builtins.toJSON set}
+    EOF
+  '';
 }
