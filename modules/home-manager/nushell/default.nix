@@ -8,8 +8,7 @@
   cfg = config.programs.nushell;
 in {
   inherit _file;
-  config = lib.mkMerge [
-  (lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.file."${config.xdg.configHome}/nushell/config.nu".text =
       lib.mkBefore (''
         let abbreviations = ${lib.nushell.toNushell {} abbreviations.abbrs}
@@ -67,9 +66,5 @@ in {
         $env.PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".local/bin"))
       '';
     };
-  })
-  (lib.mkIf (cfg.settings.use_kitty_protocol or false) {
-    home.packages = [ pkgs.kitty ];
-  })
-  ];
+  };
 }

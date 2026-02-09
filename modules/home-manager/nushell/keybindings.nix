@@ -35,7 +35,7 @@
     ];
   }
   {
-    name = "refresh nu";
+    name = "nu_refresh";
     modifier = "alt_shift";
     keycode = "char_r";
     mode = [ "emacs" "vi_normal" "vi_insert" ];
