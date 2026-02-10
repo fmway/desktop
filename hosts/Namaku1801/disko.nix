@@ -1,8 +1,9 @@
+{ mainDisk, ... }:
 {
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/disk/by-id/nvme-KINGSTON_OM8PDP3256B-AB1_50026B768583ADF8";
+      device = mainDisk;
       content = {
         type = "gpt";
         partitions = {
@@ -44,21 +45,27 @@
         };
         "local/home" = {
           type = "zfs_fs";
-          mountpoint = "/home";
+          mountpoint = "/persist/home";
           # Used by services.zfs.autoSnapshot options.
           options."com.sun:auto-snapshot" = "true";
-          # options."dedup" = "on";
+          options."dedup" = "on";
         };
         "local/root" = {
           type = "zfs_fs";
-          mountpoint = "/root";
+          mountpoint = "/persist/root";
           options."com.sun:auto-snapshot" = "true";
           # options."dedup" = "on";
-        };
+       };
         "local/nix" = {
           type = "zfs_fs";
           mountpoint = "/nix";
           options."com.sun:auto-snapshot" = "false";
+        };
+        "local/shared_cache" = {
+          type = "zfs_fs";
+          mountpoint = "/persist/shared_cache";
+          options."com.sun:auto-snapshot" = "false";
+          options."dedup" = "on";
         };
         "local/persist" = {
           type = "zfs_fs";
@@ -70,7 +77,7 @@
           type = "zfs_fs";
           mountpoint = "/";
           options."com.sun:auto-snapshot" = "true";
-          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/root@blank$' || zfs snapshot zroot/local/root@blank";
+          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/ROOT@blank$' || zfs snapshot zroot/ROOT@blank";
         };
         # refreservation=10G -o mountpoint=none zroot/reserved
         "reserved" = {
