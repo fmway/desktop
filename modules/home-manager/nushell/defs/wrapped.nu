@@ -6,7 +6,7 @@ def --wrapped df [...args] {
   | lines
   | if ($in | first | str starts-with Filesystem) {
       $in
-      | parse -r '^(?<filesystem>.+)\s+(?<size>[^\s]+)\s+(?<used>[^\s]+)\s+(?<available>[^\s]+)\s+(?<use>[^\s]+)\s+(?<mountpoint>.+)$'
+      | parse -r '^(?<filesystem>.*[^\s])\s+(?<size>[^\s]+)\s+(?<used>[^\s]+)\s+(?<available>[^\s]+)\s+(?<use>[^\s]+)\s+(?<mountpoint>[^\s].*)$'
       | slice 1..-1
       | each {|i| $i | merge {
         size: ($i.size | into filesize)
