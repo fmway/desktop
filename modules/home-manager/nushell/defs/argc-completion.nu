@@ -1,6 +1,7 @@
 $env.ARGC_COMPLETIONS_ROOT = $env.HOME | path join ".local" "share" "argc-completions"
 $env.ARGC_COMPLETIONS_PATH = $env.ARGC_COMPLETIONS_ROOT | path join "completions"
 
+# generate-completion with argc-completion
 def generate-completion [--save (-s), ...args] {
   for cli in $args {
     let res = ^$"($env.ARGC_COMPLETIONS_ROOT)/scripts/generate.sh" $cli | complete

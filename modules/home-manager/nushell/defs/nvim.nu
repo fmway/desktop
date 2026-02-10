@@ -1,3 +1,4 @@
+# neovim with zoxide support
 def --wrapped  nvim [...params] {
   let has_zoxide = which zoxide | is-not-empty
   let fix_first_param = if ($params.0 | path type) == "dir" {

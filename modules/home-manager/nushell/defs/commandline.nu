@@ -1,4 +1,8 @@
-def "commandline prepend" [str: string, --smart (-s)] {
+# commandline prepend like fish_commandline_prepend
+def "commandline prepend" [
+  str: string
+  --smart (-s) # Smart insert after sudo/doas/please instead of in first place
+] {
   let cmd = commandline | if ($in | str trim | is-empty) {
     $in + (history | last 1 | get 0.command | str trim)
   } else $in
@@ -14,9 +18,10 @@ def "commandline prepend" [str: string, --smart (-s)] {
   }
 }
 
+# commandline prepend like fish_commandline_prepend
 def "commandline append" [
   str: string,
-  --exclusive (-e): string = ""
+  --exclusive (-e): string = "" # specific for command (e.g -e yt-dlp)
 ] {
   let cmd = commandline | if ($in | str trim | is-empty) {
     $in + (history | last 1 | get 0.command | str trim)

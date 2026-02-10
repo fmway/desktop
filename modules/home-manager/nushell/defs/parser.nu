@@ -1,3 +1,4 @@
+# Convert from ini to structured data.
 def "from ini" [
   --comma-to-list (-c),
 ]: string -> record {
