@@ -1,7 +1,7 @@
 { self, lib, inputs, inputs', modulesPath, ... } @ v:
 {
   flake = let
-    mkConfs = { dir, trigger }: let
+    mkConfs = { dir, trigger, final ? (x: x) }: let
       dirs = builtins.readDir dir;
       filtered = lib.filterAttrs (k: v:
         v == "directory" &&
@@ -9,13 +9,14 @@
       ) dirs;
     in lib.listToAttrs (map (name: {
       inherit name;
-      value = lib.fmway.withImport' "${dir}/${name}/${trigger}" v;
+      value = final (lib.fmway.withImport' "${dir}/${name}/${trigger}" v);
     }) (lib.attrNames filtered));
     system = "x86_64-linux";
   in {
     diskoConfigurations = mkConfs {
       dir = "${self.outPath}/hosts";
       trigger = "disko.nix";
+      final = import;
     };
     hostConfs = mkConfs {
       dir = "${self.outPath}/hosts";
