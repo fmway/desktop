@@ -69,8 +69,8 @@
         "ROOT" = {
           type = "zfs_fs";
           mountpoint = "/";
-          options."com.sun:auto-snapshot" = "false";
-          postCreateHook = "zfs snapshot zroot/ROOT@blank";
+          options."com.sun:auto-snapshot" = "true";
+          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/root@blank$' || zfs snapshot zroot/local/root@blank";
         };
         # refreservation=10G -o mountpoint=none zroot/reserved
         "reserved" = {
