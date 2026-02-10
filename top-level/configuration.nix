@@ -13,6 +13,10 @@
     }) (lib.attrNames filtered));
     system = "x86_64-linux";
   in {
+    diskoConfigurations = mkConfs {
+      dir = "${self.outPath}/hosts";
+      trigger = "disko.nix";
+    };
     hostConfs = mkConfs {
       dir = "${self.outPath}/hosts";
       trigger = "configuration.nix";
