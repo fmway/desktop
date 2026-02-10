@@ -1,8 +1,9 @@
+{ mainDisk, ... }:
 {
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/disk/by-id/nvme-KINGSTON_OM8PDP3256B-AB1_50026B768583ADF8";
+      device = mainDisk;
       content = {
         type = "gpt";
         partitions = {
