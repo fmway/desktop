@@ -49,19 +49,23 @@
           # Used by services.zfs.autoSnapshot options.
           options."com.sun:auto-snapshot" = "true";
           options."dedup" = "on";
-          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/home@blank$' || zfs snapshot zroot/local/home@blank";
         };
         "local/root" = {
           type = "zfs_fs";
           mountpoint = "/persist/root";
           options."com.sun:auto-snapshot" = "true";
-          options."dedup" = "on";
-          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/root@blank$' || zfs snapshot zroot/local/root@blank";
-        };
+          # options."dedup" = "on";
+       };
         "local/nix" = {
           type = "zfs_fs";
           mountpoint = "/nix";
           options."com.sun:auto-snapshot" = "false";
+        };
+        "local/shared_cache" = {
+          type = "zfs_fs";
+          mountpoint = "/persist/shared_cache";
+          options."com.sun:auto-snapshot" = "false";
+          options."dedup" = "on";
         };
         "local/persist" = {
           type = "zfs_fs";
