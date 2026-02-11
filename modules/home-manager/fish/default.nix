@@ -8,6 +8,7 @@
     set fish_greeting # Disable greeting
     printf '\e[5 q'
   '';
+  programs.starship.enableFishIntegration = false;
 
   programs.fish.functions = lib.fish.importFunctions ./functions;
 }
