@@ -19,7 +19,8 @@ in {
   ];
 
   home.activation = {
-    copyNoctalia = lib.hm.dag.entryAfter ["writeBoundary"] /* sh */ ''
+    copyNoctalia = lib.hm.dag.entryAfter ["linkGeneration"] /* sh */ ''
+      [ -e "$HOME/.config/niri/noctalia.kdl" ] || touch "$HOME/.config/niri/noctalia.kdl"
       [ ! -e "$HOME/.local/share/noctalia" ] || rm -rf "$HOME/.local/share/noctalia"
       cp --dereference -r "${noctalia-shell}/share/noctalia-shell" "$HOME/.local/share/noctalia"
       chmod +rw -R "$HOME/.local/share/noctalia"
