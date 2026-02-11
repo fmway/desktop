@@ -45,16 +45,18 @@
         };
         "local/home" = {
           type = "zfs_fs";
-          mountpoint = "/home";
+          mountpoint = "/persist/home";
           # Used by services.zfs.autoSnapshot options.
           options."com.sun:auto-snapshot" = "true";
-          # options."dedup" = "on";
+          options."dedup" = "on";
+          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/home@blank$' || zfs snapshot zroot/local/home@blank";
         };
         "local/root" = {
           type = "zfs_fs";
-          mountpoint = "/root";
+          mountpoint = "/persist/root";
           options."com.sun:auto-snapshot" = "true";
-          # options."dedup" = "on";
+          options."dedup" = "on";
+          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/root@blank$' || zfs snapshot zroot/local/root@blank";
         };
         "local/nix" = {
           type = "zfs_fs";
