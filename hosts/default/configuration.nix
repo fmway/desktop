@@ -1,10 +1,9 @@
-{ internal, inputs, config, selfConfig ? config, selfInputs ? inputs, ... }:
 { inputs, config, lib, pkgs, ... }:
 {
-  imports = with inputs; [
+  imports = [
     ./hardware-configuration.nix
-    selfConfig.flake.nixosModules.default
-    fmway-pkgs.nixosModules.default
+    inputs.fmway-conf.nixosModules.default
+    inputs.fmway-pkgs.nixosModules.default
   ];
 
   # Enable fwupd for updating firmware

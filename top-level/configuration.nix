@@ -9,7 +9,7 @@
       ) dirs;
     in lib.listToAttrs (map (name: {
       inherit name;
-      value = final (lib.fmway.withImport' "${dir}/${name}/${trigger}" v);
+      value = final "${dir}/${name}/${trigger}";
     }) (lib.attrNames filtered));
     system = "x86_64-linux";
   in {
@@ -18,16 +18,10 @@
       trigger = "disko.nix";
       final = import;
     };
-    hostConfs = mkConfs {
+    nixosConfigurations = mkConfs {
       dir = "${self.outPath}/hosts";
       trigger = "configuration.nix";
-    };
-    homeConfs = mkConfs {
-      dir = "${self.outPath}/home";
-      trigger = "default.nix";
-    };
-    nixosConfigurations = lib.mapAttrs (_: module:
-      lib.nixosSystem {
+      final = module: lib.nixosSystem {
         inherit system;
         modules = [
           module
@@ -40,20 +34,23 @@
           }
         ];
         specialArgs = {
-          inherit inputs lib;
+          inherit lib;
+          inputs = inputs // { fmway-conf = inputs.fmway-conf or inputs.self; };
         };
-      }
-    ) self.hostConfs;
-    homeConfigurations = lib.mapAttrs (_: module:
-      lib.homeManagerConfiguration {
+      } // { outPath = module; };
+    };
+    homeConfigurations = mkConfs {
+      dir = "${self.outPath}/home";
+      trigger = "default.nix";
+      final = module: lib.homeManagerConfiguration {
         pkgs = self.legacyPackages.${system};
         extraSpecialArgs = {
-          inherit inputs;
+          inputs = inputs // { fmway-conf = inputs.fmway-conf or inputs.self; };
         };
         modules = [
           module
         ];
-      }
-    ) self.homeConfs;
+      } // { outPath = module; };
+    };
   };
 }

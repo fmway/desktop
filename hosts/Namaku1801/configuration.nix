@@ -1,7 +1,6 @@
-{ internal, sources, inputs, config, self, selfInputs ? inputs, ... }:
 { inputs, config, lib, pkgs, ... }:
 {
-  imports = with inputs; [
+  imports = [
     ./hardware-configuration.nix
     ./disko.nix
     # ./forgejo.nix
@@ -11,13 +10,13 @@
     ./timezone.nix
     ./zfs.nix
     ../../secrets
-    nixos-hardware.nixosModules.lenovo-thinkpad-t480
-    disko.nixosModules.default
-    agenix.nixosModules.default
-    self.nixosModules.default
-    fmway-pkgs.nixosModules.default
-    nixvim.nixosModules.nixvim
-    nxchad.nixosModules.nixvim
+    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
+    inputs.disko.nixosModules.default
+    inputs.agenix.nixosModules.default
+    inputs.fmway-conf.nixosModules.default
+    inputs.fmway-pkgs.nixosModules.default
+    inputs.nixvim.nixosModules.nixvim
+    inputs.nxchad.nixosModules.nixvim
     # sources.lix-module.nixosModules.default
   ];
 
@@ -41,7 +40,7 @@
 
   programs.nixvim.enable = true;
   programs.nixvim.imports = [
-    self.nixvimModules.default
+    inputs.fmway-conf.nixvimModules.default
   ];
 
   environment.systemPackages = with pkgs; [
@@ -51,7 +50,7 @@
   ];
 
   home-manager.users.fmway.imports = [
-    self.homeConfs.fmway
+    ../../home/fmway
     {
       # disable ~/.config/nix/nix.conf since that's is already define in /etc/nix/nix.conf
       xdg.configFile."nix/nix.conf".enable = false;
@@ -59,7 +58,7 @@
   ];
 
   nixpkgs.overlays = [
-    (inputs.agenix or selfInputs.agenix).overlays.default
+    inputs.agenix.overlays.default
   ];
 
   nix.extraOptions = ''

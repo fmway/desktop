@@ -477,8 +477,7 @@
         "nur": "nur",
         "nxchad": "nxchad",
         "systems": "systems",
-        "zed": "zed",
-        "zen-browser": "zen-browser"
+        "zed": "zed"
       }
     },
     "rust-overlay": {
@@ -535,29 +534,6 @@
       "original": {
         "owner": "zed-industries",
         "repo": "zed",
-        "type": "github"
-      }
-    },
-    "zen-browser": {
-      "inputs": {
-        "home-manager": [
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1770480420,
-        "narHash": "sha256-zm86JvwyurSk06eZD1/Cdc4eF84gWIxeOmBJ5iUxRHw=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "d1540a889b63da17f735f1d4bebd9ebfcd7c267a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
         "type": "github"
       }
     }
