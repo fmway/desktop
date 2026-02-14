@@ -12,6 +12,7 @@
     "sway"
     "hyprland"
     "nix-gc"
+    "tmux-daemon"
   ];
 
   # excludes.darwin = [
