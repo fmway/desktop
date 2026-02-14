@@ -38,7 +38,7 @@ $env.config.completions.external.completer = ({|spans|
     $spans
   }
   let sudos = ["doas" "sudo" "please"]
-  let use_fish = [ "zfs" "zpool" ]
+  let use_fish = [ "zfs" "zpool" "nix" ]
   let use_argc = [ "devenv" ]
   if ($spans.0 in $sudos) and ($spans.1? in $use_fish) {
     $_fish_completer
