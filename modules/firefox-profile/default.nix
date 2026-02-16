@@ -4,7 +4,7 @@
   inherit _file;
   imports = allModules;
   search = {
-    default = "google"; # default search engine
+    default = "ddg"; # default search engine
     privateDefault = "ddg"; # default search engine in private mode
     force = true; # Force replace the existing search configuration
 
