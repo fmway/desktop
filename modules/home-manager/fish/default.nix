@@ -7,8 +7,9 @@
   programs.fish.interactiveShellInit = /* fish */ ''
     set fish_greeting # Disable greeting
     printf '\e[5 q'
+    apply-my-prompt
+    apply-my-theme
   '';
-  programs.starship.enableFishIntegration = false;
 
   programs.fish.functions = lib.fish.importFunctions ./functions;
 }
