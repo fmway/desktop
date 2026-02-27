@@ -454,7 +454,7 @@ in [
         "swaylock -f -c 000000")
   (spawn-at-startup "wayland-pipewire-idle-inhibit")
   # (spawn-at-startup "uwsm" "finalize")
-  (spawn-at-startup "systemctl" "--user" "start" "hyprpolkitagent")
+  # (spawn-at-startup "systemctl" "--user" "start" "hyprpolkitagent")
   # (spawn-at-startup (lib.getExe' pkgs.dbus "dbus-update-activation-environment") "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "XDG_SESSION_TYPE" "NIXOS_Ozone_WL")
   (include "./noctalia.kdl")
 ]
