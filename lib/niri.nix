@@ -3,9 +3,7 @@
   s = self.niri;
   fixKey = str: replaceOrRemove: # true = replace, false = remove
     builtins.concatStringsSep "+" (lib.unique (lib.flatten (lib.imap0 (i: x:
-      if !isNull (builtins.match "^[A-Z]$" x) then
-        lib.toLower x
-      else if lib.toLower x == "mod" then
+      if lib.toLower x == "mod" then
         if replaceOrRemove then "Mod4" else []
       else
         x
