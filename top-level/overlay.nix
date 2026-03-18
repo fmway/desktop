@@ -44,7 +44,6 @@ flake.overlays = lib.mapAttrs (_: fn: self: super: lib.infuse.sugarify {
     nixpkgs.overlays = with inputs; [
       # sources.lix-module.overlays.default
       self.overlays.default
-      agenix.overlays.default
       self.overlays.externalPackages
       self.overlays.scroll
     ];

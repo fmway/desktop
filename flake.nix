@@ -16,13 +16,6 @@
     # impermanence.url = "github:nix-community/impermanence";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.darwin.follows = "";
-      inputs.systems.follows = "systems";
-      inputs.home-manager.follows = "home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     fmway-lib = {
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";

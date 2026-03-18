@@ -9,10 +9,8 @@
     ./users.nix
     ./timezone.nix
     ./zfs.nix
-    ../../secrets
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
     inputs.disko.nixosModules.default
-    inputs.agenix.nixosModules.default
     inputs.fmway-conf.nixosModules.default
     inputs.fmway-pkgs.nixosModules.default
     inputs.nixvim.nixosModules.nixvim
@@ -44,7 +42,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    agenix
     google-authenticator
     scripts.all
   ];
@@ -57,14 +54,6 @@
     }
   ];
 
-  nixpkgs.overlays = [
-    inputs.agenix.overlays.default
-  ];
-
-  nix.extraOptions = ''
-    !include ${config.age.secrets.nix.path}
-  '';
-
   # enable google totp in ssh login
   security.pam.services.sshd.googleAuthenticator.enable = true;
 
@@ -76,9 +65,6 @@
 
   # Enable fwupd for updating firmware
   services.fwupd.enable = true;
-
-  services.tailscale.enable = lib.mkDefault true;
-  services.tailscale.authKeyFile = lib.mkDefault config.age.secrets.tailscale.path;
 
   # services.samba.settings.public = {
   #   path = "/yeah";
