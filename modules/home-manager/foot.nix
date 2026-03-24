@@ -14,7 +14,7 @@
         style = "beam";
         beam-thickness = 1.5;
       };
-      colors = {
+      colors-dark = {
         alpha = 0.9;
         background = "2C2B40";
         foreground = "B3B3B3";
