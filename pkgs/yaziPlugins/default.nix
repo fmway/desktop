@@ -1,44 +1,41 @@
-{ internal, self, lib, ... }: let
-  version = "unstable-2025-08-11";
+{ internal, inputs, self, lib, super, ... }: let
+  src = inputs.yazi-plugins // { owner = "yazi-rs"; };
+  version = "unstable-${inputs.yazi-plugins.shortRev}";
 
-  src = self.fetchFromGitHub {
-    owner = "yazi-rs";
-    repo = "plugins";
-    rev = "e95c7b384e7b0a9793fe1471f0f8f7810ef2a7ed";
-    hash = "sha256-TUS+yXxBOt6tL/zz10k4ezot8IgVg0/2BbS8wPs9KcE=";
-  };
-  officials = a: builtins.foldl' (acc: curr: acc // {
-    "${curr}".__output = {
+  officials = a: builtins.foldl' (acc: curr: let name = lib.removeSuffix ".yazi" curr; in acc // (if super.yaziPlugins ? ${name} then {
+    "${name}".__output = {
       src.__assign = src;
       version.__assign = version;
     };
-  }) a [ "chmod" "diff" "full-border" "git" "jump-to-char" "lsar" "mactag" "mime-ext" "mount" "no-status" "piper" "smart-enter" "smart-filter" "smart-paste" "vcs-files" "toggle-pane" ];
-in {
-  __infuse = officials {
-    zoom.__add = {
-      inherit version src;
-      pname = "zoom.yazi";
+  } else {
+    ${name}.__add = {
+      inherit version;
+      src = src;
+      pname = curr;
 
       meta = {
-        description = "Place code snippets from docs into this monorepo, so that users can update more easily via package manager";
+        description = let
+          p = "${inputs.yazi-plugins}/${curr}/README.md";
+          d = builtins.elemAt (lib.splitString "\n" (builtins.readFile p)) 2;
+        in
+          lib.optionalString (builtins.pathExists p) d;
         homepage = "https://github.com/yazi-rs/plugins";
         license = lib.licenses.mit;
       };
     };
+  })) a (builtins.attrNames (lib.filterAttrs (k: t: t == "directory" && lib.hasSuffix ".yazi" k) (builtins.readDir inputs.yazi-plugins.outPath)));
+in {
+  __infuse = officials {
     bunny.__add = rec {
       pname = "bunny.yazi";
-      version = "1.3.2";
+      version = "1.4.0";
 
       src = self.fetchFromGitHub {
         owner = "stelcodes";
         repo = "bunny.yazi";
         rev = "v${version}";
-        hash = "sha256-HnzuR12c4wJaI7dzZrf/Zdc6yCjvsfhPEcnzNNgcLnA=";
+        hash = "sha256-Bycoiac5lVeJAJUoFt6HV4JsHpOlFul0jncygDK/D3s=";
       };
-
-      patches = [
-        ./bunny.patch
-      ];
 
       meta = {
         description = "Bookmarks menu for yazi with persistent and ephemeral bookmarks, fuzzy searching, previous directory, directory from another tab";

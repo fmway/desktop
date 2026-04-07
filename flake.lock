@@ -489,6 +489,7 @@
         "nur": "nur",
         "nxchad": "nxchad",
         "systems": "systems_2",
+        "yazi-plugins": "yazi-plugins",
         "zed": "zed"
       }
     },
@@ -558,6 +559,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "yazi-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775125846,
+        "narHash": "sha256-FVVUU9c3VQBvfjwBBilbBS8ygU4U97L2DwdT4s55OW0=",
+        "owner": "yazi-rs",
+        "repo": "plugins",
+        "rev": "e84f4fe5122b659544b4984e6b7daf14383dbe8f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yazi-rs",
+        "repo": "plugins",
         "type": "github"
       }
     },

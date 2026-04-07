@@ -3,6 +3,8 @@
   description = "My NixOS configuration";
   # Inputs
   inputs = {
+    yazi-plugins.url = "github:yazi-rs/plugins";
+    yazi-plugins.flake = false;
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia.inputs.nixpkgs.follows = "nixpkgs";
     zed.url = "github:zed-industries/zed";

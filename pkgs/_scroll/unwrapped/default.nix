@@ -1,12 +1,12 @@
 { pkgs, lib, ... }:
 pkgs.sway-unwrapped.overrideAttrs (finalAttrs: prevAttrs: {
   pname = "scroll";
-  version = "1.12.1";
+  version = "1.12.8";
   src = pkgs.fetchFromGitHub {
     owner = "dawsers";
     repo = "scroll";
     rev = finalAttrs.version;
-    hash = "sha256-DBXRF1gG+g3F43oF1M+1W/b1vFp8QnI7IhtWQWD+xIc=";
+    hash = "sha256-XcHE8QKmpHLYBOY+Jlz9zNeLYnMIJ5Aw/dCGVRUAzWE=";
   };
   patches = let
     replaces = {
