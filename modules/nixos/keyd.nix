@@ -52,6 +52,19 @@
           shift."h" = pageup;
           shift."j" = pagedown;
           shift."g" = Ctrl end;
+
+          f1 = mute;
+          f2 = volumedown;
+          f3 = volumeup;
+          f4 = micmute;
+          f5 = brightnessdown;
+          f6 = brightnessup;
+          f7 = display; # maybe
+          f8 = connect; # maybe
+          # f9 = ...;
+          f10 = bluetooth;
+          # f11 = ...;
+          f12 = bookmarks;
         };
 
         g_layer = rec {
