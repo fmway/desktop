@@ -3,6 +3,7 @@ inputs: let
   overlayLibs = collectAllLib ++ map (fixOverlay (x: x)) [
     # additional lib
     (_: _: {
+      import-tree = inputs.import-tree;
       fmway = inputs.fmway-lib.fmway;
       flake-parts = inputs.flake-parts.lib;
       den.namespace = inputs.den.namespace;
