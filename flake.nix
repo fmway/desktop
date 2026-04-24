@@ -5,6 +5,10 @@
 
   inputs = {
     den.url = "github:vic/den/v0.16.0";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-file.url = "github:vic/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -15,6 +19,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:vic/import-tree";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
   };
 }
