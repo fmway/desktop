@@ -18,7 +18,6 @@
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    den.url = "github:vic/den/v0.16.0";
     flake-file.url = "github:vic/flake-file";
     import-tree.url = "github:vic/import-tree";
   };
