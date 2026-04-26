@@ -1,19 +1,24 @@
-{ __findFile, ... }:
+{ lib, ... }:
 {
-  fmx.version = {
-    homeManager = { inputs, lib, ... }:
+  fmx.version = let
+    getVersion = class: modulesPath: with builtins;
+      if class == "nixos" then
+        lib.fileContents "${modulesPath}/../../lib/.version"
+      else (fromJSON (readFile "${modulesPath}/../release.json")).release;
+  in {
+    homeManager = { modulesPath, ... }:
     {
-      home.stateVersion = lib.mkDefault (with builtins;
-        fromJSON (
-          readFile "${inputs.home-manager}/release.json"
-        )
-      ).release;
+      home.stateVersion = lib.mkDefault (getVersion "homeManager" modulesPath);
     };
 
-    nixos = { inputs, lib, ... }:
+    nixos = { modulesPath, ... }:
     {
-      system.stateVersion = lib.mkDefault (
-        lib.fileContents "${inputs.nixpkgs}/lib/.version");
+      system.stateVersion = lib.mkDefault (getVersion "nixos" modulesPath);
+    };
+
+    darwin = { modulesPath, ... }:
+    {
+      system.stateVersion = lib.mkDefault (getVersion "darwin" modulesPath);
     };
   };
 }

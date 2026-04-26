@@ -6,9 +6,9 @@
     includes = [
       <fmx/nix>
       <fmx/boot>
-      <fmx/version>
-      (fmx.disk._.zfs "/dev/sda")
+      <fmx/disk/zfs>
       (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
     ];
+    meta.mainDisk = "/dev/nvme0n1";
   };
 }
