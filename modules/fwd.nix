@@ -15,7 +15,7 @@
       intoClass = lib.id;
       intoPath = _: [ "programs" ];
       fromAspect = _: lib.head aspect-chain;
-      adaptArgs = { pkgs, config, ... } @ args: args // { inherit config den fmx pkgs; };
+      adaptArgs = { pkgs, config, ... } @ args: args // { inherit config den fmx pkgs lib; };
     };
 
   fmx.utils._.disko = den.lib.take.exactly {

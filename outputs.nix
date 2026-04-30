@@ -40,7 +40,7 @@ inputs: let
 
   selfLib = lib: ((((import-tree
     .map (p: {
-      keys = lib.init (lib.splitString "/" (lib.removePrefix "${scanDir}/" p));
+      keys = let k = lib.init (lib.splitString "/" (lib.removePrefix "${scanDir}/" p)); in if builtins.length k > 1 then lib.tail k else k;
       value = lib.fmway.doImport p { inherit lib; };
     }))
     .pipeTo (builtins.foldl' (a: c: lib.recursiveUpdate a (lib.setAttrByPath c.keys c.value)) {}))
