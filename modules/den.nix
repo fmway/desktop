@@ -21,5 +21,6 @@
       <den/primary-user>
     ];
     home.includes = user.includes;
+    flake-packages.includes = [ (den.aspects.flake or {}) ];
   };
 }

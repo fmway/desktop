@@ -7,6 +7,7 @@
       <fmx/nix>
       <fmx/boot>
       <fmx/disk/zfs>
+      <fmx/shells/fish>
       (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
     ];
     meta.mainDisk = "/dev/nvme0n1";
