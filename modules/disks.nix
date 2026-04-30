@@ -32,20 +32,4 @@
       nixos.imports = [ inputs.disko.nixosModules.default ];
       disko = { mainDisk, ... } @ v: (import path (v // { inherit mainDisk; })).disko;
     }) ./_disks;
-
-  fmx.utils._.disko = {
-    description = "Add disko classes";
-    __functor = _:
-      { host }:
-      den._.forward {
-        # only support for nixos
-        each = [ "nixos" ];
-        fromClass = _: "disko";
-        intoClass = lib.id;
-        intoPath = _: [ "disko" ];
-        fromAspect = _: den.lib.parametric.fixedTo { inherit host; } host.aspect;
-        guard = { options, ... }: options ? disko;
-        adaptArgs = args: args // { mainDisk = host.aspect.meta.mainDisk or "/dev/sda"; };
-      };
-  };
 }

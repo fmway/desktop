@@ -1,5 +1,8 @@
-{ lib, ... }:
+{ lib, __findFile, ... }:
 {
+  den.default.includes = [
+    <fmx/version>
+  ];
   fmx.version = let
     getVersion = class: modulesPath: with builtins;
       if class == "nixos" then

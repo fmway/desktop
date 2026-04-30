@@ -8,13 +8,6 @@
     (lib.den.namespace "fmx" true)
   ];
 
-  den.default.includes = [
-    <fmx/utils>
-    <fmx/version>
-  ];
-
-  fmx.utils.includes = builtins.attrValues (fmx.utils.provides or {});
-
   den.ctx = rec {
     user.includes = [
       <den/mutual-provider>
