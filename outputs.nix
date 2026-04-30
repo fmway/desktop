@@ -1,5 +1,6 @@
 inputs: let
-  lib = inputs.nixpkgs.lib;
+  _lib = inputs.nixpkgs.lib;
+  lib = _lib.fix (_lib.extends (_lib.composeManyExtensions overlayLibs) (_: _lib));
   overlayLibs = map (x: if builtins.isAttrs x then _: _: x else x) [
     # additional lib
     (self: _: {
@@ -15,11 +16,12 @@ inputs: let
     })
     (inputs.home-manager.lib or {})
     (inputs.fmway-modules.lib or {})
+    (self: super: super.recursiveUpdate super (selfLib super))
   ];
   
   api = {
-    onSuffix = self: suffix: self.filter (lib.hasSuffix suffix);
-    offSuffix = self: suffix: self.filterNot (lib.hasSuffix suffix);
+    onSuffix = self: suffix: self.filter (_lib.hasSuffix suffix);
+    offSuffix = self: suffix: self.filterNot (_lib.hasSuffix suffix);
     toAttrs = self: fn: (self
       .map (path: rec {
          name = inputs.fmway-lib.fmway.basename path;
@@ -29,11 +31,27 @@ inputs: let
   };
 
   specialArgs = {
-    lib = lib.fix (lib.extends (lib.composeManyExtensions overlayLibs) (_: lib));
+    inherit lib;
   };
   
-  scanDir = ./modules;
+  scanDir = builtins.toPath ./modules;
 
   import-tree = inputs.import-tree.addAPI api;
+
+  selfLib = lib: ((((import-tree
+    .map (p: {
+      keys = lib.init (lib.splitString "/" (lib.removePrefix "${scanDir}/" p));
+      value = lib.fmway.doImport p { inherit lib; };
+    }))
+    .pipeTo (builtins.foldl' (a: c: lib.recursiveUpdate a (lib.setAttrByPath c.keys c.value)) {}))
+    .onSuffix "lib.nix")
+    .withLib lib)
+    scanDir;
   
-in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } (import-tree scanDir)
+in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
+  imports = [
+    (import-tree.offSuffix "lib.nix" scanDir)
+  ];
+
+  flake.lib = selfLib lib;
+}

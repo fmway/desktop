@@ -1,5 +1,5 @@
-{ den, lib, pkgs, ... }: let
-  scanPlugins = den.lib.tmux.mkScanPlugins pkgs;
+{ lib, pkgs, ... }: let
+  scanPlugins = lib.tmux.mkScanPlugins pkgs;
 in {
   tmux = {
     enable = lib.mkDefault true;
