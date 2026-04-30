@@ -18,23 +18,60 @@
       adaptArgs = { pkgs, config, ... } @ args: args // { inherit config den fmx pkgs lib; };
     };
 
-  fmx.utils._.disko = den.lib.take.exactly {
+  fmx.utils._.disko = {
     description = "Add disko classes";
-    __functor = _:
-      { host }:
-      den._.forward {
+    includes = [
+      (den.lib.perHost ({ host }: den._.forward {
         # only support for nixos
         each = [ "nixos" ];
         fromClass = _: "disko";
         intoClass = lib.id;
         intoPath = _: [ "disko" ];
-        fromAspect = _: den.lib.parametric.fixedTo { inherit host; } host.aspect;
+        fromAspect = _: host.aspect;
         guard = { options, ... }: options ? disko;
         adaptArgs = args: args // {
           mainDisk = host.aspect.meta.mainDisk or (lib.warn "${host.aspect.meta.name}: mainDisk is undefined, use default value (dev/sda)" "/dev/sda");
         };
-      };
+      }))
+    ];
   };
+
+  # fmx.utils._.browsers.includes = builtins.attrValues fmx.utils._.browsers.provides;
+
+  # FIXME: (maybe use den.ctx),
+  # from den.aspects.<profile> & den.firefox.<profile>.firefox (class firefox with additional args = { pkgs } (from homeManager))
+  #   -> homeManager.programs.<all firefox-based>.profiles.<profile>
+  # fmx.utils._.browsers._.firefox = let
+  #   firefox-based = [ "zen" "floorp" "librewolf" ];
+  # in {
+  #   description = "firefox profiles class";
+  #   __functor =
+  #     { class, aspect-chain }:
+  #     {
+  #       each = [ "homeManager" ] ++ firefox-based;
+  #       fromClass = _: "firefox";
+  #       intoClass = lib.id;
+  #       intoPath = name: if name == "homeManager" then [ "programs" "firefox" ] else [];
+  #       fromAspect = _: lib.head aspect-chain;
+  #       adaptArgs = lib.id;
+  #     };
+  #   includes = builtins.attrValues fmx.utils._.browsers._.firefox._;
+  #   _ = builtins.listToAttrs (map (name: {
+  #     inherit name;
+  #     value.description = "${name} profiles class";
+  #     value.__functor =
+  #       { class, aspect-chain }:
+  #       {
+  #         each = [ "homeManager" ];
+  #         fromClass = _: name;
+  #         intoClass = lib.id;
+  #         intoPath = _: [ "programs" name ];
+  #         fromAspect = _: lib.head aspect-chain;
+  #         adaptArgs = lib.id;
+  #         guard = { options, ... }: options ? programs.${name};
+  #       };
+  #   }) firefox-based);
+  # };
 
   # FIXME: nix classes (fmx.utils._.nix) replace arrays instead of merging
   # fmx.utils._.nix = {

@@ -2,7 +2,9 @@
   inherit (lib.fmway) mkParse mkResolvePath;
   inherit (builtins) toPath;
 in {
-  mkEngine = var: k: { url, ... } @ v: let
+
+  # ./search-engine.json -> firefox.profiles.*.search.engines friendly
+  firefox.mkEngine = var: k: { url, ... } @ v: let
     rest = removeAttrs v [ "url" "icon" ];
     matchedUrl = lib.match "^(.+)[?](.+)$" url;
     template = if isNull matchedUrl then url else lib.elemAt matchedUrl 0;
