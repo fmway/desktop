@@ -18,6 +18,10 @@
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     import-tree.url = "github:vic/import-tree";
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.0.0";
