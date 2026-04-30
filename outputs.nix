@@ -3,7 +3,7 @@ inputs: let
   overlayLibs = map (x: if builtins.isAttrs x then _: _: x else x) [
     # additional lib
     (self: _: {
-      import-tree = (import-tree.withLib lib).addAPI api;
+      import-tree = ((import-tree.withLib lib).addAPI api).map builtins.toPath;
       fmway = inputs.fmway-lib.fmway;
       flake-parts = inputs.flake-parts.lib;
       den.namespace = inputs.den.namespace;

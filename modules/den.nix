@@ -12,8 +12,11 @@
     user.includes = [
       <den/mutual-provider>
       <den/primary-user>
+      <den/define-user>
     ];
     home.includes = user.includes;
     flake-packages.includes = [ (den.aspects.flake or {}) ];
   };
+
+  den.schema.user.classes = lib.mkDefault [ "homeManager" ];
 }

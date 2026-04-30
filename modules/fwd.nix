@@ -5,8 +5,20 @@
   ];
 
   fmx.utils.includes = builtins.attrValues fmx.utils.provides;
+   # programs -> homeManager.programs
+   # TODO: support nixos class
+  fmx.utils._.programs =
+    { class, aspect-chain }:
+    den._.forward {
+      each = [ "homeManager" ];
+      fromClass = _: "programs";
+      intoClass = lib.id;
+      intoPath = _: [ "programs" ];
+      fromAspect = _: lib.head aspect-chain;
+      adaptArgs = { pkgs, config, ... } @ args: args // { inherit config den fmx pkgs; };
+    };
 
-  fmx.utils._.disko = {
+  fmx.utils._.disko = den.lib.take.exactly {
     description = "Add disko classes";
     __functor = _:
       { host }:
@@ -18,7 +30,9 @@
         intoPath = _: [ "disko" ];
         fromAspect = _: den.lib.parametric.fixedTo { inherit host; } host.aspect;
         guard = { options, ... }: options ? disko;
-        adaptArgs = args: args // { mainDisk = host.aspect.meta.mainDisk or "/dev/sda"; };
+        adaptArgs = args: args // {
+          mainDisk = host.aspect.meta.mainDisk or (lib.warn "${host.aspect.meta.name}: mainDisk is undefined, use default value (dev/sda)" "/dev/sda");
+        };
       };
   };
 
