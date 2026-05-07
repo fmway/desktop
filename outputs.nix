@@ -47,11 +47,15 @@ inputs: let
     .onSuffix "lib.nix")
     .withLib lib)
     scanDir;
+
+  isAdditionalModuleExist = inputs ? module && builtins.pathExists inputs.module;
+
+  m' = if lib.pathIsDirectory inputs.module then import-tree inputs.module else inputs.module;
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
     (import-tree.offSuffix "lib.nix" scanDir)
-  ];
+  ] ++ lib.optional isAdditionalModuleExist m';
 
   flake.lib = selfLib lib;
 }
