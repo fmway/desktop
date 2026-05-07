@@ -104,10 +104,10 @@
       };
     }
   ;
-in {
-  inherit actions functions;
   keys = import ./_keys.nix { inherit lib; };
+in {
+  inherit actions functions keys;
   parse = fn: let
-    res = fn (actions // lib.keyd.keys // functions // fix' res);
+    res = fn (actions // keys // functions // fix' res);
   in fix res;
 }

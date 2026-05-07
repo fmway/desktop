@@ -1,0 +1,14 @@
+{
+  "kaku/hardware/bluetooth": {
+    "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/hardware/bluetooth.nix",
+    "hash": "sha256-bu5oPCn1BO2F7Wxxwpaqn+QK79NMymKROXdu1OEDK9A=",
+    "mainUrl": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/hardware/bluetooth.nix",
+    "type": "file"
+  },
+  "kaku/services/pipewire": {
+    "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
+    "hash": "sha256-hH0fs6DiEBNIQ/VhzNEa4B5Yre+F/MRQ1eFa/nf5Ong=",
+    "mainUrl": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
+    "type": "file"
+  }
+}
