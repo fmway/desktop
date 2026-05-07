@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   fastfetch = {
-    enable = lib.mkDefault true;
+    enable = true;
     settings = builtins.fromJSON (lib.fileContents ./settings.json);
   };
 }

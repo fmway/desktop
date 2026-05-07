@@ -1,6 +1,5 @@
-{ lib, ... }:
 {
-  git.enable = lib.mkDefault true;
+  git.enable = true;
   # git.delta.enable = true; # enable git diff with delta
   # git.difftastic.enable = true; # git diff with difftastic
   # git.diff-so-fancy.enable = true; # git diff with diff-so-fancy
@@ -12,7 +11,7 @@
         "gitlab.com" = "gl";
         "codeberg.org" = "cb";
       };
-    in lib.foldl' (acc: x: acc // {
+    in builtins.foldl' (acc: x: acc // {
       "https://${x}/".insteadOf = "${sites.${x}}:";
       "git@${x}:".insteadOf = "${sites.${x}}s:";
     }) {
@@ -22,6 +21,6 @@
         ch = "checkout";
         s = "status";
       };
-    } (lib.attrNames sites);
+    } (builtins.attrNames sites);
   };
 }

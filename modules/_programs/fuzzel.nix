@@ -1,7 +1,6 @@
-{ lib, ... }:
 {
   fuzzel = {
-    enable = lib.mkDefault true;
+    enable = true;
     settings = {
       main = {
         font = "JetBrainsMono Nerd Font Propo:size=11";

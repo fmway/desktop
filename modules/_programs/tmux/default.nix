@@ -2,7 +2,7 @@
   scanPlugins = lib.tmux.mkScanPlugins pkgs;
 in {
   tmux = {
-    enable = lib.mkDefault true;
+    enable = true;
     aggressiveResize = lib.mkDefault true; # resize ampe mentok
     baseIndex = lib.mkDefault 1; # base index for window and session
     customPaneNavigationAndResize = lib.mkDefault true; # hjkl mode

@@ -1,7 +1,6 @@
-{ lib, ... }:
 {
   # github-cli
-  gh.enable = lib.mkDefault true;
+  gh.enable = true;
   gh.settings = {
     editor = "nvim";
     aliases = {
@@ -11,7 +10,7 @@
     git_protocol = "ssh";
   };
   # github-cli dashboard
-  gh-dash.enable = lib.mkDefault true;
+  gh-dash.enable = true;
   gh-dash.settings = {
     prSections = [{
       title = "My Pull Requests";

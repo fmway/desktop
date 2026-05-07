@@ -1,7 +1,6 @@
-{ lib, ... }:
 {
   fzf = {
-    enable = lib.mkDefault true;
+    enable = true;
     # colors = {
     #   "bg" = "#1e1e1e";
     #   "bg+" = "#1e1e1e";

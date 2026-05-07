@@ -1,7 +1,7 @@
 {
-  fmx.editors._.zed.homeManager = { pkgs, lib, ... }: {
+  fmx.editors._.zed.homeManager = { pkgs, ... }: {
     programs.zed-editor = {
-      enable = lib.mkDefault true;
+      enable = true;
       package = pkgs.zed-editor_git or pkgs.zed-editor;
       extraPackages = with pkgs; [
         rust-analyzer

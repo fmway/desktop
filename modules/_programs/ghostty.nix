@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  ghostty.enable = lib.mkDefault true;
+  ghostty.enable = true;
   ghostty.settings = {
     gtk-titlebar = false;
     keybind = let

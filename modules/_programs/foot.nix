@@ -1,7 +1,6 @@
-{ lib, ... }:
 {
   foot = {
-    enable = lib.mkDefault true;
+    enable = true;
     settings = {
       main = {
         font = "JetBrainsMono Nerd Font:style=Bold:size=14";

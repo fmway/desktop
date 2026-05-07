@@ -11,7 +11,7 @@
   }).config;
 
   fish.generateCompletions = lib.mkDefault false; # dont create fish completions by manpage, very very useless
-  fish.enable = lib.mkDefault true;
+  fish.enable = true;
   fish.interactiveShellInit = /* fish */ ''
     set fish_greeting # Disable greeting
     printf '\e[5 q'

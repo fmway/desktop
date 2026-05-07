@@ -1,7 +1,6 @@
-{ lib, ... }:
 {
   mpv = {
-    enable = lib.mkDefault true;
+    enable = true;
     config = {
       volume-max = "300";
       hwdec = "auto-safe";

@@ -11,17 +11,17 @@
   in {
     homeManager = { modulesPath, ... }:
     {
-      home.stateVersion = lib.mkDefault (getVersion "homeManager" modulesPath);
+      home.stateVersion = getVersion "homeManager" modulesPath;
     };
 
     nixos = { modulesPath, ... }:
     {
-      system.stateVersion = lib.mkDefault (getVersion "nixos" modulesPath);
+      system.stateVersion = getVersion "nixos" modulesPath;
     };
 
     darwin = { modulesPath, ... }:
     {
-      system.stateVersion = lib.mkDefault (getVersion "darwin" modulesPath);
+      system.stateVersion = getVersion "darwin" modulesPath;
     };
   };
 }

@@ -1,7 +1,6 @@
-{ lib, ... }:
 {
   bun = {
-    enable = lib.mkDefault true;
+    enable = true;
     settings = {
       smol = true;
       telemetry = false;
