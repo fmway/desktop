@@ -5,6 +5,16 @@
       <fmx/nix>
       <fmx/boot>
       <fmx/networking>
+      ({ user, ... }: {
+        nixos.nix.settings.trusted-users = [ user.userName ];
+        nixos.users.users.${user.userName}.extraGroups = [
+          "video"
+          "dialout"
+          "kvm"
+          "adbusers"
+          "fwupd-refresh"
+        ];
+      })
     ];
 
     nixos = { pkgs, ... }:
@@ -16,6 +26,22 @@
       environment.systemPackages = with pkgs; [
         android-tools
       ];
+
+      # Enable ls colors in bash
+      programs.bash.enableLsColors = true;
+
+      # allow fuse in user mode
+      programs.fuse.userAllowOther = true;
+
+      # Some programs need SUID wrappers, can be configured further or are started in user sessions.
+      programs.mtr.enable = true;
+      programs.gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
+
+      # Enable fwupd for updating firmware
+      services.fwupd.enable = true;
 
       # emulate /bin
       services.envfs.enable = true;
@@ -41,10 +67,17 @@
           "xone-dongle-firmware"
         ])
       ];
-      nixos.hardware.enableAllFirmware = lib.mkDefault true;
+      nixos = {
+        hardware.enableAllFirmware = lib.mkDefault true;
+        hardware.enableRedistributableFirmware = lib.mkDefault true;
+        
+        boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "uas" "sd_mod" ];
+      };
     };
     _.kdeconnect.nixos.programs.kdeconnect.enable = true;
   };
+
+  flake-file.inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
   source-files."kaku/hardware/bluetooth" = "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/hardware/bluetooth.nix";
 }

@@ -1,5 +1,5 @@
 {
-  fmx.essentials._.zram = { host }:
+  fmx.essentials._.zram = { host, ... }:
   {
     nixos = {
       # zramSwap.enable = lib.mkDefault true;

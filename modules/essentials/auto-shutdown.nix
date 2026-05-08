@@ -6,7 +6,7 @@
     '';
 
     __functor = _:
-      { host }: let
+      { host, ... }: let
         shut_in = host.aspect.meta.battery_limit or 15;
       in {
         nixos =

@@ -3,9 +3,9 @@ inputs: let
   lib = _lib.fix (_lib.extends (_lib.composeManyExtensions overlayLibs) (_: _lib));
   overlayLibs = map (x: if builtins.isAttrs x then _: _: x else x) [
     # additional lib
+    inputs.fmway-lib.overlays.default
     (self: _: {
-      import-tree = ((import-tree.withLib lib).addAPI api).map builtins.toPath;
-      fmway = inputs.fmway-lib.fmway;
+      inherit import-tree;
       flake-parts = inputs.flake-parts.lib;
       den.namespace = inputs.den.namespace;
       nixvim = inputs.nxchad.lib.nixvim or {};
@@ -36,7 +36,7 @@ inputs: let
   
   scanDir = builtins.toPath ./modules;
 
-  import-tree = inputs.import-tree.addAPI api;
+  import-tree = ((inputs.import-tree.withLib _lib).addAPI api).map builtins.toPath;
 
   selfLib = lib: ((((import-tree
     .map (p: {
@@ -54,8 +54,17 @@ inputs: let
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
-    (import-tree.offSuffix "lib.nix" scanDir)
+    ((import-tree.offSuffix "overlay.nix").offSuffix "lib.nix" scanDir)
   ] ++ lib.optional isAdditionalModuleExist m';
 
   flake.lib = selfLib lib;
+
+  flake.overlays = (((import-tree
+    .onSuffix "overlay.nix")
+    .map (p: {
+      name = lib.last (lib.init (lib.splitString "/" p));
+      value = import p;
+    }))
+    .pipeTo lib.listToAttrs)
+    scanDir;
 }

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, config, lib, ... }:
 {
   fmx.editors._.nixvim = { config, ... }:
   {
@@ -43,6 +43,8 @@
       flake-parts.follows = "flake-parts";
       nixpkgs.follows = "nixpkgs";
       systems.follows = "nixvim/systems";
+    } // lib.optionalAttrs (config ? flake-file.inputs.fmway-modules) {
+      fmway-modules.follows = "fmway-modules";
     };
   };
 }

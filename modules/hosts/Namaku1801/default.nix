@@ -7,42 +7,105 @@ in {
       zram.priority = 100;
 
       battery_limit = 10; # autoshutdown when battery under 10%
+
+      timeZone = "Asia/Jakarta";
+      locale = "en_US.UTF-8";
+      extraLocale = "id_ID.UTF-8";
     };
   };
   den.aspects.Namaku1801 = {
     includes = [
-      <fmx/essentials>
-      <fmx/disk/zfs>
       <fmx/display-managers/ly>
       <fmx/privileges/doas>
       <fmx/privileges/please>
       <fmx/tools/nix-ld>
       <fmx/services/keyd>
       <fmx/editors/nixvim>
+      <fmx/file-managers/yazi>
+      <fmx/disk/zfs>
+      <fmx/disk/zfs/auto-snapshot>
+      (fmx.disk._.zfs._.auto-scrub "weekly")
     ];
-    nixos.networking.hostId = lib.mkDefault "4970ef8d"; # required for zfs
-    nixos = {
-    # disable capslock
+    provides.to-users.nixos = { config, ... }:
+    {
+      programs.fish.useBabelfish = true;
+
       imports = [
         inputs.nixvim.nixosModules.nixvim
+        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
       ];
       programs.nixvim.enable = true;
       programs.nixvim.imports = [
         nixvimModule
       ];
+
+      # disable capslock
       services.xserver.xkb.options = lib.mkAfter "grp:shifts_toggle";
 
       services.xserver.xkb.layout = "us";
       console.keyMap = "us";
+      networking.hostId = lib.mkDefault "4970ef8d"; # required for zfs
+
+      boot.kernelModules = [ "kvm-intel" ];
+
+      nix.settings.experimental-features = [
+        ("pipe-operator" + lib.optionalString (!config.lix.enable or false) "s")
+      ];
+
+      services.zfs.autoSnapshot = {
+        enable = true;
+        frequent = 0;
+        hourly = 0;
+        daily = 0;
+        weekly = 2;
+        monthly = 1;
+      };
+
+      services.zfs.autoScrub.interval = "weekly";
     };
     provides.to-users.includes = [
+      <fmx/essentials>
       <fmx/programs>
       <fmx/shells/fish>
       <fmx/shells/nushell>
       <fmx/editors/zed>
+      <fmx/games/steam>
+      # <fmx/containers/waydroid>
+      <fmx/containers/flatpak>
+      <fmx/containers/docker>
+      # <fmx/containers/bottles>
+      <fmx/desktops/shells/noctalia>
       <fmx/desktops/niri>
+      <fmx/desktops/niri/noctalia>
       (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
     ];
+
+    provides.to-users.homeManager =
+    { config, ... }:
+    {
+      # disable ~/.config/nix/nix.conf since that's is already define in /etc/nix/nix.conf
+      xdg.configFile."nix/nix.conf".enable = false;
+
+      home = {
+        sessionPath = map (x: "${config.home.homeDirectory}/${x}/bin") [
+          ".local"
+          ".deno"
+          ".bun"
+        ];
+
+        sessionVariables = rec {
+          ASSETS = "${config.home.homeDirectory}/assets";
+          ASET = "${config.home.homeDirectory}/aset";
+          GITHUB = "${ASET}/Github";
+          DOWNLOADS = "${config.home.homeDirectory}/Downloads";
+        };
+
+        # disable capslock
+        keyboard.options = [
+          "grp:shifts_toggle"
+        ];
+      };
+    };
   };
 
   den.ctx.host.nixos.home-manager = {

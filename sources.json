@@ -1,4 +1,10 @@
 {
+  "h-m-m": {
+    "url": "https://codeload.github.com/nadrad/h-m-m/tar.gz/refs/heads/main",
+    "hash": "sha256-JV3CFTGcY5uwQg9I6Z+oqZ2x8MzJqEZ7m0QZRvd+xHM=",
+    "mainUrl": "https://github.com/nadrad/h-m-m/archive/main.tar.gz",
+    "type": "tarball"
+  },
   "kaku/hardware/bluetooth": {
     "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/hardware/bluetooth.nix",
     "hash": "sha256-bu5oPCn1BO2F7Wxxwpaqn+QK79NMymKROXdu1OEDK9A=",
@@ -10,5 +16,11 @@
     "hash": "sha256-hH0fs6DiEBNIQ/VhzNEa4B5Yre+F/MRQ1eFa/nf5Ong=",
     "mainUrl": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
     "type": "file"
+  },
+  "waydroid-script": {
+    "url": "https://codeload.github.com/casualsnek/waydroid_script/tar.gz/refs/heads/main",
+    "hash": "sha256-zSHZlhHJHWZRE3I5pYWhD4o8aNpa8rTiEtl2qJTuRjw=",
+    "mainUrl": "https://github.com/casualsnek/waydroid_script/archive/main.tar.gz",
+    "type": "tarball"
   }
 }

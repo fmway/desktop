@@ -4,6 +4,10 @@
   outputs = inputs: import ./outputs.nix inputs;
 
   inputs = {
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     den.url = "github:vic/den/v0.16.0";
     disko = {
       url = "github:nix-community/disko";
@@ -18,6 +22,13 @@
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fmway-modules = {
+      url = "github:fmway/modules";
+      inputs = {
+        fmway-lib.follows = "fmway-lib";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,6 +38,7 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -35,11 +47,19 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        noctalia-qs.inputs.systems.follows = "nixvim/systems";
+      };
+    };
     nxchad = {
       url = "github:fmway/nxchad";
       inputs = {
         flake-parts.follows = "flake-parts";
         fmway-lib.follows = "fmway-lib";
+        fmway-modules.follows = "fmway-modules";
         nixpkgs.follows = "nixpkgs";
         nixvim.follows = "nixvim";
         systems.follows = "nixvim/systems";

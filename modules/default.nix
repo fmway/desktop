@@ -22,6 +22,11 @@
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fmway-modules.url = "github:fmway/modules";
+    fmway-modules.inputs = {
+      fmway-lib.follows = "fmway-lib";
+      nixpkgs.follows = "nixpkgs";
+    };
     flake-file.url = "github:vic/flake-file";
     import-tree.url = "github:vic/import-tree";
   };

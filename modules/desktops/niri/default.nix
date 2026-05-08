@@ -1,5 +1,11 @@
-{ lib, ... }:
+{ inputs, ... }:
 {
+  fmx.desktops._.niri.homeManager = {
+    imports = [
+      inputs.fmway-modules.homeManagerModules.niri
+    ];
+    wayland.windowManager.niri.enable = true;
+  };
   fmx.desktops._.niri.nixos = { pkgs, ... }:
   {
     qt.enable = true;
