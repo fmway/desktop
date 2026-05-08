@@ -1,5 +1,6 @@
-{ fmx, lib, __findFile, ... }:
-{
+{ fmx, den, lib, inputs, __findFile, ... }: let
+  nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
+in {
   den.hosts.x86_64-linux.Namaku1801 = {
     meta = {
       zram.size = 16384; # 16GB
@@ -17,10 +18,18 @@
       <fmx/privileges/please>
       <fmx/tools/nix-ld>
       <fmx/services/keyd>
+      <fmx/editors/nixvim>
     ];
     nixos.networking.hostId = lib.mkDefault "4970ef8d"; # required for zfs
     nixos = {
     # disable capslock
+      imports = [
+        inputs.nixvim.nixosModules.nixvim
+      ];
+      programs.nixvim.enable = true;
+      programs.nixvim.imports = [
+        nixvimModule
+      ];
       services.xserver.xkb.options = lib.mkAfter "grp:shifts_toggle";
 
       services.xserver.xkb.layout = "us";
@@ -40,5 +49,12 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     verbose = true;
+  };
+
+  den.aspects.flake.packages = { pkgs, ... }:
+  {
+    nvim = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system}.makeNixvimWithModule {
+      module.imports = [ nixvimModule ];
+    };
   };
 }

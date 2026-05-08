@@ -28,5 +28,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    nxchad = {
+      url = "github:fmway/nxchad";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        fmway-lib.follows = "fmway-lib";
+        nixpkgs.follows = "nixpkgs";
+        nixvim.follows = "nixvim";
+        systems.follows = "nixvim/systems";
+      };
+    };
   };
 }
