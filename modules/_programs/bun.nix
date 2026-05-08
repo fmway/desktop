@@ -1,5 +1,5 @@
 {
-  bun = {
+  programs.bun = {
     enable = true;
     settings = {
       smol = true;

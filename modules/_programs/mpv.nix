@@ -1,5 +1,5 @@
 {
-  mpv = {
+  programs.mpv = {
     enable = true;
     config = {
       volume-max = "300";

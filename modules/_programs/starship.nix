@@ -1,5 +1,7 @@
 {
-  starship.enable = true;
-  starship.enableTransience = true;
-  starship.settings.add_newline = false;
+  programs.starship = {
+    enable = true;
+    enableTransience = true;
+    settings.add_newline = false;
+  };
 }

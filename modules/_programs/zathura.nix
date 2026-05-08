@@ -1,4 +1,6 @@
 {
-  zathura.enable = true;
-  zathura.mappings = {};
+  programs.zathura = {
+    enable = true;
+    mappings = {};
+  };
 }

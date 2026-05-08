@@ -1,7 +1,7 @@
 { lib, pkgs, ... }: let
   scanPlugins = lib.tmux.mkScanPlugins pkgs;
 in {
-  tmux = {
+  programs.tmux = {
     enable = true;
     aggressiveResize = lib.mkDefault true; # resize ampe mentok
     baseIndex = lib.mkDefault 1; # base index for window and session
