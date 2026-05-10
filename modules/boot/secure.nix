@@ -1,7 +1,7 @@
 # Secureboot using lanzaboot
 { inputs, lib, config, ... }:
 {
-  fmx.boot._.secure.nixos = { pkgs, ... }:
+  fmx.boot._.secure.nixos = { host, pkgs, ... }:
   {
     imports = [
       inputs.lanzaboote.nixosModules.lanzaboote
@@ -16,6 +16,7 @@
     boot.lanzaboote = {
       enable = true;
       pkiBundle = "/var/lib/sbctl";
+      configurationLimit = host.aspect.meta.configurationLimit or 25;
     };
   };
 

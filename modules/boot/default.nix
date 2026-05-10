@@ -1,9 +1,9 @@
-{ __findFile, ... }:
 {
-  fmx.boot = {
+  fmx.boot = { config, ... }:
+  {
     includes = [
-      <fmx/boot/systemd-boot>
-      <fmx/boot/plymouth>
+      config._.systemd-boot
+      config._.plymouth
     ];
 
     nixos = { lib, config, ... }:

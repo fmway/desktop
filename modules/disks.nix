@@ -1,4 +1,4 @@
-{ inputs, den, __findFile, lib, ... }:
+{ inputs, lib, ... }:
 {
   flake-file.inputs.disko = {
     url = "github:nix-community/disko";

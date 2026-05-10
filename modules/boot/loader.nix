@@ -1,23 +1,24 @@
-{ den, lib, ... }: let
-  configurationLimit = lib.mkDefault 25;
-in {
+{ den, ... }:
+{
   fmx.boot._ = {
-    systemd-boot.nixos = { config, lib, ... }:
+    systemd-boot.nixos = { host, config, lib, ... }:
     {
+      _module.args.babi = host;
+      _module.args.den = den;
       boot.loader = {
         efi.canTouchEfiVariables = lib.mkDefault config.boot.loader.systemd-boot.enable;
         systemd-boot = {
           enable = true;
           memtest86.enable = lib.mkDefault true;
-          inherit configurationLimit;
+          configurationLimit = host.aspect.meta.configurationLimit or 25;
         };
       };
     };
 
-    grub.nixos = { config, lib, ... }:
+    grub.nixos = { host, config, lib, ... }:
     {
       boot.loader.grub = {
-        inherit configurationLimit;
+        configurationLimit = host.aspect.meta.configurationLimit or 25;
         enable = true;
         copyKernels = lib.mkDefault true;
         efiInstallAsRemovable = lib.mkDefault (! config.boot.loader.efi.canTouchEfiVariables);

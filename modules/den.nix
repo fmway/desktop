@@ -1,42 +1,51 @@
-{ inputs, den, lib, fmx, __findFile, ... }: let
-  sources = builtins.mapAttrs (k: v: let
-    type = v.type or "tarball";
-    fn = if type == "file" then
-      builtins.fetchurl
-    else if type == "tarball" then
-      fetchTarball
-    else throw "undefined";
-    source = fn {
-      name = v.name or "source";
-      inherit (v) url;
-      sha256 = v.sha256 or v.hash;
-    };
-  in source) (builtins.fromJSON (builtins.readFile ../sources.json));
-in {
-  flake-file.inputs.den.url = "github:vic/den/v0.16.0";
+{ inputs, sources ? {}, den, lib, ... }:
+{
+  flake-file.inputs.den.url = "github:denful/den/main";
 
-  _module.args.sources = sources;
+  # Priority
+  # 1. args.source (<source/...>)
+  # 2. args.den.ful.<namespace/...> (<namespace/...>)
+  # 3. builtin den.lib.__findFile
   _module.args.__findFile = nixP: p: let
+    pathLike = lib.hasInfix "/" p;
     paths = lib.splitString "/" p;
     h = builtins.head paths;
     t = builtins.tail paths;
     p'= builtins.concatStringsSep "/" t;
     r = sources.${p'} or (throw "<sources/${p'}> is missing");
-  in if h == "sources" && t != [] then r else den.lib.__findFile nixP p;
+    # override, disable warn from den.lib.__findFile
+    r'= builtins.tryEval (let
+      h' = builtins.head t; t' = builtins.tail t; v = den.ful.${h}.${h'};
+    in if t' == [ h' ] then v else lib.getAttrFromPath (builtins.concatMap (x: [ "_" x ]) t') v);
+  in if pathLike && h == "sources" && t != [] then
+    r
+  else if pathLike && den ? ful.${h} && r'.success then
+    r'.value
+  else den.lib.__findFile nixP p;
+
   imports = [
     inputs.den.flakeModule
     (lib.den.namespace "fmx" true)
   ];
 
-  den.ctx = rec {
+  den.schema = rec {
+    user.classes = lib.mkDefault [ "homeManager" ];
     user.includes = [
-      <den/mutual-provider>
-      <den/primary-user>
-      <den/define-user>
+      den._.mutual-provider
+      den._.primary-user
+      den._.define-user
     ];
     home.includes = user.includes;
     flake-packages.includes = [ (den.aspects.flake or {}) ];
-  };
 
-  den.schema.user.classes = lib.mkDefault [ "homeManager" ];
+    host.includes = [
+      ({ user, ... }: if builtins.elem "homeManager" user.classes then {
+        nixos.home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          verbose = true;
+        };
+      } else {})
+    ];
+  };
 }

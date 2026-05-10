@@ -1,5 +1,24 @@
-{ config, lib, inputs, ... }:
-{
+# Like flake-file but only for source
+
+{ config, lib, inputs, ... }: let
+  sourcePath = "${inputs.self.outPath}/sources.json";
+  sources = builtins.mapAttrs (k: v: let
+    type = v.type or "tarball";
+    fn = if type == "file" then
+      builtins.fetchurl
+    else if type == "tarball" then
+      fetchTarball
+    else throw "undefined";
+    source = fn {
+      name = v.name or "source";
+      inherit (v) url;
+      sha256 = v.sha256 or v.hash;
+    };
+  in source) (builtins.fromJSON (builtins.readFile sourcePath));
+in {
+  imports = [
+    { _module.args.sources = if builtins.pathExists sourcePath then sources else {}; }
+  ];
   options.source-archives = lib.mkOption {
     type = lib.types.attrsOf lib.types.str;
     default = {};

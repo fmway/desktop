@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, config, ... }:
 {
 
   imports = [
@@ -27,8 +27,8 @@
       fmway-lib.follows = "fmway-lib";
       nixpkgs.follows = "nixpkgs";
     };
-    flake-file.url = "github:vic/flake-file";
-    import-tree.url = "github:vic/import-tree";
+    flake-file.url = "github:denful/flake-file";
+    import-tree.url = "github:denful/import-tree";
   };
 
 }

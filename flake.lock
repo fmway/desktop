@@ -37,16 +37,16 @@
     },
     "den": {
       "locked": {
-        "lastModified": 1776133621,
-        "narHash": "sha256-RNbDvS6voiq2GalVHRt6w2EpdlEmmCjUAb6fvPO9PnE=",
-        "owner": "vic",
+        "lastModified": 1778424069,
+        "narHash": "sha256-uSfZBnTIo1VxzDE9ci2jemM6N1ZmDYDyQqYSGR0i/TY=",
+        "owner": "denful",
         "repo": "den",
-        "rev": "927f4d8e2be40d05c976a91bbec66238c622bbf5",
+        "rev": "4e4dd023b0bbfb216c93cec284f8b769fd815f57",
         "type": "github"
       },
       "original": {
-        "owner": "vic",
-        "ref": "v0.16.0",
+        "owner": "denful",
+        "ref": "main",
         "repo": "den",
         "type": "github"
       }
@@ -91,13 +91,13 @@
       "locked": {
         "lastModified": 1777679829,
         "narHash": "sha256-zQxY90pq7BDbeimAiOfuK2U0huzo6oHOiC8zEpRgsbQ=",
-        "owner": "vic",
+        "owner": "denful",
         "repo": "flake-file",
         "rev": "04ca28cf570276e70a9a5f694791ab2a60f1f300",
         "type": "github"
       },
       "original": {
-        "owner": "vic",
+        "owner": "denful",
         "repo": "flake-file",
         "type": "github"
       }
@@ -212,13 +212,13 @@
       "locked": {
         "lastModified": 1773693634,
         "narHash": "sha256-BtZ2dtkBdSUnFPPFc+n0kcMbgaTxzFNPv2iaO326Ffg=",
-        "owner": "vic",
+        "owner": "denful",
         "repo": "import-tree",
         "rev": "c41e7d58045f9057880b0d85e1152d6a4430dbf1",
         "type": "github"
       },
       "original": {
-        "owner": "vic",
+        "owner": "denful",
         "repo": "import-tree",
         "type": "github"
       }

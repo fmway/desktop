@@ -1,4 +1,4 @@
-{ lib, fmx, den, inputs, ... }:
+{ lib, ... }:
 { 
   fmx.shells._.fish = { config, ... }:
   {

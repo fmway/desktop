@@ -1,40 +1,12 @@
 { den, fmx, lib, __findFile, ... }:
 {
-  den.default.includes = [
-    <fmx/utils>
-  ];
+  # den.default.includes = [
+  #   <fmx/utils>
+  # ];
 
-  fmx.utils.includes = builtins.attrValues fmx.utils.provides;
+  # fmx.utils.includes = builtins.attrValues fmx.utils.provides;
    # programs -> homeManager.programs
    # TODO: support nixos class
-  fmx.utils._.programs =
-    { class, aspect-chain }:
-    den._.forward {
-      each = [ "homeManager" ];
-      fromClass = _: "programs";
-      intoClass = lib.id;
-      intoPath = _: [ "programs" ];
-      fromAspect = _: lib.head aspect-chain;
-      adaptArgs = { pkgs, config, ... } @ args: args // { inherit config den fmx pkgs lib; };
-    };
-
-  fmx.utils._.disko = {
-    description = "Add disko classes";
-    includes = [
-      (den.lib.perHost ({ host }: den._.forward {
-        # only support for nixos
-        each = [ "nixos" ];
-        fromClass = _: "disko";
-        intoClass = lib.id;
-        intoPath = _: [ "disko" ];
-        fromAspect = _: host.aspect;
-        guard = { options, ... }: options ? disko;
-        adaptArgs = args: args // {
-          mainDisk = host.aspect.meta.mainDisk or (lib.warn "${host.aspect.meta.name}: mainDisk is undefined, use default value (dev/sda)" "/dev/sda");
-        };
-      }))
-    ];
-  };
 
   # FIXME: infinite recursion
   # fmx.utils._.nixvim = {

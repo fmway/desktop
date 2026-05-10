@@ -1,7 +1,8 @@
-{ fmx, den, lib, inputs, __findFile, ... }: let
+{ fmx, den, __findFile, lib, inputs, ... }: let
   nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
 in {
-  den.hosts.x86_64-linux.Namaku1801 = {
+  den.hosts.x86_64-linux.Namaku1801 = { };
+  den.aspects.Namaku1801 = {
     meta = {
       zram.size = 16384; # 16GB
       zram.priority = 100;
@@ -11,9 +12,8 @@ in {
       timeZone = "Asia/Jakarta";
       locale = "en_US.UTF-8";
       extraLocale = "id_ID.UTF-8";
+      configurationLimit = 20;
     };
-  };
-  den.aspects.Namaku1801 = {
     includes = [
       <fmx/display-managers/ly>
       <fmx/privileges/doas>
@@ -106,12 +106,6 @@ in {
         ];
       };
     };
-  };
-
-  den.ctx.host.nixos.home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    verbose = true;
   };
 
   den.aspects.flake.packages = { pkgs, ... }:

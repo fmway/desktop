@@ -51,10 +51,29 @@ inputs: let
   isAdditionalModuleExist = inputs ? module && builtins.pathExists inputs.module;
 
   m' = if lib.pathIsDirectory inputs.module then import-tree inputs.module else inputs.module;
+
+  scanModules = ((import-tree
+    .offSuffix "overlay.nix")
+    .offSuffix "lib.nix")
+    .map (p: let
+      name = lib.fmway.basename p;
+      toModules = name: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
+    in if lib.hasInfix "/classes/" p then {
+      imports = [ p (toModules "class-${name}") ];
+    } else if lib.hasInfix "/flake/" p then {
+      imports = [ p (toModules name) ];
+    } else p)
+    scanDir;
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
-    ((import-tree.offSuffix "overlay.nix").offSuffix "lib.nix" scanDir)
+    scanModules
+    ({ lib, config, ... }: {
+      options.flake.flakeModules = lib.mkOption {
+        type = lib.types.toml; # smart append for list value
+      };
+      config.flake.flakeModule.imports = builtins.attrValues config.flake.flakeModules;
+    })
   ] ++ lib.optional isAdditionalModuleExist m';
 
   flake.lib = selfLib lib;

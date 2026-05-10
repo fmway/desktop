@@ -1,4 +1,4 @@
-{ den, fmx, lib, ... }: let
+{ fmx, lib, ... }: let
   dir = builtins.toPath ./_programs;
 in {
   fmx.programs = ((lib.import-tree
