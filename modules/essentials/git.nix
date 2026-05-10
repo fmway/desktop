@@ -25,9 +25,10 @@
         };
         url = let
           sites = {
-            "github.com" = "gh" ;
-            "gitlab.com" = "gl";
-            "codeberg.org" = "cb";
+            "github.com" = "github" ;
+            "gitlab.com" = "gitlab";
+            "codeberg.org" = "codeberg";
+            "tangled.org" = "tangled";
           };
         in builtins.foldl' (acc: x: acc // {
           "https://${x}/".insteadOf = "${sites.${x}}:";
