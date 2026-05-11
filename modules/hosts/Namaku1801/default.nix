@@ -13,6 +13,13 @@ in {
       locale = "en_US.UTF-8";
       extraLocale = "id_ID.UTF-8";
       configurationLimit = 20;
+      scx = {
+        default.scheduler = "scx_bpfland";
+        default.args = [ "-f" "-k" "-p" ];
+
+        alter.scheduler = "scx_flash";
+        alter.args = [ "-k" ];
+      };
     };
     includes = [
       <fmx/display-managers/ly>
@@ -24,6 +31,7 @@ in {
       <fmx/file-managers/yazi>
       <fmx/disk/zfs>
       <fmx/disk/zfs/auto-snapshot>
+      <fmx/kernels/cachy>
       (fmx.disk._.zfs._.auto-scrub "weekly")
     ];
     provides.to-users.nixos = { config, ... }:
