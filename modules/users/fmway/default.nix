@@ -1,7 +1,9 @@
 { __findFile, den, ... }:
 {
   # den.homes.x86_64-linux."fmway@Namaku1801" = {};
-  den.hosts.x86_64-linux.Namaku1801.users.fmway = {};
+  den.hosts.x86_64-linux.Namaku1801.users.fmway = {
+    email = "fm18lv@gmail.com";
+  };
 
   den.aspects.fmway = {
     includes = [
@@ -11,7 +13,5 @@
       <fmx/themes/catppuccin>
       (den._.user-shell "fish")
     ];
-
-    meta.email = "fm18lv@gmail.com";
   };
 }

@@ -18,15 +18,8 @@
       boot.zfs.package = config.boot.kernelPackages.zfs_cachyos;
     };
 
-    _.scx.nixos = { host, pkgs, config, ... }: let
-      # standby scx
-      scx.default.scheduler = host.aspect.meta.scx.default.scheduler or host.aspect.meta.scx.default or host.aspect.meta.scx or "scx_bpfland";
-      scx.default.args = host.aspect.meta.scx.default.args or host.aspect.meta.scx.args or [ ];
-
-      # when power on
-      scx.alter.scheduler = host.aspect.meta.scx.alter.scheduler or host.aspect.meta.scx.alter or null;
-      scx.alter.args = host.aspect.meta.scx.alter.args or scx.default.args;
-    in {
+    _.scx.nixos = { scx, pkgs, config, ... }:
+    {
       config = lib.mkMerge [
         {
           services.scx.enable = true;

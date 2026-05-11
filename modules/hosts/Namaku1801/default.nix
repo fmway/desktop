@@ -1,26 +1,26 @@
 { fmx, den, __findFile, lib, inputs, ... }: let
   nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
 in {
-  den.hosts.x86_64-linux.Namaku1801 = { };
-  den.aspects.Namaku1801 = {
-    meta = {
-      zram.size = 16384; # 16GB
-      zram.priority = 100;
+  den.hosts.x86_64-linux.Namaku1801 = {
+    scx = {
+      default.scheduler = "scx_bpfland";
+      default.args = [ "-f" "-k" "-p" ];
 
-      battery_limit = 10; # autoshutdown when battery under 10%
-
-      timeZone = "Asia/Jakarta";
-      locale = "en_US.UTF-8";
-      extraLocale = "id_ID.UTF-8";
-      configurationLimit = 20;
-      scx = {
-        default.scheduler = "scx_bpfland";
-        default.args = [ "-f" "-k" "-p" ];
-
-        alter.scheduler = "scx_flash";
-        alter.args = [ "-k" ];
-      };
+      alter.scheduler = "scx_flash";
+      alter.args = [ "-k" ];
     };
+
+    zram.size = 16384; # 16GB
+    zram.priority = 100;
+
+    battery_limit = 10; # autoshutdown when battery under 10%
+
+    timeZone = "Asia/Jakarta";
+    locale = "en_US.UTF-8";
+    extraLocale = "id_ID.UTF-8";
+    configurationLimit = 20;
+  };
+  den.aspects.Namaku1801 = {
     includes = [
       <fmx/display-managers/ly>
       <fmx/privileges/doas>

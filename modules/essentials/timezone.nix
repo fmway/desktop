@@ -1,8 +1,8 @@
 {
   fmx.essentials._.timezone.nixos = { host, ... }: let
-    timeZone = host.aspect.meta.timeZone or host.aspect.meta.timezone or "Asia/Jakarta";
-    defaultLocale = host.aspect.meta.defaultLocale or host.aspect.meta.locale or "en_US.UTF-8";
-    extraLocale = host.aspect.meta.extraLocale or defaultLocale;
+    timeZone = host.timeZone or null;
+    defaultLocale = host.locale or "en_US.UTF-8";
+    extraLocale = host.extraLocale or defaultLocale;
   in {
     time.timeZone = timeZone;
     i18n.defaultLocale = defaultLocale;

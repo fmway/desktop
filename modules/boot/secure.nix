@@ -16,7 +16,7 @@
     boot.lanzaboote = {
       enable = true;
       pkiBundle = "/var/lib/sbctl";
-      configurationLimit = host.aspect.meta.configurationLimit or 25;
+      configurationLimit = host.configurationLimit or 25;
     };
   };
 

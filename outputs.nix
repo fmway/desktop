@@ -60,6 +60,8 @@ inputs: let
       toModules = name: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
     in if lib.hasInfix "/classes/" p then {
       imports = [ p (toModules "class-${name}") ];
+    } else if lib.hasInfix "/extras/" p then {
+      imports  = [ p (toModules "extra-${name}") ];
     } else if lib.hasInfix "/flake/" p then {
       imports = [ p (toModules name) ];
     } else p)

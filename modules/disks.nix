@@ -28,8 +28,8 @@
               den.aspects.Namaku1801.includes = [
                 <fmx/disk/${name}>
               ];
-              # Set mainDisk via meta.mainDisk (default "/dev/sda")
-              den.aspects.Namaku1801.meta.mainDisk = "/dev/nvme0n1";
+              # Set mainDisk via <host>.mainDisk (default "/dev/sda")
+              den.hosts.x86_64-linux.Namaku1801.mainDisk = "/dev/nvme0n1";
           '';
           nixos.imports = [ inputs.disko.nixosModules.default ];
           disko = { mainDisk, ... } @ v: (import path (v // { inherit mainDisk; })).disko;

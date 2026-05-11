@@ -20,8 +20,8 @@
 
         user = {
           name = user.userName;
-        } // lib.optionalAttrs (user ? aspect.meta.email) {
-          email = user.aspect.meta.email;
+        } // lib.optionalAttrs (!isNull user.email) {
+          email = user.email;
         };
         url = let
           sites = {

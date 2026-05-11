@@ -6,7 +6,7 @@
     '';
     nixos =
       { host, pkgs, ... }: let
-        shut_in = host.aspect.meta.battery_limit or 15;
+        shut_in = host.battery_limit or 15;
       in {
         systemd.services.auto-shutdown = {
           path = with pkgs;[
