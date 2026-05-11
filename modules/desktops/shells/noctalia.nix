@@ -14,7 +14,7 @@
 
     includes = [
       ({ user, ... }: {
-        nixos.users.users.${user.userName}.extraGroups = [ "i2c" ];
+        nixos.users.users.${user.userName}.extraGroups = [ "i2c" "input" ];
       })
     ];
 
@@ -29,6 +29,9 @@
 
       environment.systemPackages = with pkgs; [
         ddcutil
+        evtest
+        wl-mirror
+        gpu-screen-recorder
       ];
       services.udev.packages = with pkgs; [
         ddcutil
