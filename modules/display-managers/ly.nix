@@ -6,8 +6,8 @@
     services.displayManager.ly.settings = {
       save = true;
       allow_empty_password = false;
-      animation = "doom";
-      asterisk = "-";
+      animation = "none";
+      asterisk = "%";
       auth_fails = 10;
 
       brightness_down_cmd = "${lib.getExe pkgs.brightnessctl} -q s 1%-";
