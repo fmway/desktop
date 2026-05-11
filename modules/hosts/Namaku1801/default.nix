@@ -108,9 +108,9 @@ in {
     };
   };
 
-  den.aspects.flake.packages = { pkgs, ... }:
+  perSystem = { pkgs, ... }:
   {
-    nvim = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system}.makeNixvimWithModule {
+    packages.nvim = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system}.makeNixvimWithModule {
       module.imports = [ nixvimModule ];
     };
   };

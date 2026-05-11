@@ -31,7 +31,6 @@
   den.schema = rec {
     user.classes = lib.mkDefault [ "homeManager" ];
     user.includes = [
-      den._.mutual-provider
       den._.primary-user
       den._.define-user
     ];
@@ -46,6 +45,13 @@
           verbose = true;
         };
       } else {})
+      {
+        # Force hostName
+        nixos = { host, ... }:
+        {
+          networking.hostName = lib.mkForce host.name;
+        };
+      }
     ];
   };
 }

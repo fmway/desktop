@@ -1,7 +1,7 @@
 { lib, pretty-lock, ... }: let
   ipc = [ "noctalia-shell" "ipc" "call" ];
   inherit (lib.kdl) leaf plain node flag HJKL M seq;
-  inherit (lib.niri) spawn window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule;
+  inherit (lib.niri) spawn window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule environment;
 in {
   fmx.desktops._.niri.nixos.security.pam.services.swaylock = {};
   fmx.desktops._.niri.homeManager = { pkgs, config, ... }: let
@@ -15,21 +15,6 @@ in {
       (proportion 1.0)
     ];
 
-    environment = {
-      TERMINAL = lib.getExe' pkgs.foot "footclient";
-      DISPLAY = ":0";
-      ELECTRON_OZONE_PLATFORM_HINT = "auto";
-      CLUTTER_BACKEND = "wayland";
-      GDK_BACKEND = "wayland,x11";
-      MOZ_ENABLE_WAYLAND = 1;
-      NIXOS_OZONE_WL = 1;
-      QT_QPA_PLATFORM = "wayland;xcb";
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
-      SDL_VIDEODRIVER = "wayland";
-      _JAVA_AWT_WM_NONREPARENTING =  1;
-      PROTON_ENABLE_WAYLAND = 1;
-    };
-
     dmenuan = pkgs.writeScript "dmenuan.sh" /* fish */ ''
       #!${lib.getExe pkgs.fish}
       set menu (${dmenu_path} | ${fuzzel} --layer overlay -d | xargs)
@@ -40,9 +25,6 @@ in {
       end
     '';
 
-    nodes.environment = map (k: let
-      v = (if builtins.isString environment.${k} then x: x else builtins.toJSON) environment.${k};
-    in leaf k v) (builtins.attrNames environment);
   in {
     home.packages = with pkgs; [
       foot
@@ -196,7 +178,20 @@ in {
         # )
       )
 
-      (plain "environment" nodes.environment)
+      (environment.append
+        (leaf "TERMINAL" (lib.getExe' pkgs.foot "footclient"))
+        (leaf "DISPLAY" ":0")
+        (leaf "ELECTRON_OZONE_PLATFORM_HINT" "auto")
+        (leaf "CLUTTER_BACKEND" "wayland")
+        (leaf "GDK_BACKEND" "wayland,x11")
+        (leaf "MOZ_ENABLE_WAYLAND" "1")
+        (leaf "NIXOS_OZONE_WL" "1")
+        (leaf "QT_QPA_PLATFORM" "wayland;xcb")
+        (leaf "QT_WAYLAND_DISABLE_WINDOWDECORATION" "1")
+        (leaf "SDL_VIDEODRIVER" "wayland")
+        (leaf "_JAVA_AWT_WM_NONREPARENTING" "1")
+        (leaf "PROTON_ENABLE_WAYLAND" "1")
+      )
 
       (window-rule
         (match {
@@ -259,7 +254,7 @@ in {
       )
 
       # Keybindings section
-      (binds
+      (binds.append
         (plain "Mod+Shift+Slash" (flag "show-hotkey-overlay"))
         (node "Mod+Return"       { hotkey-overlay-title = "Open a Terminal: footclient"; }
           (spawn
@@ -270,8 +265,9 @@ in {
           (spawn fuzzel "--layer" "overlay"))
         (plain "Mod+Shift+D"
           (spawn "${dmenuan}"))
-        # (node "Mod+I"            { hotkey-overlay-title = "Lock the screen"; }
-          (spawn pretty-lock)
+        (node "Mod+I"            { hotkey-overlay-title = "Lock the screen"; }
+          (spawn (lib.splitString " " (lib.trim pretty-lock)))
+        )
 
         (plain "Mod+Shift+Q" (flag "close-window"))
 

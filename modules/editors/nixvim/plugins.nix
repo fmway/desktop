@@ -6,8 +6,6 @@ in {
 
     nixvim = { pkgs, ... }:
     {
-      # Depends for git-dev plugins
-      globals.git_username.__raw = "get_git_username()";
       opts.relativenumber = true;
       nvchad.config.colorify.mode = "bg";
       extraPlugins = with pkgs.vimPlugins; [
@@ -23,16 +21,6 @@ in {
       ];
       extraConfigLua = ''
         vim.g.startuptime_tries = 10
-      '';
-
-      extraConfigLuaPre = lib.mkBefore /* lua */ ''
-        function get_git_username()
-          local username = vim.fn.system("git config user.name"):gsub("\n", "")
-          if username == "" then
-            return vim.env.USERNAME
-          end
-          return username
-        end
       '';
 
       plugins.lz-n.plugins = [
@@ -77,39 +65,6 @@ in {
           keys = [
             (keymap' "<leader>ty" (mkRawFn ''require("typr").open()'') "Open Typr" {})
             (keymap' "<leader>td" (mkRawFn ''require("typr.stats").open()'') "Show Typr Stats" {})
-          ];
-        })
-        (let
-          opts = {
-            read_only = false;
-            verbose = true;
-            git.default_org.__raw = "vim.g.git_username";
-            xdg_handler.enabled = true;
-            opener = mkRawFn [ "dir" "_" "selected_path" ] ''
-              vim.cmd("NvimTreeOpen " .. vim.fn.fnameescape(dir))
-              if selected_path then
-                vim.cmd("edit " .. selected_path)
-              end
-            '';
-          };
-        in {
-          __unkeyed-1 = "git-dev.nvim";
-          cmd = [ "GitDevClean" "GitDevCleanAll" "GitDevCloseBuffers" "GitDevOpen" "GitDevRecents" "GitDevToggleUI" "GitDevXDGHandle" ];
-          after = mkRawFn ''
-            require("git-dev").setup {${toLuaObject opts}}
-          '';
-          keys = [
-            (keymap' "<leader>go" (mkRawFn ''
-                local repo = vim.fn.input "Repository: "
-                if repo ~= "" then
-                  require("git-dev").open(repo)
-                end
-              '')
-              "[O]pen a remote git repository"
-              {}
-            )
-            (keymap'.n "<leader>gc" (mkRawFn ''require("git-dev").close_buffers()'') "[C]lose buffers of current repository" {})
-            (keymap'.n "<leader>gC" (mkRawFn ''require("git-dev").clean()'') "[C]lean current repository" {})
           ];
         })
       ];
@@ -197,7 +152,6 @@ in {
       };
       plugins.telescope.enabledExtensions = [
         "notify"
-        "git_dev"
       ];
 
       plugins.neoscroll = {
