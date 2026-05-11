@@ -1,5 +1,5 @@
 {
-  programs.foot = {
+  fmx.programs._.foot.homeManager.programs.foot = {
     enable = true;
     settings = {
       main = {

@@ -1,5 +1,5 @@
 {
-  programs.fuzzel = {
+  fmx.programs._.fuzzel.homeManager.programs.fuzzel = {
     enable = true;
     settings = {
       main = {

@@ -1,5 +1,5 @@
 {
-  programs = {
+  fmx.programs._.github.homeManager.programs = {
     # github-cli
     gh.enable = true;
     gh.settings = {

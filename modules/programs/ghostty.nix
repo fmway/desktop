@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  programs.ghostty = {
+  fmx.programs._.ghostty.homeManager.programs.ghostty = {
     enable = true;
     settings = {
       gtk-titlebar = false;

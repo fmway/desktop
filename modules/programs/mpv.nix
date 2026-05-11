@@ -1,5 +1,5 @@
 {
-  programs.mpv = {
+  fmx.programs._.mpv.homeManager.programs.mpv = {
     enable = true;
     config = {
       volume-max = "300";

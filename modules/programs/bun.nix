@@ -1,5 +1,5 @@
 {
-  programs.bun = {
+  fmx.programs._.bun.homeManager.programs.bun = {
     enable = true;
     settings = {
       smol = true;

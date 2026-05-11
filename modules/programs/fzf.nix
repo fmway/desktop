@@ -1,5 +1,5 @@
 {
-  programs.fzf = {
+  fmx.programs._.fzf.homeManager.programs.fzf = {
     enable = true;
     # colors = {
     #   "bg" = "#1e1e1e";
