@@ -31,4 +31,8 @@
     import-tree.url = "github:denful/import-tree";
   };
 
+  perSystem = { pkgs, lib, ... }:
+  {
+    packages = import ../packages { inherit pkgs lib; };
+  };
 }

@@ -34,8 +34,15 @@ in {
       <fmx/kernels/cachy>
       (fmx.disk._.zfs._.auto-scrub "weekly")
     ];
-    provides.to-users.nixos = { config, ... }:
+    provides.to-users.nixos = { config, pkgs, ... }:
     {
+      nixpkgs.overlays = [
+        (self: super: import ../../../packages { inherit lib; pkgs = self; })
+      ];
+      environment.systemPackages = with pkgs; [
+        qr-watcher
+        watch-clip-sync
+      ];
       programs.fish.useBabelfish = true;
 
       imports = [
