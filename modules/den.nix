@@ -1,4 +1,4 @@
-{ inputs, sources ? {}, den, lib, ... }:
+{ inputs, sources ? {}, __findFile, den, lib, ... }:
 {
   flake-file.inputs.den.url = "github:denful/den/main";
 
@@ -34,19 +34,22 @@
       den._.primary-user
       den._.define-user
     ];
-    home.includes = user.includes;
+    home.includes = user.includes ++ [
+      # Respect mutual-provider to-users
+      ({ home, ... }: den.lib.policy.include (home.host.aspect._.to-users or {}))
+    ];
     flake-packages.includes = [ (den.aspects.flake or {}) ];
 
     host.includes = [
-      ({ user, ... }: if builtins.elem "homeManager" user.classes then {
+      ({ user, ... }: lib.optionalAttrs (builtins.elem "homeManager" user.classes) {
         nixos.home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
           verbose = true;
         };
-      } else {})
+      })
       {
-        # Force hostName
+        # Force hostName, useful when integrated with clan.nix with different hostName machine
         nixos = { host, ... }:
         {
           networking.hostName = lib.mkForce host.name;

@@ -2,10 +2,10 @@
 {
   fmx.nix = { config, ... }:
   {
-    includes = [ config._.cache ];
-    __functor = _:
-      { class, aspect-chain }:
-      if lib.unused aspect-chain builtins.elem class [ "nixos" "homeManager" "darwin" ] then {
+    includes = [
+      config._.cache
+      ({ class, aspect-chain }:
+      lib.optionalAttrs (builtins.elem class [ "nixos" "homeManager" "darwin" ]) {
         ${class}.nix.settings = {
           experimental-features = [
             "nix-command"
@@ -13,6 +13,10 @@
           ];
           auto-optimise-store = false;
         };
-      } else {};
+      })
+    ];
+    homeManager = { pkgs, ... }: {
+      nix.package = lib.mkDefault pkgs.nix;
+    };
   };
 }

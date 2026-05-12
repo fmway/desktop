@@ -15,7 +15,7 @@
 
     __functor = _s: options: dates:
       { class, aspect-chain }:
-      if lib.unused aspect-chain builtins.elem class [ "nixos" "homeManager" "darwin" ] then {
+      if builtins.elem class [ "nixos" "homeManager" "darwin" ] then {
         ${class}.nix.gc = {
           automatic = true; inherit options;
           ${if class == "darwin" then "interval" else "dates"} = dates;

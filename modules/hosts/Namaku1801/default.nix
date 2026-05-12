@@ -92,15 +92,21 @@ in {
       <fmx/desktops/shells/noctalia>
       <fmx/desktops/niri>
       <fmx/desktops/niri/noctalia>
-      (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
+      # (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
+
+      {
+        # disable ~/.config/nix/nix.conf since that's is already define in /etc/nix/nix.conf
+        homeManager.xdg.configFile."nix/nix.conf".enable = lib.mkDefault false;
+      }
+      ({ home, ... }: {
+        # reenable for standalone home manager
+        homeManager.xdg.configFile."nix/nix.conf".enable = lib.mkOverride 999 true;
+      })
     ];
 
     provides.to-users.homeManager =
     { config, ... }:
     {
-      # disable ~/.config/nix/nix.conf since that's is already define in /etc/nix/nix.conf
-      xdg.configFile."nix/nix.conf".enable = false;
-
       home = {
         sessionPath = map (x: "${config.home.homeDirectory}/${x}/bin") [
           ".local"

@@ -24,7 +24,7 @@
         __functor = _:
           { class, aspect-chain }:
           if builtins.elem class [ "nixos" "darwin" "homeManager" ] then {
-            description = lib.unused aspect-chain "Nix Binary Caches from ${name}";
+            description = "Nix Binary Caches from ${name}";
             ${class}.imports = [ path ];
           } else {};
       }) ./_cache;
