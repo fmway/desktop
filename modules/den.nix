@@ -1,5 +1,11 @@
-{ inputs, sources ? {}, __findFile, den, lib, ... }:
-{
+{ inputs, sources ? {}, __findFile, den, lib, ... }: let
+  nurOverlay = lib.optionalAttrs (inputs ? nur) rec {
+    nixos.nixpkgs.overlays = [
+      inputs.nur.overlays.default
+    ];
+    homeManager = nixos;
+  };
+in {
   flake-file.inputs.den.url = "github:denful/den/main";
 
   # Priority
@@ -29,6 +35,7 @@
       den._.define-user
     ];
     home.includes = user.includes ++ [
+      nurOverlay
       # Respect mutual-provider to-users
       ({ home, ... }: den.lib.policy.include (home.host.aspect._.to-users or {}))
     ];
@@ -42,6 +49,7 @@
           verbose = true;
         };
       })
+      nurOverlay
       {
         # Force hostName, useful when integrated with clan.nix with different hostName machine
         nixos = { host, ... }:

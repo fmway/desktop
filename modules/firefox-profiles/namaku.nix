@@ -1,12 +1,18 @@
-{ __findFile, ... }:
-{
+{ __findFile, lib, ... }:
+lib.fix (s: {
   # TODO:
-  # den.hosts.x86_64-linux.Namaku1801.users.fmway.firefox.Namaku1801 = {};
+  den.hosts.x86_64-linux.Namaku1801.users.fmway.firefox-profiles.Namaku1801 = {
+    profileName = "namaku";
+    classes = [ "floorp"  ];
+    classAliases.floorp = [ "firefox" ];
+  };
+
+  den.homes.x86_64-linux."fmway@Namaku1801".firefox-profiles.Namaku1801 = s.den.hosts.x86_64-linux.Namaku1801.users.fmway.firefox-profiles.Namaku1801;
 
   den.aspects.Namaku1801.includes = [
     <fmx/browsers/firefox>
   ];
-  den.aspects.Namaku1801.firefox =
+  den.aspects.Namaku1801.floorp =
   { pkgs, ... }:
   {
     containersForce = true; # force replace the existing containers configuration
@@ -31,24 +37,25 @@
     };
 
     # TODO
-    # extensions.packages = (with pkgs.nur.repos.rycee.firefox-addons; [
-    #   metamask
-    #   # multi-account-containers
-    #   violentmonkey
-    #   # greasemonkey
-    #   # gesturefy
-    #   # tree-style-tab
-    #   # react-devtools
-    #   # search-by-image
-    #   # firefox-color
-    #   # vue-js-devtools
-    # ]) ++ pkgs.lib.optionals (pkgs ? fmway) (with pkgs.fmway.firefox-addons; [
+    extensions.packages = (with pkgs.nur.repos.rycee.firefox-addons; [
+      # metamask
+      # multi-account-containers
+      violentmonkey
+      # greasemonkey
+      # gesturefy
+      # tree-style-tab
+      # react-devtools
+      # search-by-image
+      # firefox-color
+      # vue-js-devtools
+    ]) #++ pkgs.lib.optionals (pkgs ? fmway) (with pkgs.fmway.firefox-addons; [
     #   xdm_v8
     #   what-font
     #   # wakatime
     #   # stayfree
     #   firefox-relay
     #   # preact-devtools
-    # ]);
+    # ])
+    ;
   };
-}
+})

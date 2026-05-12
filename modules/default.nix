@@ -29,6 +29,9 @@
     };
     flake-file.url = "github:denful/flake-file";
     import-tree.url = "github:denful/import-tree";
+    nur.url = "github:nix-community/nur";
+    nur.inputs.flake-parts.follows = "flake-parts";
+    nur.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   perSystem = { pkgs, lib, ... }:

@@ -58,6 +58,13 @@
         noctalia-qs.inputs.systems.follows = "nixvim/systems";
       };
     };
+    nur = {
+      url = "github:nix-community/nur";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     nxchad = {
       url = "github:fmway/nxchad";
       inputs = {

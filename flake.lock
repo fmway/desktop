@@ -435,6 +435,29 @@
         "type": "github"
       }
     },
+    "nur": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1778645506,
+        "narHash": "sha256-7FokJ6hpBnJc/c3UsVhs2NiyeNZxLGGZY2qmY96v/78=",
+        "owner": "nix-community",
+        "repo": "nur",
+        "rev": "7e7807470cc4b68c8d9e95dbaa0fce7adb5c782b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nur",
+        "type": "github"
+      }
+    },
     "nxchad": {
       "inputs": {
         "flake-parts": [
@@ -511,6 +534,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "noctalia": "noctalia",
+        "nur": "nur",
         "nxchad": "nxchad"
       }
     },
