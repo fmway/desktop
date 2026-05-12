@@ -58,13 +58,14 @@ inputs: let
     .map (p: let
       name = lib.fmway.basename p;
       toModules = name: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
-    in if lib.hasInfix "/classes/" p then {
-      imports = [ p (toModules "class-${name}") ];
-    } else if lib.hasInfix "/extras/" p then {
-      imports  = [ p (toModules "extra-${name}") ];
-    } else if lib.hasInfix "/flake/" p then {
-      imports = [ p (toModules name) ];
-    } else p)
+      m = builtins.match ".*([/]flake[/]((classes|extras)[/])?).*" p;
+      s = builtins.elemAt m 0;
+      r = {
+        "/flake/".imports = [ p (toModules name) ];
+        "/flake/extras/".imports = [ p (toModules "extra-${name}") ];
+        "/flake/classes/".imports = [ p (toModules "class-${name}") ];
+      };
+    in if isNull m then p else r.${s})
     scanDir;
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {

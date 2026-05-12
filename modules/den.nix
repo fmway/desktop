@@ -13,14 +13,8 @@
     t = builtins.tail paths;
     p'= builtins.concatStringsSep "/" t;
     r = sources.${p'} or (throw "<sources/${p'}> is missing");
-    # override, disable warn from den.lib.__findFile
-    r'= builtins.tryEval (let
-      h' = builtins.head t; t' = builtins.tail t; v = den.ful.${h}.${h'};
-    in if t' == [ h' ] then v else lib.getAttrFromPath (builtins.concatMap (x: [ "_" x ]) t') v);
   in if pathLike && h == "sources" && t != [] then
     r
-  else if pathLike && den ? ful.${h} && r'.success then
-    r'.value
   else den.lib.__findFile nixP p;
 
   imports = [
