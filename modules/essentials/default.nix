@@ -34,7 +34,7 @@
       })
     ];
 
-    persistence = { persistent,  ... }:
+    persistence = { persistent, osConfig,  ... }:
     {
       ${persistent.defaultDirectory} = {
         enable = true;
@@ -53,7 +53,19 @@
           { directory = "/var/lib/sops-nix"; mode = "u=rwx,g=,o="; user = "root"; group = "root"; }
           { directory = "/var/lib/upower"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
           { directory = "/var/lib/bluetooth"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
-        ];
+        ]
+        ++ lib.optional osConfig.services.zerotierone.enable {
+          directory = "/var/lib/zerotier-one"; mode = "u=rwx,g=,0="; user = "root"; group = "root";
+        }
+        ++ lib.optional osConfig.networking.networkmanager.enable
+          "/etc/NetworkManager/system-connections"
+        ++ lib.optional osConfig.networking.wireless.iwd.enable {
+          directory = "/var/lib/iwd"; mode = "u=rwx,g=,o"; user = "root"; group = "root";
+        }
+        ++ lib.optional osConfig.services.colord.enable {
+          directory = "/var/lib/colord"; mode = "u=rwx,g=,o="; user = "colord"; group = "colord";
+        }
+        ;
 
         files = [
           "/etc/machine-id"
