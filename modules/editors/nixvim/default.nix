@@ -2,7 +2,14 @@
 {
   fmx.editors._.nixvim = { config, ... }:
   {
-    includes = builtins.attrValues config.provides;
+    includes = builtins.attrValues config.provides ++ [
+      ({ user, host, persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+          ".local/state/nvim"
+          ".local/share/nvim/nvnotify1" # ignore nvnotify
+        ];
+      })
+    ];
 
     nixvim = {
       imports = [

@@ -415,6 +415,13 @@ in {
           }) allSubs;
         });
   };
+  fmx.desktops._.niri._.noctalia.includes = [
+    ({ host, user, persistent, ... }: {
+      persistence.${persistent.cacheDirectory}.users.${user.userName}.files = [
+        ".config/niri/noctalia.kdl"
+      ];
+    })
+  ];
   fmx.desktops._.niri._.noctalia.homeManager = { pkgs, ... }: let
     sub = mkSub pkgs;
   in {

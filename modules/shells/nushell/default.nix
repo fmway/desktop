@@ -1,6 +1,13 @@
 # TODO: expose as nushell class
 { lib, ... }:
 {
+  fmx.shells._.nushell.includes = [
+    ({ user, host, persistent, ... }: {
+      persistence.${persistent.defaultDirectory}.users.${user.userName}.files = [
+        ".config/nushell/history.txt"
+      ];
+    })
+  ];
   fmx.shells._.nushell.homeManager =
     { config, ... }: let
       abbreviations = import ./_abbreviations.nix { inherit lib; };

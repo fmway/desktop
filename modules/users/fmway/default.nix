@@ -13,5 +13,8 @@
       <fmx/themes/catppuccin>
       (den._.user-shell "fish")
     ];
+    excludes = [
+      <fmx/programs/starship>
+    ];
   };
 }

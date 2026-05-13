@@ -14,7 +14,14 @@ in {
 
     libreoffice = mkAllPackages (pkgs: [ pkgs.libreoffice-fresh ]);
 
-    zotero = mkAllPackages (pkgs: [ pkgs.zotero ]);
+    zotero = mkAllPackages (pkgs: [ pkgs.zotero ]) // {
+      persistence = { persistent, user, ... }:
+      {
+        ${persistent.defaultDirectory}.users.${user.userName}.directories = [
+          "Zotero"
+        ];
+      };
+    };
 
     # Alternative LaTex
     typst = mkAllPackages (pkgs: [ pkgs.typst ]);

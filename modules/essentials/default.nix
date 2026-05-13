@@ -15,7 +15,52 @@
           "fwupd-refresh"
         ];
       })
+      ({ user, host, persistent, ... }: {
+        persistence.${persistent.defaultDirectory}.users.${user.userName} = {
+          directories = [
+            "Downloads"
+            "Music"
+            "Pictures"
+            "Documents"
+            "Videos"
+            ".ssh"
+            ".gnupg"
+            ".local/share/keyrings"
+            ".local/share/direnv"
+            ".config/sops"
+            ".android"
+          ];
+        };
+      })
     ];
+
+    persistence = { persistent,  ... }:
+    {
+      ${persistent.defaultDirectory} = {
+        enable = true;
+        hideMounts = true;
+        directories = map (x: { directory = x; mode = "0755"; user = "root"; group = "root"; }) [
+          "/etc/nixos"
+          "/var/log"
+          "/var/lib/nixos"
+          "/var/lib/systemd"
+          "/var/db/dhcpcd"
+          "/var/db/sudo/lectured"
+        ] ++ [
+          "/var/lib/boltd"
+          "/var/lib/fwupd"
+          "/etc/secrets"
+          { directory = "/var/lib/sops-nix"; mode = "u=rwx,g=,o="; user = "root"; group = "root"; }
+          { directory = "/var/lib/upower"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+          { directory = "/var/lib/bluetooth"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+        ];
+
+        files = [
+          "/etc/machine-id"
+          "/etc/kernel/entry-token"
+        ];
+      };
+    };
 
     nixos = { pkgs, ... }:
     {
@@ -74,7 +119,16 @@
         boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "uas" "sd_mod" ];
       };
     };
-    _.kdeconnect.nixos.programs.kdeconnect.enable = true;
+    _.kdeconnect = {
+      includes = [
+        ({ user, host, persistent, ... }: {
+          persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
+            ".config/kdeconnect"
+          ];
+        })
+      ];
+      nixos.programs.kdeconnect.enable = true;
+    };
   };
 
   flake-file.inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";

@@ -1,6 +1,12 @@
 # Secureboot using lanzaboot
 { inputs, lib, config, ... }:
 {
+  fmx.boot._.secure.persistence = { persistent, ... }:
+  {
+    ${persistent.defaultDirectory}.directories = [
+      "/var/lib/sbctl"
+    ];
+  };
   fmx.boot._.secure.nixos = { host, pkgs, ... }:
   {
     imports = [

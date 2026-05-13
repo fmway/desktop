@@ -16,6 +16,16 @@
       ({ user, ... }: {
         nixos.users.users.${user.userName}.extraGroups = [ "i2c" "input" ];
       })
+      ({ user, persistent, host, ... }: {
+        persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
+          ".config/noctalia"
+        ];
+      })
+      ({ user, persistent, host, ... }: {
+        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+          ".cache/noctalia"
+        ];
+      })
     ];
 
     nixos = { pkgs, ... }:

@@ -1,7 +1,24 @@
 { __findFile, ... }:
 {
   # enable flatpak support
-  fmx.containers._.flatpak.nixos.services.flatpak.enable = true;
+  fmx.containers._.flatpak = {
+    nixos.services.flatpak.enable = true;
+    includes = [
+      ({ user, host, persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+          ".cache/flatpak"
+          ".local/share/flatpak"
+        ];
+      })
+    ];
+  };
+  fmx.containers._.bottles.includes = [
+    ({ user, host, persistent, ... }: {
+      persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
+        ".local/share/bottles"
+      ];
+    })
+  ];
   fmx.containers._.bottles.nixos = { pkgs, ... }:
   {
     environment.systemPackages = [
@@ -22,6 +39,13 @@
         nixos.users.users.${user.userName}.extraGroups = [ "docker" ];
       })
     ];
+    persistence = { persistent, ... }:
+    {
+      ${persistent.cacheDirectory}.directories = [
+        { directory = "/var/lib/docker"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+        { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+      ];
+    };
   };
   fmx.containers._.docker._.rootless = {
     includes = [
@@ -45,18 +69,10 @@
     };
   };
 
-  # TODO
-  # fmx.containers._.docker._.impermanence = { persistent, ... }:
-  # {
-  #   nixos.environment.persistence.${persistent.cacheDirectory}.directories = [
-  #     "/var/lib/docker"
-  #     "/var/lib/containers/"
-  #   ];
-  # };
-  # fmx.containers._.podman._.impermanence = { persistent, ... }:
-  # {
-  #   nixos.environment.persistence.${persistent.cacheDirectory}.directories = [
-  #     "/var/lib/containers/"
-  #   ];
-  # };
+  fmx.containers._.podman.persistence = { persistent, ... }:
+  {
+    ${persistent.cacheDirectory}.directories = [
+      { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+    ];
+  };
 }

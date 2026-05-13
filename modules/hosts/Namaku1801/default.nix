@@ -2,6 +2,8 @@
   nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
 in {
   den.hosts.x86_64-linux.Namaku1801 = {
+    impermanence.enable = true;
+    persistent.cacheDirectory = "/persist/shared_cache";
     scx = {
       default.scheduler = "scx_bpfland";
       default.args = [ "-f" "-k" "-p" ];
@@ -48,6 +50,7 @@ in {
       imports = [
         inputs.nixvim.nixosModules.nixvim
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
+        ./_impermanence.nix
       ];
       programs.nixvim.enable = true;
       programs.nixvim.imports = [

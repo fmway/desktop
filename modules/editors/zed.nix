@@ -1,4 +1,13 @@
 {
+  fmx.editors._.zed.includes = [
+    ({ user, host, persistent, ... }: {
+      persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+        ".local/share/zed"
+        ".cache/zed"
+        ".local/state/zed"
+      ];
+    })
+  ];
   fmx.editors._.zed.homeManager = { pkgs, ... }: {
     programs.zed-editor = {
       enable = true;

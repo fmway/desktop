@@ -16,7 +16,18 @@
         apply-my-theme
       '';
     };
-    includes = builtins.attrValues config.provides;
+    includes = builtins.attrValues config.provides ++ [
+      ({ user, host, persistent, ... }: {
+        persistence.${persistent.defaultDirectory}.users.${user.userName}.files = [
+          ".local/share/fish/fish_history"
+        ];
+      })
+      ({ user, host, persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+          ".cache/fish"
+        ];
+      })
+    ];
     _.functions = { config, ... }: {
       description = "Collection of my fish functions";
       includes = builtins.attrValues config.provides;

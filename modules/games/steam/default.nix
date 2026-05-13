@@ -5,6 +5,12 @@
       "steam"
       "steam-unwrapped"
     ])
+    ({ user, host, persistent, ... }: {
+      persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+        ".steam"
+        ".local/share/Steam"
+      ];
+    })
   ];
   fmx.games._.steam.nixos =
   { config, lib, pkgs, ... }:
