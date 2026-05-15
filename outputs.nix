@@ -36,7 +36,12 @@ inputs: let
   
   scanDir = builtins.toPath ./modules;
 
-  import-tree = ((inputs.import-tree.withLib _lib).addAPI api).map builtins.toPath;
+  import-tree =
+    inputs.import-tree.withLib _lib
+    (s: s.addAPI api)
+    (s: s.map builtins.toPath)
+    # for local flake
+    (inputs._wrapImportTree or (s: s)); 
 
   selfLib = lib: ((((import-tree
     .map (p: {
