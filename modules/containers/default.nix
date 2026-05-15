@@ -1,4 +1,3 @@
-{ __findFile, ... }:
 {
   # enable flatpak support
   fmx.containers._.flatpak = {

@@ -43,55 +43,72 @@ inputs: let
     # for local flake
     (inputs._wrapImportTree or (s: s)); 
 
-  selfLib = lib: ((((import-tree
-    .map (p: {
+  selfLib = lib: import-tree
+    (s: s.map (p: {
       keys = let k = lib.init (lib.splitString "/" (lib.removePrefix "${scanDir}/" p)); in if builtins.length k > 1 then lib.tail k else k;
       value = lib.fmway.doImport p { inherit lib inputs; };
     }))
-    .pipeTo (builtins.foldl' (a: c: lib.recursiveUpdate a (lib.setAttrByPath c.keys c.value)) {}))
-    .onSuffix "lib.nix")
-    .withLib lib)
+    (s: s.pipeTo (builtins.foldl' (a: c: lib.recursiveUpdate a (lib.setAttrByPath c.keys c.value)) {}))
+    (s: s.onSuffix "lib.nix")
+    (s: s.withLib lib)
     scanDir;
 
   isAdditionalModuleExist = inputs ? module && builtins.pathExists inputs.module;
 
-  m' = if lib.pathIsDirectory inputs.module then import-tree inputs.module else inputs.module;
+  scanModules = import-tree
+    (s: s.offSuffix "overlay.nix")
+    (s: s.offSuffix "lib.nix")
+    (s: if isAdditionalModuleExist then s.addPath inputs.module else s) # for local use
+    # (s: s.map (p: let
+    #   name = lib.fmway.basename p;
+    #   toModules = name: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
+    #   m = builtins.match ".*([/]flake[/]((classes|extras)[/])?).*" p;
+    #   s = builtins.elemAt m 0;
+    #   r = {
+    #     "/flake/".imports = [ p (toModules name) ];
+    #     "/flake/extras/".imports = [ p (toModules "extra-${name}") ];
+    #     "/flake/classes/".imports = [ p (toModules "class-${name}") ];
+    #   };
+    # in if isNull m then p else r.${s}))
+    ;
 
-  scanModules = ((import-tree
-    .offSuffix "overlay.nix")
-    .offSuffix "lib.nix")
-    .map (p: let
-      name = lib.fmway.basename p;
-      toModules = name: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
-      m = builtins.match ".*([/]flake[/]((classes|extras)[/])?).*" p;
-      s = builtins.elemAt m 0;
-      r = {
-        "/flake/".imports = [ p (toModules name) ];
-        "/flake/extras/".imports = [ p (toModules "extra-${name}") ];
-        "/flake/classes/".imports = [ p (toModules "class-${name}") ];
-      };
-    in if isNull m then p else r.${s})
-    scanDir;
+  # Priority
+  # 1. args.source (<source/...>)
+  # 2. args.den.ful.<namespace/...> (<namespace/...>)
+  # 3. builtin den.lib.__findFile
+  scoped = { den, sources }:
+  {
+    __findFile = nixP: p: let
+      pathLike = lib.hasInfix "/" p;
+      paths = lib.splitString "/" p;
+      h = builtins.head paths;
+      t = builtins.tail paths;
+      p'= builtins.concatStringsSep "/" t;
+      r = sources.${p'} or (throw "<sources/${p'}> is missing");
+    in if pathLike && h == "sources" && t != [] then
+      r
+    else den.lib.__findFile nixP p;
+  };
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
-    scanModules
+    ({ den, sources ? {}, ... }: scanModules.addScoped (scoped { inherit den sources; }) scanDir)
     ({ lib, config, ... }: {
       options.flake.flakeModules = lib.mkOption {
         type = lib.types.toml; # smart append for list value
       };
       config.flake.flakeModule.imports = builtins.attrValues config.flake.flakeModules;
     })
-  ] ++ lib.optional isAdditionalModuleExist m';
+  ];
 
   flake.lib = selfLib lib;
 
-  flake.overlays = (((import-tree
-    .onSuffix "overlay.nix")
-    .map (p: {
+  flake.overlays = import-tree
+    (s: s.onSuffix "overlay.nix")
+    (s: s.map (p: {
       name = lib.last (lib.init (lib.splitString "/" p));
       value = import p;
     }))
-    .pipeTo lib.listToAttrs)
+    (s: s.pipeTo lib.listToAttrs)
     scanDir;
 }

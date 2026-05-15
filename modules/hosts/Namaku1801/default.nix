@@ -1,4 +1,4 @@
-{ fmx, den, __findFile, lib, inputs, ... }: let
+{ fmx, den, lib, inputs, ... }: let
   nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
 in {
   den.hosts.x86_64-linux.Namaku1801 = {

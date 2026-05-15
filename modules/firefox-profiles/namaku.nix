@@ -1,4 +1,4 @@
-{ __findFile, lib, ... }:
+{ lib, ... }:
 lib.fix (s: {
   # TODO:
   den.hosts.x86_64-linux.Namaku1801.users.fmway.firefox-profiles.Namaku1801 = {

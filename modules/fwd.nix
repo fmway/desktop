@@ -1,4 +1,4 @@
-{ den, fmx, lib, __findFile, ... }:
+{ den, fmx, lib, ... }:
 {
   # den.default.includes = [
   #   <fmx/utils>

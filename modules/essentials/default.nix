@@ -1,4 +1,4 @@
-{ den, lib, __findFile, ... }:
+{ den, lib, ... }:
 {
   fmx.essentials = { config, ... }: {
     includes = builtins.attrValues config.provides ++ [

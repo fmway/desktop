@@ -1,4 +1,3 @@
-{ __findFile, ... }:
 {
   fmx.containers._.waydroid = { persistent, ... }:
   {

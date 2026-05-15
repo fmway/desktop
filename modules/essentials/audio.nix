@@ -1,4 +1,3 @@
-{ __findFile, ... }:
 {
   source-files."kaku/services/pipewire" = "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix";
 

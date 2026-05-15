@@ -1,4 +1,3 @@
-{ __findFile, ... }:
 {
   den.default.includes = [
     <fmx/version>
