@@ -1,6 +1,6 @@
-# FIXME: we don't consume this yet
 { lib, search-engines, ... }:
 {
+  # TODO: add impermanence for firefox / all firefox based
   fmx.browsers._.firefox = {
     firefox = 
       { pkgs, ... }:

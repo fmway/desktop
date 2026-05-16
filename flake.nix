@@ -13,6 +13,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dsearch = {
+      url = "github:AvengeMedia/danksearch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-file.url = "github:denful/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -28,6 +32,10 @@
         fmway-lib.follows = "fmway-lib";
         nixpkgs.follows = "nixpkgs";
       };
+    };
+    helium = {
+      url = "github:vikingnope/helium-browser-nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";

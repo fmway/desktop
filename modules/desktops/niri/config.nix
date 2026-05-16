@@ -1,8 +1,15 @@
-{ lib, pretty-lock, ... }: let
+{ lib, den, pretty-lock, ... }: let
   ipc = [ "noctalia-shell" "ipc" "call" ];
   inherit (lib.kdl) leaf plain node flag HJKL M seq;
   inherit (lib.niri) spawn window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule environment;
+  inherit (den.lib) policy;
 in {
+  fmx.desktops._.niri.includes = [
+    (policy.when ({ user, ... }: user.hasAspect <fmx/desktops/shells/noctalia>)
+      (policy.include <fmx/desktops/niri/noctalia>))
+    (policy.when ({ user, ... }: user.hasAspect <fmx/desktops/shells/dms>)
+      (policy.include <fmx/desktops/niri/dms>))
+  ];
   fmx.desktops._.niri.nixos.security.pam.services.swaylock = {};
   fmx.desktops._.niri.homeManager = { pkgs, config, ... }: let
     dmenu_path = lib.getExe' pkgs.dmenu "dmenu_path";
@@ -422,12 +429,21 @@ in {
       ];
     })
   ];
+  fmx.desktops._.niri._.dms.homeManager = {
+    wayland.windowManager.niri.config = [
+      (include { optional = true; } "./dms/alttab.kdl")
+      (include { optional = true; } "./dms/binds.kdl")
+      (include { optional = true; } "./dms/colors.kdl")
+      (include { optional = true; } "./dms/cursor.kdl")
+      (include { optional = true; } "./dms/layout.kdl")
+      (include { optional = true; } "./dms/outputs.kdl")
+      (include { optional = true; } "./dms/windowrules.kdl")
+      (include { optional = true; } "./dms/wblur.kdl")
+    ];
+  };
   fmx.desktops._.niri._.noctalia.homeManager = { pkgs, ... }: let
     sub = mkSub pkgs;
   in {
-    home.activation.initialNoctaliaForNiri = lib.hm.dag.entryAfter [ "linkGeneration" ] /* sh */ ''
-      [ -e "$HOME/.config/niri/noctalia.kdl" ] || touch "$HOME/.config/niri/noctalia.kdl" 
-    '';
     wayland.windowManager.niri.config = [
       (binds.append
         # fn section
@@ -486,7 +502,7 @@ in {
       # (spawn-at-startup
       #   "wl-paste" "--type" "text" "--watch" "cliphist" "store")
 
-      (include "./noctalia.kdl")
+      (include { optional = true; } "./noctalia.kdl")
     ];
   };
 }

@@ -28,7 +28,29 @@ inputs: let
          value = (if builtins.isFunction fn || fn ? __functor then fn else _: fn) { inherit name path; };
       }))
       .pipeTo lib.listToAttrs;
+
+    # auto export flakeModules.<x> if the module inside */flake/(classes|extras/)?
+    # respect to import-tree.addScope except the flakeModules 
+    collectModules = self:
+      self.map (p: let
+        name = lib.fmway.basename p;
+        m = builtins.match ".*([/]flake[/]((classes|extras)[/])?).*" p;
+        m'= builtins.elemAt m 0;
+        fixModule =
+          if self.__config.scoped == {  } then
+            p
+          else
+            lib.modules.setDefaultModuleLocation p (scopedImport self.__config.scoped p);
+        r = {
+          "/flake/".imports = [ p (toModules name p) ];
+          "/flake/extras/".imports = [ p (toModules "extra-${name}" p) ];
+          "/flake/classes/".imports = [ p (toModules "class-${name}" p) ];
+        };
+      in if isNull m then fixModule else r.${m'})
+      (s: s.pipeTo (modules: { imports = modules; }));
   };
+
+  toModules = name: p: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
 
   specialArgs = {
     inherit lib;
@@ -59,22 +81,10 @@ inputs: let
     (s: s.offSuffix "overlay.nix")
     (s: s.offSuffix "lib.nix")
     (s: if isAdditionalModuleExist then s.addPath inputs.module else s) # for local use
-    # (s: s.map (p: let
-    #   name = lib.fmway.basename p;
-    #   toModules = name: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
-    #   m = builtins.match ".*([/]flake[/]((classes|extras)[/])?).*" p;
-    #   s = builtins.elemAt m 0;
-    #   r = {
-    #     "/flake/".imports = [ p (toModules name) ];
-    #     "/flake/extras/".imports = [ p (toModules "extra-${name}") ];
-    #     "/flake/classes/".imports = [ p (toModules "class-${name}") ];
-    #   };
-    # in if isNull m then p else r.${s}))
     ;
 
   # Priority
   # 1. args.source (<source/...>)
-  # 2. args.den.ful.<namespace/...> (<namespace/...>)
   # 3. builtin den.lib.__findFile
   scoped = { den, sources }:
   {
@@ -92,7 +102,7 @@ inputs: let
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
-    ({ den, sources ? {}, ... }: scanModules.addScoped (scoped { inherit den sources; }) scanDir)
+    ({ den, sources ? {}, ... }: scanModules.addScoped (scoped { inherit den sources; }) (s: s.collectModules) scanDir)
     ({ lib, config, ... }: {
       options.flake.flakeModules = lib.mkOption {
         type = lib.types.toml; # smart append for list value

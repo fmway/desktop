@@ -1,6 +1,19 @@
 { fmx, den, lib, inputs, ... }: let
   nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
 in {
+  # den.aspects.fmway.excludes = [
+  #   <fmx/desktops/shells/noctalia>
+  # ];
+  # den.aspects.fmway.provides.Namaku1801 = {
+  #   # replace noctalia to dms
+  #   # meta.handleWith = den.lib.aspects.fx.constraints.substitute <fmx/desktops/shells/noctalia> <fmx/desktops/shells/dms>;
+  #   excludes = [
+  #     <fmx/desktops/shells/noctalia>
+  #   ];
+  #   includes = [
+  #     <fmx/desktops/shells/dms>
+  #   ];
+  # };
   den.hosts.x86_64-linux.Namaku1801 = {
     impermanence.enable = true;
     persistent.cacheDirectory = "/persist/shared_cache";
@@ -93,8 +106,8 @@ in {
       <fmx/containers/docker>
       # <fmx/containers/bottles>
       <fmx/desktops/shells/noctalia>
+      # <fmx/desktops/shells/dms>
       <fmx/desktops/niri>
-      <fmx/desktops/niri/noctalia>
       # (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
 
       {

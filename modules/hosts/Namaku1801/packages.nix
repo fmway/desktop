@@ -1,4 +1,4 @@
-{ den, ... }:
+{ den, lib, ... }:
 {
   den.aspects.Namaku1801.includes = [
     den.aspects.Namaku1801._.packages

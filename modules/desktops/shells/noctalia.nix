@@ -13,9 +13,7 @@
     };
 
     includes = [
-      ({ user, ... }: {
-        nixos.users.users.${user.userName}.extraGroups = [ "i2c" "input" ];
-      })
+      <fmx/desktops/utils/ddc>
       ({ user, persistent, host, ... }: {
         persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
           ".config/noctalia"
@@ -30,23 +28,11 @@
 
     nixos = { pkgs, ... }:
     {
-      boot.kernelModules = [
-        "i2c-dev"
-      ];
-      boot.initrd.availableKernelModules = [
-        "i2c-dev"
-      ];
-
       environment.systemPackages = with pkgs; [
-        ddcutil
         evtest
         wl-mirror
         gpu-screen-recorder
       ];
-      services.udev.packages = with pkgs; [
-        ddcutil
-      ];
-      users.groups.i2c = {};
     };
   };
 

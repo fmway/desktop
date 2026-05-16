@@ -13,6 +13,9 @@ in {
     (lib.den.namespace "fmx" true)
   ];
 
+  den.default.includes = [
+    den._.inputs'
+  ];
   den.schema = rec {
     user.classes = lib.mkDefault [ "homeManager" ];
     user.includes = [
