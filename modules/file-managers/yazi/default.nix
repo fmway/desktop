@@ -2,7 +2,7 @@
   t = by: args:
     if lib.isString args then t by {} args
     else run: map (x: { inherit run; "${by}" = x; } // args);
-  run = t "name";
+  run = t "url";
   run'= t "mime";
 in {
   fmx.file-managers._.yazi = { config, ... }:
@@ -100,7 +100,7 @@ in {
       programs.yazi.plugins.piper = pkgs.yaziPlugins.piper;
 
       programs.yazi.settings.yazi.plugin.prepend_previewers = [ 
-        { name = "*.md"; run = ''piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"''; }
+        { url = "*.md"; run = ''piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"''; }
       ];
     };
 
@@ -143,8 +143,8 @@ in {
       ];
 
       open.prepend_rules = [
-        { name = "*Video{s,}"; use = [ "play" ]; }
-        { name = "*.{ass,srt,ssa,sty,sup,vtt}";
+        { url = "*Video{s,}"; use = [ "play" ]; }
+        { url = "*.{ass,srt,ssa,sty,sup,vtt}";
           use  = [ "add-sub" "edit" ];
         }
       ];
