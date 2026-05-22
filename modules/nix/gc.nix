@@ -14,12 +14,11 @@
     '';
 
     __functor = _s: options: dates:
-      { class, aspect-chain }:
-      if builtins.elem class [ "nixos" "homeManager" "darwin" ] then {
-        ${class}.nix.gc = {
+      lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: {
+        nix.gc = {
           automatic = true; inherit options;
           ${if class == "darwin" then "interval" else "dates"} = dates;
         };
-      } else {};
+      });
   };
 }

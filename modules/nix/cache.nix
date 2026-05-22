@@ -6,12 +6,8 @@
       { name, path }:
       {
         description = "Nix Binary Caches from ${name}";
-        __functor = _:
-          { class, aspect-chain }:
-          if builtins.elem class [ "nixos" "darwin" "homeManager" ] then {
-            description = "Nix Binary Caches from ${name}";
-            ${class}.imports = [ path ];
-          } else {};
-      }) ./_cache;
+      } // lib.genAttrs [ "nixos" "darwin" "homeManager" ] (class: {
+        imports = [ path ];
+      })) ./_cache;
   };
 }

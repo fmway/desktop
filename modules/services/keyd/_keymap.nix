@@ -6,8 +6,12 @@ self: with self; {
     katakanahiragana = layer altgr;
     capslock         = layer normal;
     shift            = layer shift;
+    yen = "l";
+    ro = ";";
   };
   shift.capslock = capslock;
+  shift.yen = "L";
+  shift.ro = ":";
   # normal mode
   normal = {
     h   = left;
@@ -20,11 +24,21 @@ self: with self; {
     v   = toggle visual;
     g   = oneshot g_layer;
 
+    o = "l";
+    shift."o" = "L";
+    "p" = ";";
+    shift."p" = ":";
+
     shift."6" = home;
     shift."4" = end;
     shift."h" = pageup;
     shift."j" = pagedown;
     shift."g" = Ctrl end;
+
+    alt."j" = "l";
+    alt.shift."j" = "L";
+    alt."k" = ";";
+    alt.shift."k" = ":";
 
     f1 = mute;
     f2 = volumedown;

@@ -38,16 +38,16 @@
       [ "${inputs.impermanence}/lib.nix" "${inputs.impermanence}/mount-file.bash" "${submodule-options}" "${inputs.impermanence}/home-manager.nix" "${inputs.impermanence}/create-directories.bash" ]
       (builtins.readFile "${inputs.impermanence}/nixos.nix"));
 in {
-  den.classes.persistence = "Impermanence persistence class";
+  den.classes.persistence.description = "Impermanence persistence class";
 
-  den.policies.enable-impermanence = { host, ... }:
-    lib.optionals host.impermanence.enable [
-      (den.lib.policy.resolve { persistent = host.persistent; })
-      (den.lib.policy.include {
-        nixos.imports = [
-          ({ pkgs, config, lib, options, utils, ... }: import patchModule { inherit pkgs config options utils; lib = lib // { inherit uniqLastBy uniqBy; }; })
-        ];
-      })
+  den.policies.enable-impermanence = { host, ... }: [
+    (den.lib.policy.resolve { persistent = host.persistent; })
+  ] ++ lib.optionals host.impermanence.enable [
+    (den.lib.policy.include {
+      nixos.imports = [
+        ({ pkgs, config, lib, options, utils, ... }: import patchModule { inherit pkgs config options utils; lib = lib // { inherit uniqLastBy uniqBy; }; })
+      ];
+    })
     ];
 
   den.policies.persistence-to-nixos = { host, ... }:
