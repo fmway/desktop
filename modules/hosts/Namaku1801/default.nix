@@ -37,6 +37,7 @@ in {
   };
   den.aspects.Namaku1801 = {
     includes = [
+      <fmx/essentials/openssh/allow-users>
       <fmx/display-managers/ly>
       <fmx/privileges/doas>
       <fmx/privileges/please>
