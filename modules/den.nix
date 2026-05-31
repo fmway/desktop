@@ -1,10 +1,4 @@
 { inputs, den, lib, config, ... }: let
-  nurOverlay = lib.optionalAttrs (inputs ? nur) rec {
-    nixos.nixpkgs.overlays = [
-      inputs.nur.overlays.default
-    ];
-    homeManager = nixos;
-  };
   inputs-param = ctx: builtins.mapAttrs (_: input: if input._type or "" == "flake" then config.perInput ctx.system input else input) inputs;
 in {
   flake-file.inputs.den.url = "github:denful/den/main";
@@ -33,7 +27,6 @@ in {
       den._.define-user
     ];
     home.includes = user.includes ++ [
-      nurOverlay
       # Respect mutual-provider to-users
       (den.lib.policy.mkPolicy "to-users-to-standalone-hm"
         ({ home, ... }: den.lib.policy.include (home.host.aspect._.to-users or {})))
@@ -48,7 +41,6 @@ in {
           verbose = true;
         };
       })
-      nurOverlay
       {
         # Force hostName, useful when integrated with clan.nix with different hostName machine
         nixos = { host, ... }:

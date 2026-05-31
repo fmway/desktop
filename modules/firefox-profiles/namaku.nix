@@ -10,6 +10,7 @@ lib.fix (s: {
 
   den.aspects.Namaku1801.includes = [
     <fmx/browsers/firefox>
+    <overlays/nur>
   ];
   den.aspects.Namaku1801.floorp =
   { pkgs, ... }:
