@@ -5,9 +5,9 @@
   inherit (den.lib) policy;
 in {
   fmx.desktops._.niri.includes = [
-    (policy.when ({ user, ... }: user.hasAspect <fmx/desktops/shells/noctalia>)
+    (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/noctalia>)
       (policy.include <fmx/desktops/niri/noctalia>))
-    (policy.when ({ user, ... }: user.hasAspect <fmx/desktops/shells/dms>)
+    (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/dms>)
       (policy.include <fmx/desktops/niri/dms>))
   ];
   fmx.desktops._.niri.nixos.security.pam.services.swaylock = {};
