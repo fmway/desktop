@@ -1,7 +1,7 @@
 # Like flake-file but only for source
 
 { config, lib, inputs, ... }: let
-  sourcePath = "${inputs.self.outPath}/sources.json";
+  sourcePath = inputs._source or "${inputs.self.outPath}/sources.json";
   sources = builtins.mapAttrs (k: v: let
     type = v.type or "tarball";
     fn = if type == "file" then
