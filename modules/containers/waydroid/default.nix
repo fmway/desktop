@@ -1,6 +1,5 @@
 {
-  fmx.containers._.waydroid = { persistent, ... }:
-  {
+  fmx.containers._.waydroid = {
     nixos = { pkgs, ... }:
     {
       virtualisation.waydroid.enable = true;
@@ -28,17 +27,17 @@
     };
 
     includes = [
-      ({ host, user, persistent, ... }: {
+      ({ persistent, user, host, ... }: {
         persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
           ".local/share/waydroid"
         ];
       })
+      ({ persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.directories = [
+          { mode = "0755"; directory = "/var/lib/waydroid"; user = "root"; group = "root"; }
+        ];
+      })
     ];
-    persistence = {
-      ${persistent.cacheDirectory}.directories = [
-        { mode = "0755"; directory = "/var/lib/waydroid"; user = "root"; group = "root"; }
-      ];
-    };
   };
 
   source-archives."waydroid-script" = "https://github.com/casualsnek/waydroid_script/archive/main.tar.gz";

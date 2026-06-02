@@ -1,28 +1,30 @@
 # Secureboot using lanzaboote
 { inputs, lib, config, ... }:
 {
-  fmx.boot._.lanzaboote.persistence = { persistent, ... }:
-  {
-    ${persistent.defaultDirectory}.directories = [
-      "/var/lib/sbctl"
-    ];
-  };
-  fmx.boot._.lanzaboote.nixos = { host, pkgs, ... }:
-  {
-    imports = [
-      inputs.lanzaboote.nixosModules.lanzaboote
-    ];
-    environment.systemPackages = [
-      pkgs.sbctl
+  fmx.boot._.lanzaboote = {
+    includes = [
+      ({ persistent, ... }: {
+        persistence.${persistent.defaultDirectory}.directories = [ "/var/lib/sbctl" ];     
+      })
     ];
 
-    boot.loader.systemd-boot.enable = lib.mkForce false;
-    boot.loader.grub.enable = lib.mkForce false;
+    nixos = { host, pkgs, ... }:
+    {
+      imports = [
+        inputs.lanzaboote.nixosModules.lanzaboote
+      ];
+      environment.systemPackages = [
+        pkgs.sbctl
+      ];
 
-    boot.lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-      configurationLimit = host.configurationLimit or 25;
+      boot.loader.systemd-boot.enable = lib.mkForce false;
+      boot.loader.grub.enable = lib.mkForce false;
+
+      boot.lanzaboote = {
+        enable = true;
+        pkiBundle = "/var/lib/sbctl";
+        configurationLimit = host.configurationLimit or 25;
+      };
     };
   };
 

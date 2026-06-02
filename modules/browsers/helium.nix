@@ -15,8 +15,8 @@
         }))
       ];
     };
-    fmx.browsers._.helium = {
-      includes = [
+  fmx.browsers._.helium = {
+    includes = [
       ({ host, user, persistent, ... }: {
         persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
           ".cache/net.imput.helium"

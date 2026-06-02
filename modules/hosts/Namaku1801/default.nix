@@ -15,7 +15,7 @@ in {
   #   ];
   # };
   den.hosts.x86_64-linux.Namaku1801 = {
-    impermanence.enable = true;
+    persistent.enable = true;
     persistent.cacheDirectory = "/persist/shared_cache";
     scx = {
       default.scheduler = "scx_bpfland";

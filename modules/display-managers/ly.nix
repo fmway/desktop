@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.display-managers._.ly = { persistent, ... }:
+  fmx.display-managers._.ly =
   {
     nixos = { pkgs, ... }:
     {
@@ -21,8 +21,10 @@
         vi_default_mode = "normal";
       };
     };
-    persistence.${persistent.cacheDirectory}.files = [
-      "/etc/ly/save.txt"
+    includes = [
+      ({ persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.files = [ "/etc/ly/save.txt" ];
+      })
     ];
   };
 }

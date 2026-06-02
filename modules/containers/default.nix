@@ -3,7 +3,7 @@
   fmx.containers._.flatpak = {
     nixos.services.flatpak.enable = true;
     includes = [
-      ({ user, host, persistent, ... }: {
+      ({ persistent, user, host, ... }: {
         persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
           ".cache/flatpak"
           ".local/share/flatpak"
@@ -12,7 +12,7 @@
     ];
   };
   fmx.containers._.bottles.includes = [
-    ({ user, host, persistent, ... }: {
+    ({ persistent, user, host, ... }: {
       persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
         ".local/share/bottles"
       ];
@@ -37,14 +37,13 @@
       ({ user, ... }: {
         nixos.users.users.${user.userName}.extraGroups = [ "docker" ];
       })
+      ({ persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.directories = [
+          { directory = "/var/lib/docker"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+          { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+        ];
+      })
     ];
-    persistence = { persistent, ... }:
-    {
-      ${persistent.cacheDirectory}.directories = [
-        { directory = "/var/lib/docker"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
-        { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
-      ];
-    };
   };
   fmx.containers._.docker._.rootless = {
     includes = [
@@ -56,8 +55,8 @@
     };
   };
 
-  fmx.containers._.podman.nixos = {
-    virtualisation.podman = {
+  fmx.containers._.podman = {
+    nixos.virtualisation.podman = {
       enable = true;
 
       # Create a `docker` alias for podman, to use it as a drop-in replacement
@@ -66,12 +65,13 @@
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
     };
-  };
 
-  fmx.containers._.podman.persistence = { persistent, ... }:
-  {
-    ${persistent.cacheDirectory}.directories = [
-      { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+    includes = [
+      ({ persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.directories = [
+          { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+        ];
+      })
     ];
   };
 }

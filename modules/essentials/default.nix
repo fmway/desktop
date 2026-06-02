@@ -15,6 +15,12 @@
           "fwupd-refresh"
         ];
       })
+      ({ persistent, ... }: {
+        persistence.${persistent.defaultDirectory}.hideMounts = true;
+      })
+      ({ persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.hideMounts = true;
+      })
       ({ user, host, persistent, ... }: {
         persistence.${persistent.defaultDirectory}.users.${user.userName} = {
           directories = [
@@ -34,11 +40,9 @@
       })
     ];
 
-    persistence = { persistent, osConfig,  ... }:
+    persistence = { persistent, config,  ... }:
     {
       ${persistent.defaultDirectory} = {
-        enable = true;
-        hideMounts = true;
         directories = map (x: { directory = x; mode = "0755"; user = "root"; group = "root"; }) [
           "/etc/nixos"
           "/var/log"
@@ -54,15 +58,15 @@
           { directory = "/var/lib/upower"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
           { directory = "/var/lib/bluetooth"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
         ]
-        ++ lib.optional osConfig.services.zerotierone.enable {
+        ++ lib.optional config.services.zerotierone.enable {
           directory = "/var/lib/zerotier-one"; mode = "u=rwx,g=,0="; user = "root"; group = "root";
         }
-        ++ lib.optional osConfig.networking.networkmanager.enable
+        ++ lib.optional config.networking.networkmanager.enable
           "/etc/NetworkManager/system-connections"
-        ++ lib.optional osConfig.networking.wireless.iwd.enable {
+        ++ lib.optional config.networking.wireless.iwd.enable {
           directory = "/var/lib/iwd"; mode = "u=rwx,g=,o"; user = "root"; group = "root";
         }
-        ++ lib.optional osConfig.services.colord.enable {
+        ++ lib.optional config.services.colord.enable {
           directory = "/var/lib/colord"; mode = "u=rwx,g=,o="; user = "colord"; group = "colord";
         }
         ;

@@ -36,7 +36,7 @@ inputs: let
     collectModules = self:
       self.map (p: let
         name = lib.fmway.basename p;
-        m = builtins.match ".*([/]flake[/]((classes|extras)[/])?).*" p;
+        m = builtins.match ".*([/]flake[/]((classes|extras|quirks)[/])?).*" p;
         m'= builtins.elemAt m 0;
         fixModule =
           if self.__config.scoped == {  } then
@@ -47,6 +47,7 @@ inputs: let
           "/flake/".imports = [ p (toModules name p) ];
           "/flake/extras/".imports = [ p (toModules "extra-${name}" p) ];
           "/flake/classes/".imports = [ p (toModules "class-${name}" p) ];
+          "/flake/quirks/".imports = [ p (toModules "quirk-${name}" p) ];
         };
       in if isNull m then fixModule else r.${m'})
       (s: s.pipeTo (modules: { imports = modules; }));

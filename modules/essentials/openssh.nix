@@ -1,10 +1,21 @@
 {
-  fmx.essentials._.openssh.nixos.services.openssh = {
-    enable = true;
-    # use public key instead of password
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = true;
-    settings.PermitRootLogin = "yes";
+  fmx.essentials._.openssh = {
+    includes = [
+      ({ persistent, ... }: {
+        persistence = {
+          ${persistent.defaultDirectory}.directories = [
+            { directory = "/etc/ssh"; mode = "u=rwx,g=rx,o=x"; }
+          ];
+        };
+      })
+    ];
+    nixos.services.openssh = {
+      enable = true;
+      # use public key instead of password
+      settings.PasswordAuthentication = false;
+      settings.KbdInteractiveAuthentication = true;
+      settings.PermitRootLogin = "yes";
+    };
   };
 
   # TODO: cross hosts

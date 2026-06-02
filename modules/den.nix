@@ -31,7 +31,6 @@ in {
       (den.lib.policy.mkPolicy "to-users-to-standalone-hm"
         ({ home, ... }: den.lib.policy.include (home.host.aspect._.to-users or {})))
     ];
-    flake-packages.includes = [ (den.aspects.flake or {}) ];
 
     host.includes = [
       ({ user, ... }: lib.optionalAttrs (builtins.elem "homeManager" user.classes) {

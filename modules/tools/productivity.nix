@@ -15,12 +15,11 @@ in {
     libreoffice = mkAllPackages (pkgs: [ pkgs.libreoffice-fresh ]);
 
     zotero = mkAllPackages (pkgs: [ pkgs.zotero ]) // {
-      persistence = { persistent, user, ... }:
-      {
-        ${persistent.defaultDirectory}.users.${user.userName}.directories = [
-          "Zotero"
-        ];
-      };
+      includes = [
+        ({ persistent, user, ... }: {
+          persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [ "Zotero" ];
+        })
+      ];
     };
 
     # Alternative LaTex
