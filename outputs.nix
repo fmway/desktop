@@ -18,8 +18,10 @@ inputs: let
     (inputs.fmway-modules.lib or {})
     (self: super: super.recursiveUpdate super (selfLib super))
   ];
-  
+
   api = {
+    addPaths = self: paths:
+      builtins.foldl' (s: s.addPath) self (lib.flatten paths);
     onSuffix = self: suffix: self.filter (_lib.hasSuffix suffix);
     offSuffix = self: suffix: self.filterNot (_lib.hasSuffix suffix);
     toAttrs = self: fn: (self
@@ -75,12 +77,14 @@ inputs: let
     (s: s.withLib lib)
     scanDir;
 
-  isAdditionalModuleExist = inputs ? module && builtins.pathExists inputs.module;
+  isAdditionalModuleExist = let
+    m = inputs.module or [];
+  in m != [] && builtins.all (x: let r = builtins.pathExists x; in r) (lib.flatten m);
 
   scanModules = import-tree
     (s: s.offSuffix "overlay.nix")
     (s: s.offSuffix "lib.nix")
-    (s: if isAdditionalModuleExist then s.addPath inputs.module else s) # for local use
+    (s: if isAdditionalModuleExist then s.addPaths inputs.module else s) # for local use
     ;
 
   # Priority
@@ -121,4 +125,8 @@ in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
     }))
     (s: s.pipeTo lib.listToAttrs)
     scanDir;
+
+  flake = {
+    _inputs = inputs;
+  };
 }
