@@ -23,27 +23,31 @@
     };
   };
 
-  deepMerge = lhs: rhs:
-    lhs // rhs // (builtins.mapAttrs (rName: rValue:
-      let lValue = lhs.${rName} or null; in
-      if builtins.isAttrs lValue && builtins.isAttrs rValue then
-        deepMerge lValue rValue
-      else if builtins.isList lValue && builtins.isList rValue then
-        lValue ++ rValue
-      else rValue
-    ) rhs);
+  deepMergeList =
+    builtins.zipAttrsWith (_: v: let
+      f = builtins.head v;
+    in
+      if builtins.length v == 1 then
+        f
+      else if builtins.isAttrs f then
+        deepMergeList v
+      else if builtins.isList f then
+        builtins.concatLists v
+      else
+        lib.last v
+    );
 
-  _impermanenceOpts = { mode = null; method = null; directory = null; file = null; hideMount = null; allowTrash = null; persistentStoragePath = null; };
-  impermanenceOpts = builtins.attrNames _impermanenceOpts;
+  _impermanenceOpts = { mode = null; method = null; directory = null; file = null; hideMount = null; allowTrash = null; persistentStoragePath = null; user = null; group = null; };
+  _preservationOpts = { mode = null; how = null; directory = null; file = null; inInitrd = null; user = null; group = null; configureParent = null; parent = null; mountOptions = null; createLinkTarget = null; };
   f = impl: v:
     if impl == "impermanence" then
       map (x: if builtins.isString x then x else builtins.intersectAttrs _impermanenceOpts x) v
     else
-      map (x: if builtins.isString x then x else removeAttrs x impermanenceOpts);
+      map (x: if builtins.isString x then x else builtins.intersectAttrs _preservationOpts x) v;
 
   normalize = impl: builtins.mapAttrs (k: v: {
-    directories = f impl (lib.unique (v.directories or []));
-    files = f impl (lib.unique (v.files or []));
+    directories = f impl (v.directories or []);
+    files = f impl (v.files or []);
   } // lib.optionalAttrs (v ? users) {
     users = normalize impl v.users;
   });
@@ -95,7 +99,7 @@ in {
         imports = [
           inputs.${x}.nixosModules.${x}
         ];
-        config = fix x (normalize x (builtins.foldl' deepMerge {} persistence));
+        config = fix x (deepMergeList (map (normalize x) (lib.unique persistence)));
       };
     });
 
@@ -106,4 +110,6 @@ in {
   den.policies.persistence-to-host =
     { host, ... }:
       (policy.resolve.shared { persistent = host.persistent; });
-    }
+    
+}
+

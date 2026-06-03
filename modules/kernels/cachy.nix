@@ -18,57 +18,59 @@
       boot.zfs.package = config.boot.kernelPackages.zfs_cachyos;
     };
 
-    _.scx.nixos = { scx, pkgs, config, ... }:
-    {
-      config = lib.mkMerge [
-        {
-          services.scx.enable = true;
-          services.scx.package = lib.mkDefault pkgs.scx.full;
-          services.scx.scheduler = scx.default.scheduler;
-          services.scx.extraArgs = scx.default.args;
-        }
-        (lib.mkIf (!isNull scx.alter.scheduler) {
-          # change scheduler to scx.alter when power is on
-          systemd.services.scx.serviceConfig = let
-            bin = lib.getExe' config.services.scx.package;
-            alter = lib.concatStringsSep " " ([ (bin scx.alter.scheduler) ] ++ scx.alter.args);
-            default = lib.concatStringsSep " " ([ (bin scx.default.scheduler) ] ++ scx.default.args);
-          in {
-            ExecStart = lib.mkForce (pkgs.writeScript "scx.sh" /* bash */ ''
-              #!${lib.getExe pkgs.bash}
-              
-              # if discarging, use default, if else use alter
-              if [ "$(cat /sys/class/power_supply/AC/online)" -eq 0 ]; then
-                exec ${default}
-              else
-                exec ${alter}
-              fi
-            '');
-          };
-
-          systemd.services."scx-refresh" = {
-            unitConfig = {
-              Description = "refresh scx";
+    _.scx = { scx, ... }: {
+      nixos = { pkgs, config, ... }:
+      {
+        config = lib.mkMerge [
+          {
+            services.scx.enable = true;
+            services.scx.package = lib.mkDefault pkgs.scx.full;
+            services.scx.scheduler = scx.default.scheduler;
+            services.scx.extraArgs = scx.default.args;
+          }
+          (lib.mkIf (!isNull scx.alter.scheduler) {
+            # change scheduler to scx.alter when power is on
+            systemd.services.scx.serviceConfig = let
+              bin = lib.getExe' config.services.scx.package;
+              alter = lib.concatStringsSep " " ([ (bin scx.alter.scheduler) ] ++ scx.alter.args);
+              default = lib.concatStringsSep " " ([ (bin scx.default.scheduler) ] ++ scx.default.args);
+            in {
+              ExecStart = lib.mkForce (pkgs.writeScript "scx.sh" /* bash */ ''
+                #!${lib.getExe pkgs.bash}
+                
+                # if discarging, use default, if else use alter
+                if [ "$(cat /sys/class/power_supply/AC/online)" -eq 0 ]; then
+                  exec ${default}
+                else
+                  exec ${alter}
+                fi
+              '');
             };
-            script = ''
-              if systemctl status scx.service &>/dev/null; then
-                systemctl stop scx.service
-              fi
-              systemctl start scx.service
+
+            systemd.services."scx-refresh" = {
+              unitConfig = {
+                Description = "refresh scx";
+              };
+              script = ''
+                if systemctl status scx.service &>/dev/null; then
+                  systemctl stop scx.service
+                fi
+                systemctl start scx.service
+              '';
+              serviceConfig = {
+                Type = "oneshot";
+              };
+            };
+
+            services.udev.extraRules = /* udev */ ''
+              ACTION=="change", \
+                SUBSYSTEM=="power_supply", \
+                KERNEL=="AC", TAG+="systemd", \
+                ENV{SYSTEMD_WANTS}="scx-refresh.service"
             '';
-            serviceConfig = {
-              Type = "oneshot";
-            };
-          };
-
-          services.udev.extraRules = /* udev */ ''
-            ACTION=="change", \
-              SUBSYSTEM=="power_supply", \
-              KERNEL=="AC", TAG+="systemd", \
-              ENV{SYSTEMD_WANTS}="scx-refresh.service"
-          '';
-        })
-      ];
+          })
+        ];
+      };
     };
   };
   flake-file.inputs.nix-cachyos-kernel = {
