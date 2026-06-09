@@ -1,5 +1,5 @@
 {
-  fmx.privileges._.doas.nixos.security.doas = {
+  fmx.privileges.doas.nixos.security.doas = {
     enable = true;
     extraRules = [
     {

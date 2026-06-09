@@ -16,10 +16,6 @@
 
       jq.enable = lib.mkDefault true;
 
-      lazygit.enable = lib.mkDefault true;
-
-      zoxide.enable = lib.mkDefault true; # cd alternative
-
       translate-shell.enable = lib.mkDefault true; # google or bing translate in terminal
 
       yt-dlp.enable = lib.mkDefault true; # all in one video downloader

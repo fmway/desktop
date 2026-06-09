@@ -1,16 +1,21 @@
-{
-  fmx.programs._.jujutsu = { config, ... }:
-  {
+{ lib, den, ... }: let
+  inherit (den.lib) policy;
+in {
+  fmx.tools.dev.jujutsu = {
     includes = [
-      config._.starship
+      (policy.when (ctx: ctx.hasAspect <fmx/programs/starship>) (policy.include <fmx/tools/dev/jujutsu/starship>))
     ];
-    homeManager = { config, ... }:
+    homeManager = { user, config, ... }:
     {
       programs.jujutsu.enable = true;
       programs.jujutsu.settings = {
-        user = config.programs.git.settings.user;
         ui.editor = "nvim";
         ui.default-command = "log";
+        user = {
+          name = user.userName;
+        } // lib.optionalAttrs (!isNull (user.email or null)) {
+          email = user.email;
+        };
       };
       programs.jjui.enable = true;
       programs.jjui.settings = {
@@ -20,7 +25,7 @@
       };
     };
 
-    _.starship.homeManager = { pkgs, ... }:
+    starship.homeManager = { pkgs, ... }:
     {
       home.packages = with pkgs;[
         starship-jj

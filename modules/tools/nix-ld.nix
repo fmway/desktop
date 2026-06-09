@@ -1,13 +1,13 @@
 {
-  fmx.tools._.nix-ld = { config, ... }: {
-    includes = builtins.attrValues config.provides;
+  fmx.tools.nix-ld = {
+    includes = [ <fmx/tools/nix-ld/core> ];
     nixos = {
       programs.nix-ld = {
         enable = true;
       };
     };
 
-    _.core.nixos = { pkgs, ... }:
+    core.nixos = { pkgs, ... }:
     {
       programs.nix-ld.libraries = with pkgs; [
         glibc

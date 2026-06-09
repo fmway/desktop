@@ -4,14 +4,32 @@
   {
     includes = [
       config._.cache
-      ({ user, host, persistent, ... }: {
-        persistence.${persistent.defaultDirectory}.users.${user.userName}.files = [
-          ".local/share/nix/repl-history"
+      ({ host, persistent, ... }: {
+        persistence = [
+        {
+          ${persistent.defaultDirectory}.files = [
+            "/root/.local/share/nix/repl-history"
+          ];
+        }
+        {
+          ${persistent.cacheDirectory}.directories = [
+            "/root/.cache/nix"
+          ];
+        }
         ];
       })
       ({ user, host, persistent, ... }: {
-        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
-          ".cache/nix"
+        persistence = [
+        {
+          ${persistent.defaultDirectory}.users.${user.userName}.files = [
+            ".local/share/nix/repl-history"
+          ];
+        }
+        {
+          ${persistent.cacheDirectory}.users.${user.userName}.directories = [
+            ".cache/nix"
+          ];
+        }
         ];
       })
       (lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: {

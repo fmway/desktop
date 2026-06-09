@@ -1,14 +1,14 @@
 # TODO: expose as schema / keyd class
 { lib, ... }:
 {
-  fmx.services._.keyd.includes = [
+  fmx.tools.keymapper.keyd.includes = [
     # register keyd group for each user
     ({ user, host, ... }: {
       nixos.users.users.${user.userName}.extraGroups = [ "keyd" ];
     })
     { nixos.users.groups.keyd = {}; }
   ];
-  fmx.services._.keyd.nixos = { pkgs, ... }:
+  fmx.tools.keymapper.keyd.nixos = { pkgs, ... }:
   {
     # Link keyd-keyboard to /dev/input/keyd
     services.udev.extraRules = /* udev */ ''
@@ -40,7 +40,7 @@
       enable = true;
       keyboards.default = {
         ids = [ "*" ];
-        settings = lib.keyd.parse (import ./_keymap.nix);
+        settings = lib.keymapper.keyd.parse (import ./_keymap.nix);
       };
     };
   };

@@ -14,7 +14,6 @@
       # nil # this too
       oha # http load generator
       hyperfine # for benchmarking
-      parallel # multi threading in shell
       # adbtuifm # file-manager adb
       # isync
       # himalaya # email client...🤔

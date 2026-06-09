@@ -1,4 +1,15 @@
-{
+let
+  persistContainerAspect = {
+    name = "persist@container";
+    includes = [
+      ({ persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.directories = [
+          { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
+        ];
+      })
+    ];
+  };
+in {
   # enable flatpak support
   fmx.containers._.flatpak = {
     nixos.services.flatpak.enable = true;
@@ -40,9 +51,9 @@
       ({ persistent, ... }: {
         persistence.${persistent.cacheDirectory}.directories = [
           { directory = "/var/lib/docker"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
-          { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
         ];
       })
+      persistContainerAspect
     ];
   };
   fmx.containers._.docker._.rootless = {
@@ -67,11 +78,7 @@
     };
 
     includes = [
-      ({ persistent, ... }: {
-        persistence.${persistent.cacheDirectory}.directories = [
-          { directory = "/var/lib/containers"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
-        ];
-      })
+      persistContainerAspect
     ];
   };
 }

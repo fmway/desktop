@@ -1,7 +1,8 @@
 { den, ... }:
 {
   den.aspects.fmway.includes = [
-    den.aspects.fmway._.packages
+    <fmway/packages>
+    <fmx/desktops/apps/telegram>
   ];
   den.aspects.fmway._.packages = {
     homeManager = { pkgs, ... }:
@@ -16,7 +17,6 @@
         ttyper # monkeytype in terminal
         
         # gui
-        telegram-desktop
         upscayl # image upscaler
 
         # development

@@ -20,7 +20,7 @@
 
         user = {
           name = user.userName;
-        } // lib.optionalAttrs (!isNull user.email) {
+        } // lib.optionalAttrs (!isNull (user.email or null)) {
           email = user.email;
         };
         url = let

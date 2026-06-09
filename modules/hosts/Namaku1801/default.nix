@@ -39,10 +39,9 @@ in {
     includes = [
       <fmx/essentials/openssh/allow-users>
       <fmx/display-managers/ly>
-      <fmx/privileges/doas>
-      <fmx/privileges/please>
+      <fmx/privileges/_>
       <fmx/tools/nix-ld>
-      <fmx/services/keyd>
+      <fmx/tools/keymapper/keyd>
       <fmx/editors/nixvim>
       <fmx/file-managers/yazi>
       <fmx/disk/zfs>
@@ -96,6 +95,7 @@ in {
       services.zfs.autoScrub.interval = "weekly";
     };
     provides.to-users.includes = [
+      <fmx/tools/drive/megasync>
       <fmx/essentials>
       <fmx/programs>
       <fmx/shells/fish>

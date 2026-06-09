@@ -5,6 +5,7 @@
       <fmx/nix>
       <fmx/boot>
       <fmx/networking>
+      <fmx/tools/cli/_>
       ({ user, ... }: {
         nixos.nix.settings.trusted-users = [ user.userName ];
         nixos.users.users.${user.userName}.extraGroups = [
@@ -15,32 +16,38 @@
           "fwupd-refresh"
         ];
       })
-      ({ persistent, ... }: {
-        persistence.${persistent.defaultDirectory}.hideMounts = true;
-      })
-      ({ persistent, ... }: {
-        persistence.${persistent.cacheDirectory}.hideMounts = true;
-      })
       ({ user, host, persistent, ... }: {
-        persistence.${persistent.defaultDirectory}.users.${user.userName} = {
-          directories = [
-            "Downloads"
-            "Music"
-            "Pictures"
-            "Documents"
-            "Videos"
-            ".ssh"
-            ".gnupg"
-            ".local/share/keyrings"
-            ".local/share/direnv"
-            ".config/sops"
-            ".android"
+        persistence = [
+        {
+          ${persistent.defaultDirectory}.users.${user.userName} = {
+            directories = [
+              "Downloads"
+              "Music"
+              "Pictures"
+              "Documents"
+              "Videos"
+              ".ssh"
+              ".gnupg"
+              ".local/share/keyrings"
+              ".local/share/direnv"
+              ".config/sops"
+              ".android"
+            ];
+            files = [
+              ".bash_history"
+            ];
+          };
+        }
+        {
+          ${persistent.cacheDirectory}.users.${user.userName}.directories = [
+            ".local/share/applications"
           ];
-        };
+        }
+        ];
       })
     ];
 
-    persistence = { persistent, config,  ... }:
+    persistence = { persistent, host, config,  ... }:
     {
       ${persistent.defaultDirectory} = {
         directories = map (x: { directory = x; mode = "0755"; user = "root"; group = "root"; }) [
@@ -74,6 +81,7 @@
         files = [
           "/etc/machine-id"
           "/etc/kernel/entry-token"
+          "/root/.bash_history"
         ];
       };
     };

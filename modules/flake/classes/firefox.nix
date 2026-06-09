@@ -89,6 +89,10 @@
     lib.types.submodule (
       { name, config, ... }:
       {
+        imports = [
+          den.schema.firefox-profile
+          den.schema.conf
+        ];
         freeformType = lib.types.attrsOf lib.types.anything;
         config._module.args.host = host;
         config._module.args.user = user;
@@ -263,7 +267,7 @@ in {
 
   # Add `firefox-profiles` option to every user via den.schema.user.imports.
   den.schema = rec {
-    firefox-profile = { };
+    firefox-profile.isEntity = true;
     user.imports = [
       ({ user, host, ... }: {
         options.firefox-profiles = lib.mkOption {

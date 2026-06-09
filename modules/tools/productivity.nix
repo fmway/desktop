@@ -4,7 +4,7 @@
     homeManager = { pkgs, ... }: { home.packages = fn pkgs; };
   };
 in {
-  fmx.tools._.productivity.provides = {
+  fmx.tools.productivity = {
 
     zoom = mkAllPackages (pkgs: [ pkgs.zoom-us ]) // {
       includes = [

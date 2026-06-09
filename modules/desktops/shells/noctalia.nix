@@ -7,13 +7,13 @@
       home.packages = with pkgs; [
         libappindicator
         libdbusmenu
-        cliphist
         noctalia-shell
       ];
     };
 
     includes = [
       <fmx/desktops/utils/ddc>
+      <fmx/tools/clipboard/cliphist>
       ({ user, persistent, host, ... }: {
         persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
           ".config/noctalia"

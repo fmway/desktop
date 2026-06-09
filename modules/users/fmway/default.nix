@@ -19,12 +19,10 @@
       <fmx/tools/productivity/zoom>
       <fmx/tools/productivity/zotero>
       <fmx/tools/productivity/h-m-m>
+      <fmx/tools/dev/_>
       <fmx/themes/catppuccin>
       <fmx/browsers/helium>
       (den._.user-shell "fish")
-    ];
-    excludes = [
-      <fmx/programs/starship>
     ];
   };
 }
