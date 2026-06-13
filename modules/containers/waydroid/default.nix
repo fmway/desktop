@@ -1,5 +1,5 @@
 {
-  fmx.containers._.waydroid = {
+  fmx.containers.waydroid = {
     nixos = { pkgs, ... }:
     {
       virtualisation.waydroid.enable = true;

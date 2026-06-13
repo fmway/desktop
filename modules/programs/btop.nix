@@ -1,5 +1,5 @@
 {
-  fmx.programs._.btop.homeManager.programs.btop = {
+  fmx.programs.btop.homeManager.programs.btop = {
     enable = true;
     settings = {
       theme_background = true;

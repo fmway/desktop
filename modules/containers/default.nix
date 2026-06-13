@@ -11,7 +11,7 @@ let
   };
 in {
   # enable flatpak support
-  fmx.containers._.flatpak = {
+  fmx.containers.flatpak = {
     nixos.services.flatpak.enable = true;
     includes = [
       ({ persistent, user, host, ... }: {
@@ -22,27 +22,30 @@ in {
       })
     ];
   };
-  fmx.containers._.bottles.includes = [
-    ({ persistent, user, host, ... }: {
-      persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
-        ".local/share/bottles"
+  fmx.containers.bottles = {
+    nixos = { pkgs, ... }:
+    {
+      environment.systemPackages = [
+        (pkgs.bottles.override {
+          removeWarningPopup = true;
+        })
       ];
-    })
-  ];
-  fmx.containers._.bottles.nixos = { pkgs, ... }:
-  {
-    environment.systemPackages = [
-      (pkgs.bottles.override {
-        removeWarningPopup = true;
+    };
+    includes = [
+      ({ persistent, user, host, ... }: {
+        persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
+          ".local/share/bottles"
+        ];
       })
     ];
   };
-  fmx.containers._.distrobox.nixos = { pkgs, ... }:
+
+  fmx.containers.distrobox.nixos = { pkgs, ... }:
   {
     environment.systemPackages = [ pkgs.distrobox ];
   };
 
-  fmx.containers._.docker = {
+  fmx.containers.docker = {
     nixos.virtualisation.docker.enable = true;
     includes = [
       ({ user, ... }: {
@@ -55,18 +58,19 @@ in {
       })
       persistContainerAspect
     ];
-  };
-  fmx.containers._.docker._.rootless = {
-    includes = [
-      <fmx/containers/docker>
-    ];
-    nixos.virtualisation.docker.rootless = {
-      enable = true;
-      setSocketVariable = true;
+
+    rootless = {
+      includes = [
+        <fmx/containers/docker>
+      ];
+      nixos.virtualisation.docker.rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
     };
   };
 
-  fmx.containers._.podman = {
+  fmx.containers.podman = {
     nixos.virtualisation.podman = {
       enable = true;
 

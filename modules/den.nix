@@ -29,7 +29,7 @@ in {
     home.includes = user.includes ++ [
       # Respect mutual-provider to-users
       (den.lib.policy.mkPolicy "to-users-to-standalone-hm"
-        ({ home, ... }: den.lib.policy.include (home.host.aspect._.to-users or {})))
+        ({ home, ... }: den.lib.policy.include (home.host.aspect.to-users or {})))
     ];
 
     host.includes = [

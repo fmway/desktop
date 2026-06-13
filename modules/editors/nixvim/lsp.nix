@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.editors._.nixvim._.lsp.nixvim = { pkgs, config, ... }: {
+  fmx.editors.nixvim.lsp.nixvim = { pkgs, config, ... }: {
     extraConfigLuaPre = let
       final = lib.nixvim.toLuaObject (removeAttrs config.plugins.lsp.servers.nixd.settings [ "__raw" ]);
     in lib.nixvim.mkLuaFn' "myNixd" ''

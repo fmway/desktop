@@ -1,10 +1,10 @@
 # TODO: add fonts schema / class
 { den, ... }:
 {
-  fmx.essentials._.fonts.includes = [
+  fmx.essentials.fonts.includes = [
     (den._.unfree [ "corefonts" ])
   ];
-  fmx.essentials._.fonts.nixos = { pkgs, lib, config, ... }:
+  fmx.essentials.fonts.nixos = { pkgs, lib, config, ... }:
   {
     fonts = {
       # add fonts

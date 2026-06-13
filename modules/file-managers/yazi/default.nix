@@ -5,9 +5,8 @@
   run = t "url";
   run'= t "mime";
 in {
-  fmx.file-managers._.yazi = { config, ... }:
-  {
-    includes = builtins.attrValues config.provides;
+  fmx.file-managers.yazi = {
+    includes = [ <fmx/file-managers/yazi/_> ];
     # TODO: cross config
     nixos = { pkgs, ... }:
     {
@@ -56,7 +55,7 @@ in {
       };
     };
 
-    _.ouch.nixos = { pkgs, ... }:
+    ouch.nixos = { pkgs, ... }:
     {
       environment.systemPackages = [
         pkgs.ouch
@@ -92,7 +91,7 @@ in {
       };
     };
 
-    _.piper.nixos = { pkgs, ... }:
+    piper.nixos = { pkgs, ... }:
     {
       environment.systemPackages = [
         pkgs.glow
@@ -104,7 +103,7 @@ in {
       ];
     };
 
-    _.duckdb.nixos = { pkgs, ... }:
+    duckdb.nixos = { pkgs, ... }:
     {
       environment.systemPackages = [
         pkgs.duckdb
@@ -128,10 +127,10 @@ in {
       };
     };
 
-    _.mpv.includes = [
+    mpv.includes = [
       { homeManager.programs.mpv.config.input-ipc-server = "/tmp/mpv-playlist.sock"; }
     ];
-    _.mpv.nixos.programs.yazi.settings.yazi = {
+    mpv.nixos.programs.yazi.settings.yazi = {
       opener.add-sub = [{
         run  = /* sh */ ''echo sub-add "'$0'" | socat - /tmp/mpv-playlist.sock'';
         desc = "Add sub to MPV";
@@ -150,7 +149,7 @@ in {
       ];
     };
 
-    _.neovim.nixos = { pkgs, ... }:
+    neovim.nixos = { pkgs, ... }:
     {
       programs.yazi.settings.yazi.opener.edit = [{
         for = "unix";
@@ -162,7 +161,7 @@ in {
       }];
     };
 
-    _.trash.nixos = { pkgs, ... }:
+    trash.nixos = { pkgs, ... }:
     {
       programs.yazi = {
         settings.keymap.mgr.prepend_keymap = [

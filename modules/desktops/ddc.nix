@@ -1,5 +1,5 @@
 {
-  fmx.desktops._.utils._.ddc = {
+  fmx.desktops.utils.ddc = {
     includes = [
       ({ user, ... }: {
         nixos.users.users.${user.userName}.extraGroups = [ "i2c" "input" ];

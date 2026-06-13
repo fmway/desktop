@@ -1,10 +1,9 @@
 { inputs, lib, ... }:
 {
-  fmx.kernels._.cachy = { config, ... }:
-  {
+  fmx.kernels.cachy = {
     includes = [
-      config._.zfs
-      config._.scx
+      <fmx/kernels/cachy/zfs>
+      <fmx/kernels/cachy/scx>
     ];
     nixos = { pkgs, ... }:
     {
@@ -12,13 +11,13 @@
       nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
     };
 
-    _.zfs.nixos = { config, ... }:
+    zfs.nixos = { config, ... }:
     {
       boot.supportedFilesystems.zfs = true;
       boot.zfs.package = config.boot.kernelPackages.zfs_cachyos;
     };
 
-    _.scx = { scx, ... }: {
+    scx = { scx, ... }: {
       nixos = { pkgs, config, ... }:
       {
         config = lib.mkMerge [

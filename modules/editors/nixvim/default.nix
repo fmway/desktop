@@ -1,8 +1,8 @@
 { inputs, config, lib, ... }:
 {
-  fmx.editors._.nixvim = { config, ... }:
-  {
-    includes = builtins.attrValues config.provides ++ [
+  fmx.editors.nixvim = {
+    includes = [
+      <fmx/editors/nixvim/_>
       ({ host, persistent, ... }: {
         persistence.${persistent.cacheDirectory}.directories = [
           "/root/.local/state/nvim"

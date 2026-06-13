@@ -1,7 +1,7 @@
 { lib, ... }: let
   inherit (lib.nixvim) keymap mkRawFn;
 in {
-  fmx.editors._.nixvim._.keymaps.nixvim.keymaps = [
+  fmx.editors.nixvim.keymaps.nixvim.keymaps = [
     (keymap.v   "<" "<gv" { noremap = true; })
     (keymap.v   ">" ">gv" { noremap = true; })
     (keymap.n.v "p" "p`[v`]" { noremap = true; })

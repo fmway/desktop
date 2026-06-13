@@ -1,12 +1,12 @@
 {
-  fmx.programs._.fuzzel.includes = [
+  fmx.programs.fuzzel.includes = [
     ({ user, host, persistent, ... }: {
       persistence.${persistent.cacheDirectory}.users.${user.userName}.files = [
         ".cache/fuzzel"
       ];
     })
   ];
-  fmx.programs._.fuzzel.homeManager.programs.fuzzel = {
+  fmx.programs.fuzzel.homeManager.programs.fuzzel = {
     enable = true;
     settings = {
       main = {

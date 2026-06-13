@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.programs._.fastfetch.homeManager.programs.fastfetch = {
+  fmx.programs.fastfetch.homeManager.programs.fastfetch = {
     enable = true;
     settings = builtins.fromJSON (lib.fileContents ./settings.json);
   };

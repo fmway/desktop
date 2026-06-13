@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  den.aspects.overlays._.nur = rec {
+  den.aspects.overlays.nur = rec {
     nixos.nixpkgs.overlays = [
       inputs.nur.overlays.default
     ];

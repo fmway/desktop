@@ -1,5 +1,5 @@
 {
-  fmx.editors._.zed.includes = [
+  fmx.editors.zed.includes = [
     ({ user, host, persistent, ... }: {
       persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
         ".local/share/zed"
@@ -8,7 +8,7 @@
       ];
     })
   ];
-  fmx.editors._.zed.homeManager = { pkgs, ... }: {
+  fmx.editors.zed.homeManager = { pkgs, ... }: {
     programs.zed-editor = {
       enable = true;
       package = pkgs.zed-editor_git or pkgs.zed-editor;

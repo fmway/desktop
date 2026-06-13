@@ -1,5 +1,5 @@
 {
-  fmx.browsers._.helium.homeManager =
+  fmx.browsers.helium.homeManager =
     { inputs', ... }:
     {
       home.packages = [
@@ -15,7 +15,7 @@
         }))
       ];
     };
-  fmx.browsers._.helium = {
+  fmx.browsers.helium = {
     includes = [
       ({ host, user, persistent, ... }: {
         persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [

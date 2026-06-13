@@ -20,7 +20,7 @@
 
   imports = [
     {
-      fmx.disk._ = lib.import-tree.toAttrs (
+      fmx.disk = lib.import-tree.toAttrs (
         { path, name }:
         {
           description = ''
@@ -37,7 +37,7 @@
     }
   ];
 
-  fmx.disk._.zfs._.auto-snapshot = {
+  fmx.disk.zfs.auto-snapshot = {
     description = "enable zfs autosnapshot per 2 week and 1 month";
     nixos.services.zfs.autoSnapshot = {
       enable = true;
@@ -49,7 +49,7 @@
     };
   };
 
-  fmx.disk._.zfs._.auto-scrub = interval: {
+  fmx.disk.zfs.auto-scrub = interval: {
     nixos.services.zfs.autoScrub.interval = interval;
   };
 }

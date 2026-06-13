@@ -1,7 +1,7 @@
 # Secureboot using lanzaboote
 { inputs, lib, config, ... }:
 {
-  fmx.boot._.lanzaboote = {
+  fmx.boot.lanzaboote = {
     includes = [
       ({ persistent, ... }: {
         persistence.${persistent.defaultDirectory}.directories = [ "/var/lib/sbctl" ];     

@@ -1,5 +1,5 @@
 {
-  fmx.programs._.zathura.homeManager.programs.zathura = {
+  fmx.programs.zathura.homeManager.programs.zathura = {
     enable = true;
     mappings = {};
   };

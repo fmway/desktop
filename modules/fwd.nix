@@ -1,7 +1,7 @@
 { den, fmx, lib, ... }:
 {
   # FIXME: infinite recursion
-  # fmx.utils._.nixvim = {
+  # fmx.utils.nixvim = {
   #   description = "nixvim -> nixos.programs.nixvim";
   #   includes = [
   #     ({ class, aspect-chain }: den._.forward {

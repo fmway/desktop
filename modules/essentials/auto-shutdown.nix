@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.essentials._.auto-shutdown = {
+  fmx.essentials.auto-shutdown = {
     description = ''
       Auto shutdown when power is discharging (default: <= 15%, set in meta.battery_limit)
     '';

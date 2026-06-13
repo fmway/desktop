@@ -4,14 +4,14 @@
   inherit (lib.niri) spawn window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule environment;
   inherit (den.lib) policy;
 in {
-  fmx.desktops._.niri.includes = [
+  fmx.desktops.niri.includes = [
     (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/noctalia>)
       (policy.include <fmx/desktops/niri/noctalia>))
     (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/dms>)
       (policy.include <fmx/desktops/niri/dms>))
   ];
-  fmx.desktops._.niri.nixos.security.pam.services.swaylock = {};
-  fmx.desktops._.niri.homeManager = { pkgs, config, ... }: let
+  fmx.desktops.niri.nixos.security.pam.services.swaylock = {};
+  fmx.desktops.niri.homeManager = { pkgs, config, ... }: let
     dmenu_path = lib.getExe' pkgs.dmenu "dmenu_path";
     fuzzel = lib.getExe pkgs.fuzzel;
 
@@ -422,14 +422,14 @@ in {
           }) allSubs;
         });
   };
-  fmx.desktops._.niri._.noctalia.includes = [
+  fmx.desktops.niri.noctalia.includes = [
     ({ host, user, persistent, ... }: {
       persistence.${persistent.cacheDirectory}.users.${user.userName}.files = [
         ".config/niri/noctalia.kdl"
       ];
     })
   ];
-  fmx.desktops._.niri._.dms.homeManager = {
+  fmx.desktops.niri.dms.homeManager = {
     wayland.windowManager.niri.config = [
       (include { optional = true; } "./dms/alttab.kdl")
       (include { optional = true; } "./dms/binds.kdl")
@@ -441,7 +441,7 @@ in {
       (include { optional = true; } "./dms/wblur.kdl")
     ];
   };
-  fmx.desktops._.niri._.noctalia.homeManager = { pkgs, ... }: let
+  fmx.desktops.niri.noctalia.homeManager = { pkgs, ... }: let
     sub = mkSub pkgs;
   in {
     wayland.windowManager.niri.config = [

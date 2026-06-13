@@ -1,5 +1,5 @@
 {
-  fmx.programs._.neovide.homeManager.programs.neovide = {
+  fmx.programs.neovide.homeManager.programs.neovide = {
     enable = true;
     settings = {
       fork = true;

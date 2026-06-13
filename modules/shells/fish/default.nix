@@ -1,7 +1,6 @@
-{ lib, ... }:
+{ lib, fmx, ... }:
 { 
-  fmx.shells._.fish = { config, ... }:
-  {
+  fmx.shells.fish = {
     nixos = {
       programs.fish.enable = true;
       programs.fish.generateCompletions = lib.mkDefault false;
@@ -16,7 +15,8 @@
         apply-my-theme
       '';
     };
-    includes = builtins.attrValues config.provides ++ [
+    includes = [
+      <fmx/shells/fish/_>
       ({ user, host, persistent, ... }: {
         persistence.${persistent.defaultDirectory}.users.${user.userName}.files = [
           ".local/share/fish/fish_history"
@@ -28,18 +28,19 @@
         ];
       })
     ];
-    _.functions = { config, ... }: {
+    functions = let
+      r = ((lib.import-tree
+      .initFilter (lib.hasSuffix ".fish"))
+      .toAttrs ({ path, name, ... }: let
+        v = lib.fmway.parseFish (lib.fileContents path);
+      in {
+        description = builtins.concatStringsSep ": " (["${name}.fish"] ++ lib.optional (v ? description) v.description);
+        homeManager.programs.fish.functions.${name} = v;
+      }))
+      ./_functions;
+    in {
       description = "Collection of my fish functions";
-      includes = builtins.attrValues config.provides;
-      _ = ((lib.import-tree
-        .initFilter (lib.hasSuffix ".fish"))
-        .toAttrs ({ path, name, ... }: let
-          v = lib.fmway.parseFish (lib.fileContents path);
-        in {
-          description = builtins.concatStringsSep ": " (["${name}.fish"] ++ lib.optional (v ? description) v.description);
-          homeManager.programs.fish.functions.${name} = v;
-        }))
-        ./_functions;
-    };
+      includes = map (name: fmx.shells.fish.functions.${name}) (builtins.attrNames r);
+    } // r;
   };
 }

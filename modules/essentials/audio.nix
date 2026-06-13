@@ -1,14 +1,14 @@
 {
   source-files."kaku/services/pipewire" = "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix";
 
-  fmx.essentials._.audio.includes = [
+  fmx.essentials.audio.includes = [
     ({ user, persistent, ... }: {
       persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
         ".local/state/wireplumber"
       ];
     })
   ];
-  fmx.essentials._.audio.nixos = {
+  fmx.essentials.audio.nixos = {
     imports = [
       <sources/kaku/services/pipewire>
     ];

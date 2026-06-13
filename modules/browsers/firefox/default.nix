@@ -1,7 +1,7 @@
 { lib, search-engines, ... }:
 {
   # TODO: add impermanence for firefox / all firefox based
-  fmx.browsers._.firefox = {
+  fmx.browsers.firefox = {
     firefox = 
       { pkgs, ... }:
       {

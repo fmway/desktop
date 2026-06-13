@@ -1,7 +1,7 @@
 { lib, ... }: let
   inherit (lib.nixvim) toLuaObject mkLuaFn mkRawFn mkRaw keymap';
 in {
-  fmx.editors._.nixvim._.plugins = {
+  fmx.editors.nixvim.plugins = {
     description = "nvim plugins";
 
     nixvim = { pkgs, ... }:

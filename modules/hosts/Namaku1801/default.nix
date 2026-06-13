@@ -47,9 +47,9 @@ in {
       <fmx/disk/zfs>
       <fmx/disk/zfs/auto-snapshot>
       <fmx/kernels/cachy>
-      (fmx.disk._.zfs._.auto-scrub "weekly")
+      (fmx.disk.zfs.auto-scrub "weekly")
     ];
-    provides.to-users.nixos = { config, pkgs, ... }:
+    _.to-users.nixos = { config, pkgs, ... }:
     {
       nixpkgs.overlays = [
         (self: super: import ../../../packages { inherit lib; pkgs = self; })
@@ -94,7 +94,7 @@ in {
 
       services.zfs.autoScrub.interval = "weekly";
     };
-    provides.to-users.includes = [
+    _.to-users.includes = [
       <fmx/tools/drive/megasync>
       <fmx/essentials>
       <fmx/programs>
@@ -109,7 +109,7 @@ in {
       <fmx/desktops/shells/noctalia>
       # <fmx/desktops/shells/dms>
       <fmx/desktops/niri>
-      # (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
+      # (fmx.nix.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
 
       {
         # disable ~/.config/nix/nix.conf since that's is already define in /etc/nix/nix.conf
@@ -121,7 +121,7 @@ in {
       })
     ];
 
-    provides.to-users.homeManager =
+    _.to-users.homeManager =
     { config, ... }:
     {
       home = {

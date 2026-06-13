@@ -1,5 +1,5 @@
 {
-  fmx.programs._.zoxide = {
+  fmx.programs.zoxide = {
     includes = [
       ({ user, persistent, ... }: {
         persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [

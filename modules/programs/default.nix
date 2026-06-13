@@ -1,8 +1,7 @@
 { lib, ... }:
 {
-  fmx.programs = { config, ... }:
-  {
-    includes = builtins.attrValues config._;
+  fmx.programs = {
+    includes = [ <fmx/programs/_> ];
     homeManager.programs = {
       # ls alternative
       eza = {

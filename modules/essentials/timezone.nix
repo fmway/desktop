@@ -1,5 +1,5 @@
 {
-  fmx.essentials._.timezone.nixos = { host, ... }: let
+  fmx.essentials.timezone.nixos = { host, ... }: let
     timeZone = host.timeZone or null;
     defaultLocale = host.locale or "en_US.UTF-8";
     extraLocale = host.extraLocale or defaultLocale;

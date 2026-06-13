@@ -1,7 +1,5 @@
-{ den, lib, ... }:
 {
-  fmx.boot._.plymouth.nixos = { ... }:
-  {
+  fmx.boot.plymouth.nixos = {
     boot.plymouth = {
       enable = true;
       theme = "bgrt";

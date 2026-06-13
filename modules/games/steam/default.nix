@@ -1,6 +1,6 @@
 { inputs, den, ... }:
 {
-  fmx.games._.steam.includes = [
+  fmx.games.steam.includes = [
     (den._.unfree [
       "steam"
       "steam-unwrapped"
@@ -12,7 +12,7 @@
       ];
     })
   ];
-  fmx.games._.steam.nixos =
+  fmx.games.steam.nixos =
   { config, lib, pkgs, ... }:
   {
     nixpkgs.overlays = [

@@ -1,6 +1,6 @@
 { search-engines, lib, ... }:
 {
-  fmx.browsers._.qutebrowser.homeManager.programs.qutebrowser = {
+  fmx.browsers.qutebrowser.homeManager.programs.qutebrowser = {
     keyBindings.normal = {
       "<Alt-o>" = "cmd-set-text :open {url}";
       ";;" = "cmd-set-text :";

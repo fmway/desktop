@@ -1,9 +1,8 @@
 {
-  fmx.boot = { config, ... }:
-  {
+  fmx.boot = {
     includes = [
-      config._.systemd-boot
-      config._.plymouth
+      <fmx/boot/systemd-boot>
+      <fmx/boot/plymouth>
     ];
 
     nixos = { lib, config, ... }:

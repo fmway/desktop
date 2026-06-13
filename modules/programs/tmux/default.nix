@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.programs._.tmux.homeManager = { pkgs, ... }: let
+  fmx.programs.tmux.homeManager = { pkgs, ... }: let
     scanPlugins = lib.tmux.mkScanPlugins pkgs;
   in {
     programs.tmux = {

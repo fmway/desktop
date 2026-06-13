@@ -1,9 +1,9 @@
 { den, lib, ... }:
 {
   den.aspects.Namaku1801.includes = [
-    den.aspects.Namaku1801._.packages
+    <Namaku1801/packages>
   ];
-  den.aspects.Namaku1801._.packages.nixos = { pkgs, ... }:
+  den.aspects.Namaku1801.packages.nixos = { pkgs, ... }:
   {
     environment.systemPackages = with pkgs; [
       wl-clipboard

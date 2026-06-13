@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.display-managers._.ly =
+  fmx.display-managers.ly =
   {
     nixos = { pkgs, ... }:
     {

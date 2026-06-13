@@ -1,7 +1,7 @@
 {
   # default allow tcp port
   # TODO: add class or schema to expose firewall open ports
-  fmx.essentials._.firewall.nixos.networking.firewall.allowedTCPPorts = [
+  fmx.essentials.firewall.nixos.networking.firewall.allowedTCPPorts = [
     1234
     3000
     3001

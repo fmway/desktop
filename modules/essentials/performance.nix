@@ -1,7 +1,6 @@
 {
-  fmx.essentials._.performance = { config, ... }:
-  {
-    includes = builtins.attrValues config.provides;
+  fmx.essentials.performance = {
+    includes = [ <fmx/essentials/performance/_> ];
     nixos = {
       security.rtkit.enable = true;
       services.upower.enable = true;
@@ -9,13 +8,13 @@
     };
 
     # Enale throttled.service for fix Intel CPU throttling
-    _.throttled.nixos.services.throttled.enable = true;
+    throttled.nixos.services.throttled.enable = true;
 
     # Enable thermald for CPU temperature auto handling
-    _.thermald.nixos.services.thermald.enable = true;
+    thermald.nixos.services.thermald.enable = true;
 
     # Enable earlyoom for handling OOM conditions
-    _.earlyoom.nixos.services.earlyoom = {
+    earlyoom.nixos.services.earlyoom = {
       enable = true;
       enableNotifications = true;
       freeMemThreshold = 2;
@@ -23,7 +22,7 @@
     };
 
     # power-profiles-daemon.enable = true;
-    _.tuned.nixos = {
+    tuned.nixos = {
       services.tuned = {
         enable = true;
         ppdSupport = true;

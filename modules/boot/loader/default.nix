@@ -1,5 +1,5 @@
 {
-  fmx.boot._ = {
+  fmx.boot = {
     systemd-boot.nixos = { host, config, lib, ... }:
     {
       boot.loader = {

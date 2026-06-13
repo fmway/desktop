@@ -1,7 +1,8 @@
 { den, lib, ... }:
 {
-  fmx.essentials = { config, ... }: {
-    includes = builtins.attrValues config.provides ++ [
+  fmx.essentials = {
+    includes = [
+      <fmx/essentials/_>
       <fmx/nix>
       <fmx/boot>
       <fmx/networking>
@@ -126,7 +127,7 @@
     };
 
     # FIXME: specific hardware
-    _.hardware = {
+    hardware = {
       includes = [
         (den._.unfree [
           "broadcom-bt-firmware"
@@ -143,7 +144,7 @@
         boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "uas" "sd_mod" ];
       };
     };
-    _.kdeconnect = {
+    kdeconnect = {
       includes = [
         ({ user, host, persistent, ... }: {
           persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [

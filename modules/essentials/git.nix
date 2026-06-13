@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.essentials._.git = 
+  fmx.essentials.git = 
   { user, ... }:
   {
     nixos.programs.git.enable = true;

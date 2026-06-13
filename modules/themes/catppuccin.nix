@@ -16,26 +16,23 @@
       } // (if isNull accent || accent == "" then {} else { inherit accent; });
     }) list);
 in {
-  fmx.themes._.catppuccin = { config, ... }:
-  {
-    includes = builtins.attrValues config.provides;
+  fmx.themes.catppuccin = {
+    includes = [ <fmx/themes/catppuccin/_> ];
     homeManager.imports = [
       inputs.catppuccin.homeModules.catppuccin
     ];
-
-    provides = toCatppuccinFriendly [
-      "fzf"
-      "sway"
-      "btop"
-      "qutebrowser"
-      # "zed"
-      "ghostty"
-      { lazygit = "teal"; }
-      { gh-dash = "teal"; }
-      { bat.mocha = ""; }
-      { swaylock.mocha = ""; }
-    ];
-  };
+  } // toCatppuccinFriendly [
+    "fzf"
+    "sway"
+    "btop"
+    "qutebrowser"
+    # "zed"
+    "ghostty"
+    { lazygit = "teal"; }
+    { gh-dash = "teal"; }
+    { bat.mocha = ""; }
+    { swaylock.mocha = ""; }
+  ];
   flake-file.inputs = {
     catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";

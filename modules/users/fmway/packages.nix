@@ -4,7 +4,7 @@
     <fmway/packages>
     <fmx/desktops/apps/telegram>
   ];
-  den.aspects.fmway._.packages = {
+  den.aspects.fmway.packages = {
     homeManager = { pkgs, ... }:
     {
       home.packages = with pkgs; [

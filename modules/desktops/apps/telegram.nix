@@ -1,5 +1,5 @@
 {
-  fmx.desktops._.apps._.telegram = {
+  fmx.desktops.apps.telegram = {
     includes = [
       ({ persistent, user, ... }: {
         persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [

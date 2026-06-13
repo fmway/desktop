@@ -1,6 +1,6 @@
 { config, lib, inputs, ... }:
 {
-  fmx.desktops._.shells._.noctalia = {
+  fmx.desktops.shells.noctalia = {
     homeManager = { pkgs, ... }: let
       noctalia-shell = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
     in {

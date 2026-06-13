@@ -1,9 +1,8 @@
 { lib, ... }:
 {
-  fmx.nix = { config, ... }:
-  {
+  fmx.nix = {
     includes = [
-      config._.cache
+      <fmx/nix/cache>
       ({ host, persistent, ... }: {
         persistence = [
         {

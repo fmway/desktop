@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  fmx.desktops._.shells._.dms = {
+  fmx.desktops.shells.dms = {
     includes = [
       <fmx/desktops/utils/ddc>
       <fmx/desktops/shells/dms/danksearch>
@@ -28,7 +28,7 @@
     #   inputs.dms.homeModules.dank-material-shell
     # ];
 
-    _.danksearch.homeManager = {
+    danksearch.homeManager = {
       imports = [
         inputs.dsearch.homeModules.default
       ];

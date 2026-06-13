@@ -1,5 +1,5 @@
 {
-  fmx.editors._.nixvim._.treesitter.nixvim =
+  fmx.editors.nixvim.treesitter.nixvim =
   { pkgs, ... }:
   {
     plugins.treesitter.nixvimInjections = true;

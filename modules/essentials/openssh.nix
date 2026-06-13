@@ -1,5 +1,5 @@
 {
-  fmx.essentials._.openssh = {
+  fmx.essentials.openssh = {
     includes = [
       ({ persistent, ... }: {
         persistence = {
@@ -19,7 +19,7 @@
   };
 
   # TODO: cross hosts
-  fmx.essentials._.openssh._.allow-users = { host, ... }:
+  fmx.essentials.openssh.allow-users = { host, ... }:
   {
     nixos.imports = let
       collectKeys = builtins.concatMap (user: user.sshKeys) (builtins.attrValues host.users);
@@ -28,7 +28,7 @@
     }) (builtins.attrNames host.users ++ [ "root" ]);
   };
 
-  fmx.essentials._.openssh._.google-auth.nixos =
+  fmx.essentials.openssh.google-auth.nixos =
   { pkgs, ... }:
   {
     # enable google totp in ssh login
