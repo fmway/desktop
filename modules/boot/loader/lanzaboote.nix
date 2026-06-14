@@ -1,6 +1,16 @@
 # Secureboot using lanzaboote
-{ inputs, lib, config, ... }:
-{
+{ inputs, lib, config, ... }: let
+  moduleFile = "${inputs.lanzaboote}/nix/modules/lanzaboote.nix";
+  moduleStr = builtins.readFile moduleFile;
+  replace = {
+    "boot.bootspec = {\n      enable = true;" = "boot.bootspec = {";
+  };
+  replaceK = builtins.attrNames replace; replaceV = builtins.attrValues replace;
+  patchModule =
+    if builtins.any (lib.flip lib.hasInfix moduleStr) replaceK then
+      builtins.toFile "lanzaboote.nix" (builtins.replaceStrings replaceK replaceV moduleStr)
+    else moduleFile;
+in {
   fmx.boot._.lanzaboote = {
     includes = [
       ({ persistent, ... }: {
@@ -10,9 +20,7 @@
 
     nixos = { host, pkgs, ... }:
     {
-      imports = [
-        inputs.lanzaboote.nixosModules.lanzaboote
-      ];
+      imports = [ patchModule ];
       environment.systemPackages = [
         pkgs.sbctl
       ];
@@ -24,6 +32,7 @@
         enable = true;
         pkiBundle = "/var/lib/sbctl";
         configurationLimit = host.configurationLimit or 25;
+        package = lib.mkDefault inputs.lanzaboote.packages.${host.system}.lzbt;
       };
     };
   };

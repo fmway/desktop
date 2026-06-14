@@ -112,5 +112,11 @@ in {
     { host, ... }:
       (policy.resolve.shared { persistent = host.persistent; });
     
+
+  flake-file.inputs = {
+    impermanence.url = "github:nix-community/impermanence";
+    impermanence.inputs.home-manager.follows = "home-manager";
+    impermanence.inputs.nixpkgs.follows = "nixpkgs";
+  };
 }
 
