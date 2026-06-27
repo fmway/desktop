@@ -47,7 +47,7 @@
       })
     ];
 
-    persistence = { persistent, host, config,  ... }:
+    persistence = { persistent, host, osConfig,  ... }:
     {
       ${persistent.defaultDirectory} = {
         directories = map (x: { directory = x; mode = "0755"; user = "root"; group = "root"; }) [
@@ -65,15 +65,15 @@
           { directory = "/var/lib/upower"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
           { directory = "/var/lib/bluetooth"; mode = "u=rwx,g=rx,o=x"; user = "root"; }
         ]
-        ++ lib.optional config.services.zerotierone.enable {
+        ++ lib.optional osConfig.services.zerotierone.enable {
           directory = "/var/lib/zerotier-one"; mode = "u=rwx,g=,0="; user = "root"; group = "root";
         }
-        ++ lib.optional config.networking.networkmanager.enable
+        ++ lib.optional osConfig.networking.networkmanager.enable
           "/etc/NetworkManager/system-connections"
-        ++ lib.optional config.networking.wireless.iwd.enable {
+        ++ lib.optional osConfig.networking.wireless.iwd.enable {
           directory = "/var/lib/iwd"; mode = "u=rwx,g=,o"; user = "root"; group = "root";
         }
-        ++ lib.optional config.services.colord.enable {
+        ++ lib.optional osConfig.services.colord.enable {
           directory = "/var/lib/colord"; mode = "u=rwx,g=,o="; user = "colord"; group = "colord";
         }
         ;
