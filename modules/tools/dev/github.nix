@@ -1,22 +1,31 @@
 {
-  fmx.tools.dev.github.homeManager.programs = {
-    # github-cli
-    gh.enable = true;
-    gh.settings = {
-      editor = "nvim";
-      aliases = {
-        co = "pr checkout";
-        pv = "pr view";
+  fmx.tools.dev.github = {
+    includes = [
+      ({ user, persistent, ... }: {
+        persistence.${persistent.defaultDirectory}.users.${user.userName}.files = [
+          ".config/gh/hosts.yml"
+        ];
+      })
+    ];
+    homeManager.programs = {
+      # github-cli
+      gh.enable = true;
+      gh.settings = {
+        editor = "nvim";
+        aliases = {
+          co = "pr checkout";
+          pv = "pr view";
+        };
+        git_protocol = "ssh";
       };
-      git_protocol = "ssh";
-    };
-    # github-cli dashboard
-    gh-dash.enable = true;
-    gh-dash.settings = {
-      prSections = [{
-        title = "My Pull Requests";
-        filters = "is:open author:@me";
-      }];
+      # github-cli dashboard
+      gh-dash.enable = true;
+      gh-dash.settings = {
+        prSections = [{
+          title = "My Pull Requests";
+          filters = "is:open author:@me";
+        }];
+      };
     };
   };
 }

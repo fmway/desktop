@@ -1,10 +1,11 @@
 { fmx, den, lib, inputs, ... }: let
   nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
+  inherit (den.lib.aspects) fx;
 in {
   # den.aspects.fmway.excludes = [
   #   <fmx/desktops/shells/noctalia>
   # ];
-  # den.aspects.fmway.provides.Namaku1801 = {
+  den.aspects.fmway.provides.Namaku1801 = {
   #   # replace noctalia to dms
   #   # meta.handleWith = den.lib.aspects.fx.constraints.substitute <fmx/desktops/shells/noctalia> <fmx/desktops/shells/dms>;
   #   excludes = [
@@ -13,7 +14,7 @@ in {
   #   includes = [
   #     <fmx/desktops/shells/dms>
   #   ];
-  # };
+  };
   den.hosts.x86_64-linux.Namaku1801 = {
     persistent.enable = true;
     persistent.cacheDirectory = "/persist/shared_cache";
@@ -49,6 +50,9 @@ in {
       <fmx/kernels/cachy>
       (fmx.disk._.zfs._.auto-scrub "weekly")
     ];
+    # provides.to-users.meta.handleWith = [
+    #   (fx.constraints.substitute <fmx/nix/runtime/nix> <fmx/nix/runtime/dnix>)
+    # ];
     provides.to-users.nixos = { config, pkgs, ... }:
     {
       nixpkgs.overlays = [
@@ -78,10 +82,6 @@ in {
       networking.hostId = lib.mkDefault "4970ef8d"; # required for zfs
 
       boot.kernelModules = [ "kvm-intel" ];
-
-      nix.settings.experimental-features = [
-        ("pipe-operator" + lib.optionalString (!config.lix.enable or false) "s")
-      ];
 
       services.zfs.autoSnapshot = {
         enable = true;

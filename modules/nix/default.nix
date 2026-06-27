@@ -1,9 +1,10 @@
 { lib, ... }:
 {
-  fmx.nix = { config, ... }:
-  {
+  den.quirks.nix-options.description = "collect all nix options (especially for binary caches), useful for autoappend into the shell (like fish abbr)";
+  fmx.nix = {
     includes = [
-      config._.cache
+      <fmx/nix/cache>
+      <fmx/nix/runtime>
       ({ host, persistent, ... }: {
         persistence = [
         {
@@ -42,8 +43,5 @@
         };
       }))
     ];
-    homeManager = { pkgs, ... }: {
-      nix.package = lib.mkDefault pkgs.nix;
-    };
   };
 }

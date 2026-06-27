@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  fmx.nix._.gc = {
+  fmx.nix.gc = {
     description = ''
       Automatic nix gc
 

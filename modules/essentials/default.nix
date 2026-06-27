@@ -39,9 +39,10 @@
           };
         }
         {
-          ${persistent.cacheDirectory}.users.${user.userName}.directories = [
-            ".local/share/applications"
-          ];
+          ${persistent.cacheDirectory}.users.${user.userName} = {
+            directories = [ ".local/share/applications" ];
+            files = [ ".config/mimeapps.list" ];
+          };
         }
         ];
       })
