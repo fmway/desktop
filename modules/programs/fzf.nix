@@ -10,11 +10,11 @@
 
     tmux.enableShellIntegration = true; # enable tmux integration
 
-    fileWidgetCommand = "fd --type f"; # CTRL+T
+    fileWidget.command = "fd --type f"; # CTRL+T
 
-    changeDirWidgetCommand = "fd --type d"; # ALT+C
+    changeDirWidget.command = "fd --type d"; # ALT+C
 
-    historyWidgetOptions = [
+    historyWidget.options = [
       "--sort"
       "--exact"
     ]; # CTRL+R

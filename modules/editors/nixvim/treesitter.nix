@@ -76,7 +76,7 @@
       templ
       terraform
       textproto
-      tmux
+      # tmux
       todotxt
       toml
       tsx
