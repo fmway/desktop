@@ -1,6 +1,9 @@
 { den, lib, ... }:
 {
   fmx.essentials = { config, ... }: {
+    firewall = {
+      tcp = [ 1234 3000 3001 5900 8000 8080 8888 9000 9876 ];
+    };
     includes = builtins.attrValues config.provides ++ [
       <fmx/nix>
       <fmx/boot>
