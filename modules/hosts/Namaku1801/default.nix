@@ -16,6 +16,7 @@ in {
   #   ];
   };
   den.hosts.x86_64-linux.Namaku1801 = {
+    hardware = "lenovo-thinkpad-t480";
     persistent.enable = true;
     persistent.cacheDirectory = "/persist/shared_cache";
     scx = {
@@ -66,7 +67,6 @@ in {
 
       imports = [
         inputs.nixvim.nixosModules.nixvim
-        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
         ./_impermanence.nix
       ];
       programs.nixvim.enable = true;

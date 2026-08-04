@@ -1,5 +1,12 @@
-{ lib, ... }:
-{
+{ lib, inputs, ... }: let
+  getHardwareModule = hardware: let
+    module =
+      if lib.hasInfix "/" hardware then
+      let p = "${inputs.nixos-hardware}/${hardware}"; in
+        if builtins.pathExists p then p else null
+      else inputs.nixos-hardware.nixosModules.${hardware} or null;
+  in if isNull hardware || isNull module then {} else module;
+in {
   den.schema.host = { config, ... }:
   {
     options = {
@@ -41,6 +48,19 @@
         description = "(use case: for boot configurationLimit)";
         type = lib.types.ints.unsigned;
         default = 25;
+      };
+      hardware = lib.mkOption {
+        description = "The name of hardware, used by nixos-hardware (host.hardware-module)";
+        example = lib.literalExpression /* nix */ ''
+          "lenovo-thinkpad-t480"
+        '';
+        type = with lib.types; nullOr str;
+        default = null;
+      };
+      hardware-module = lib.mkOption {
+        readOnly = true;
+        type = lib.types.deferredModule;
+        default = getHardwareModule config.hardware;
       };
     };
   };

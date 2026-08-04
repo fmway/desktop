@@ -137,7 +137,9 @@
           "xone-dongle-firmware"
         ])
       ];
-      nixos = {
+      nixos = { host, ... }:
+      {
+        imports = [ (host.hardware-module or {}) ];
         hardware.enableAllFirmware = lib.mkDefault true;
         hardware.enableRedistributableFirmware = lib.mkDefault true;
         
