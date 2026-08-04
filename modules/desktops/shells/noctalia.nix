@@ -40,8 +40,7 @@
     url = "github:noctalia-dev/noctalia-shell";
     inputs = {
       nixpkgs.follows = "nixpkgs";
-    } // lib.optionalAttrs (config ? flake-file.inputs.nixvim) {
-      noctalia-qs.inputs.systems.follows = "nixvim/systems";
+      noctalia-qs.inputs.systems.follows = "systems";
     };
   };
 }

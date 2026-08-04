@@ -16,7 +16,7 @@ inputs: let
     })
     (inputs.home-manager.lib or {})
     (inputs.fmway-modules.lib or {})
-    (self: super: super.recursiveUpdate super (selfLib super))
+    (self: super: super.recursiveUpdate super (selfLib super true))
   ];
 
   api = {
@@ -43,11 +43,11 @@ inputs: let
     # for local flake
     (inputs._wrapImportTree or (s: s)); 
 
-  selfLib = lib: import-tree
+  selfLib = lib: internal: let r = import-tree
     (s: s.map (p: {
       keys = let k = lib.init (lib.splitString "/" (lib.removePrefix "${scanDir}/" p)); in if builtins.length k > 1 then lib.tail k else k;
       value = lib.fmway.doImport p {
-        inherit lib inputs;
+        inherit lib inputs internal; selfLib = r;
         require = cond: value: { _type = "require"; inherit cond value; };
       };
     }))
@@ -58,7 +58,7 @@ inputs: let
         cond = if isRequire then c.value.cond else true;
       in if cond then lib.recursiveUpdate a (lib.setAttrByPath c.keys value) else a) {}))
     (s: s.onSuffix "lib.nix")
-    scanDir;
+    scanDir; in r;
 
   isAdditionalModuleExist = let
     m = inputs.module or [];
@@ -98,7 +98,7 @@ in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
     })
   ];
 
-  flake.lib = selfLib lib;
+  flake.lib = selfLib lib false;
 
   flake.overlays = import-tree
     (s: s.onSuffix "overlay.nix")

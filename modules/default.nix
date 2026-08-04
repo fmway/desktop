@@ -4,10 +4,9 @@
     inputs.flake-file.flakeModules.default
   ];
 
-  systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
-
   flake-file.inputs = {
     # core flake
+    systems.url = "github:nix-systems/triplet";
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     home-manager = {
       url = "github:nix-community/home-manager/master";

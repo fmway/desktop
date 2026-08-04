@@ -1,18 +1,14 @@
-{ lib, inputs, ... }: let
-  mkCross = a:
-    lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: { config, pkgs, osConfig ? {}, ... } @ args: let
-      m = if builtins.isFunction a then a ({ inherit config class pkgs; } // args) else a;
-    in lib.optionalAttrs (class != "homeManager" || !(osConfig.home-manager.useGlobalPkgs or false)) m);
-in {
+{ lib, inputs, ... }:
+{
   fmx.nix._.runtime.includes = [ <fmx/nix/runtime/nix> ];
-  fmx.nix._.runtime._.nix = mkCross ({ pkgs, ... }: {
+  fmx.nix._.runtime._.nix = lib.mkCross ({ pkgs, ... }: {
     nix.package = pkgs.nix;
     nix.settings.experimental-features = [ "pipe-operators" ];
   });
 
   fmx.nix._.runtime._.lix = { version ? "latest", ... }: {
     includes = [
-      (mkCross ({ pkgs, class, ... }: {
+      (lib.mkCross ({ pkgs, class, ... }: {
         key = "fmx@nix/runtime/lix";
         # TODO
         # imports = lib.optionals (version == "upstream") [

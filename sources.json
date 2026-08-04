@@ -1,7 +1,7 @@
 {
   "h-m-m": {
     "url": "https://codeload.github.com/nadrad/h-m-m/tar.gz/refs/heads/main",
-    "hash": "sha256-JV3CFTGcY5uwQg9I6Z+oqZ2x8MzJqEZ7m0QZRvd+xHM=",
+    "hash": "sha256-//8UlSMMGLUyY3HteqKAbXY7q0dW64MttIHXY+vREXw=",
     "mainUrl": "https://github.com/nadrad/h-m-m/archive/main.tar.gz",
     "type": "tarball"
   },
@@ -15,6 +15,12 @@
     "url": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
     "hash": "sha256-hH0fs6DiEBNIQ/VhzNEa4B5Yre+F/MRQ1eFa/nf5Ong=",
     "mainUrl": "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/services/pipewire.nix",
+    "type": "file"
+  },
+  "mnixry/nixpak/common": {
+    "url": "https://raw.githubusercontent.com/mnixry/nixos-config/refs/heads/main/pkgs/nixpaks/common.nix",
+    "hash": "sha256-ptnWxXlrT9CCzDDbOz28VrbUl3Sm8epZIHlzF/CN1xo=",
+    "mainUrl": "https://raw.githubusercontent.com/mnixry/nixos-config/refs/heads/main/pkgs/nixpaks/common.nix",
     "type": "file"
   },
   "waydroid-script": {

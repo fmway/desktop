@@ -39,7 +39,10 @@
     };
     helium = {
       url = "github:vikingnope/helium-browser-nix-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.inputs.systems.follows = "systems";
+      };
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -53,6 +56,10 @@
       };
     };
     import-tree.url = "github:denful/import-tree";
+    jail-nix = {
+      url = "sourcehut:~alexdavid/jail.nix";
+      flake = false;
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -65,19 +72,24 @@
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpak = {
+      url = "github:nixpak/nixpak";
+      flake = false;
+    };
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs = {
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
       };
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        noctalia-qs.inputs.systems.follows = "nixvim/systems";
+        noctalia-qs.inputs.systems.follows = "systems";
       };
     };
     nur = {
@@ -95,8 +107,9 @@
         fmway-modules.follows = "fmway-modules";
         nixpkgs.follows = "nixpkgs";
         nixvim.follows = "nixvim";
-        systems.follows = "nixvim/systems";
+        systems.follows = "systems";
       };
     };
+    systems.url = "github:nix-systems/triplet";
   };
 }

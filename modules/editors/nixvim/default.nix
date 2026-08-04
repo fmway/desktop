@@ -46,6 +46,7 @@
   flake-file.inputs = {
     nixvim.url = "github:nix-community/nixvim";
     nixvim.inputs = {
+      systems.follows = "systems";
       nixpkgs.follows = "nixpkgs";
       flake-parts.follows = "flake-parts";
     };
@@ -55,7 +56,7 @@
       nixvim.follows = "nixvim";
       flake-parts.follows = "flake-parts";
       nixpkgs.follows = "nixpkgs";
-      systems.follows = "nixvim/systems";
+      systems.follows = "systems";
     } // lib.optionalAttrs (config ? flake-file.inputs.fmway-modules) {
       fmway-modules.follows = "fmway-modules";
     };
