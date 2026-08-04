@@ -95,13 +95,10 @@ in {
       services.zfs.autoScrub.interval = "weekly";
     };
     provides.to-users.includes = [
-      <fmx/tools/drive/megasync>
       <fmx/essentials>
       <fmx/programs>
       <fmx/shells/fish>
       <fmx/shells/nushell>
-      <fmx/editors/zed>
-      <fmx/games/steam>
       # <fmx/containers/waydroid>
       <fmx/containers/flatpak>
       <fmx/containers/docker>

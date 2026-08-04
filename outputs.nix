@@ -46,9 +46,17 @@ inputs: let
   selfLib = lib: import-tree
     (s: s.map (p: {
       keys = let k = lib.init (lib.splitString "/" (lib.removePrefix "${scanDir}/" p)); in if builtins.length k > 1 then lib.tail k else k;
-      value = lib.fmway.doImport p { inherit lib inputs; };
+      value = lib.fmway.doImport p {
+        inherit lib inputs;
+        require = cond: value: { _type = "require"; inherit cond value; };
+      };
     }))
-    (s: s.pipeTo (builtins.foldl' (a: c: lib.recursiveUpdate a (lib.setAttrByPath c.keys c.value)) {}))
+    (s: s.pipeTo (
+      builtins.foldl' (a: c: let
+        isRequire = c.value._type or "" == "require";
+        value = if isRequire then c.value.value else c.value;
+        cond = if isRequire then c.value.cond else true;
+      in if cond then lib.recursiveUpdate a (lib.setAttrByPath c.keys value) else a) {}))
     (s: s.onSuffix "lib.nix")
     scanDir;
 

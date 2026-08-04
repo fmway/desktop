@@ -16,12 +16,15 @@
 
   den.aspects.fmway = {
     includes = [
+      <fmx/tools/drive/megasync>
       <fmx/tools/productivity/zoom>
       <fmx/tools/productivity/zotero>
       <fmx/tools/productivity/h-m-m>
       <fmx/tools/dev/_>
       <fmx/themes/catppuccin>
       <fmx/browsers/helium>
+      <fmx/editors/zed>
+      <fmx/games/steam>
       (den._.user-shell "fish")
     ];
   };

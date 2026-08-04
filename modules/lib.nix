@@ -4,6 +4,10 @@
       "[${toString min}-${toString val}]"
     else "${toString min}";
 in {
+  mkCross = a:
+    lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: { config, pkgs, osConfig ? {}, ... } @ args: let
+      m = if builtins.isFunction a then a ({ inherit config class pkgs; } // args) else a;
+    in lib.optionalAttrs (class != "homeManager" || !(osConfig.home-manager.useGlobalPkgs or false)) m);
   tmux.mkScanPlugins = pkgs: path: extendPlugins:
     extendPlugins ++ (((lib.import-tree
       .initFilter (lib.hasSuffix ".tmux"))
