@@ -80,6 +80,10 @@
   ) // { __idx = acc.__idx + 1; }) { __idx = 0; } _actions) // {
     macro = mkAction' "macro";
     command = mkAction' "command";
+    noop = {
+      __toString = _: "noop";
+      __functor = self: list: obj: lib.genAttrs' list (key: assert builtins.isString key || key ? __toString; { name = toString key; value = self; }) // obj;
+    };
   };
 
   fix' = x: lib.mapAttrs (k: v:
@@ -108,6 +112,6 @@
 in {
   inherit actions functions keys;
   parse = fn: let
-    res = fn (actions // keys // functions // fix' res);
+    res = fn (keys // actions // functions // fix' res);
   in fix res;
 }

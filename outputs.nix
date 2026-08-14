@@ -62,7 +62,6 @@ inputs: let
   scanDir = builtins.toPath ./modules;
 
   import-tree =
-    inputs.import-tree.withLib _lib
     (s: s.addAPI api)
     (s: s.map builtins.toPath)
     # for local flake
@@ -75,7 +74,6 @@ inputs: let
     }))
     (s: s.pipeTo (builtins.foldl' (a: c: lib.recursiveUpdate a (lib.setAttrByPath c.keys c.value)) {}))
     (s: s.onSuffix "lib.nix")
-    (s: s.withLib lib)
     scanDir;
 
   isAdditionalModuleExist = let
