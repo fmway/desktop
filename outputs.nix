@@ -30,38 +30,14 @@ inputs: let
          value = (if builtins.isFunction fn || fn ? __functor then fn else _: fn) { inherit name path; };
       }))
       .pipeTo lib.listToAttrs;
-
-    # auto export flakeModules.<x> if the module inside */flake/(classes|extras/)?
-    # respect to import-tree.addScope except the flakeModules 
-    collectModules = self:
-      self.map (p: let
-        name = lib.fmway.basename p;
-        m = builtins.match ".*([/]flake[/]((classes|extras|quirks)[/])?).*" p;
-        m'= builtins.elemAt m 0;
-        fixModule =
-          if self.__config.scoped == {  } then
-            p
-          else
-            lib.modules.setDefaultModuleLocation p (scopedImport self.__config.scoped p);
-        r = {
-          "/flake/".imports = [ p (toModules name p) ];
-          "/flake/extras/".imports = [ p (toModules "extra-${name}" p) ];
-          "/flake/classes/".imports = [ p (toModules "class-${name}" p) ];
-          "/flake/quirks/".imports = [ p (toModules "quirk-${name}" p) ];
-        };
-      in if isNull m then fixModule else r.${m'})
-      (s: s.pipeTo (modules: { imports = modules; }));
   };
 
-  toModules = name: p: { flake.flakeModules = { ${name} = p; default.imports = [ p ]; }; };
-
-  specialArgs = {
-    inherit lib;
-  };
+  specialArgs = { inherit lib; };
   
   scanDir = builtins.toPath ./modules;
 
   import-tree =
+    inputs.import-tree
     (s: s.addAPI api)
     (s: s.map builtins.toPath)
     # for local flake
@@ -105,7 +81,7 @@ inputs: let
   
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
-    ({ den, sources ? {}, ... }: scanModules.addScoped (scoped { inherit den sources; }) (s: s.collectModules) scanDir)
+    ({ den, sources ? {}, ... }: scanModules.addScoped (scoped { inherit den sources; }) scanDir)
     ({ lib, config, ... }: {
       options.flake.flakeModules = lib.mkOption {
         type = lib.types.toml; # smart append for list value

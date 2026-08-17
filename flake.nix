@@ -22,6 +22,10 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    fmway-garden = {
+      url = "github:fmway/garden";
+      inputs.import-tree.follows = "import-tree";
+    };
     fmway-lib = {
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";

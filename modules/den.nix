@@ -2,18 +2,22 @@
   inherit (den.lib) policy;
 in {
   flake-file.inputs.den.url = "github:denful/den/main";
+  flake-file.inputs.fmway-garden = {
+    url = "github:fmway/garden";
+    inputs.import-tree.follows = "import-tree";
+  };
 
   imports = [
     inputs.den.flakeModule
+    (inputs.fmway-garden.flakeModule.full.without [ "clan" ])
     (lib.den.namespace "fmx" true)
   ];
 
   den.policies.inputs-parametric = { host ? null, home ? null, ... } @ c:
     lib.optional (c ? host || c ? home)
     (policy.resolve.shared rec {
-      inputs' = let
-        system = c.host.system or c.home.system;
-      in builtins.mapAttrs (name: input: if name == "self" || input._type or "" == "flake" then config.perInput system input else input) inputs;
+      system = host.system or home.system;
+      inputs' = builtins.mapAttrs (name: input: if name == "self" || input._type or "" == "flake" then config.perInput system input else input) inputs;
       self' = inputs'.self;
     }) ++ [
       (policy.resolve { inherit inputs; })

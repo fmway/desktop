@@ -190,6 +190,26 @@
         "type": "github"
       }
     },
+    "fmway-garden": {
+      "inputs": {
+        "import-tree": [
+          "import-tree"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786968641,
+        "narHash": "sha256-mNZtc37vbpbaAh5i05am5AlVjcqmDgGCXTxlbL8WkHo=",
+        "owner": "fmway",
+        "repo": "garden",
+        "rev": "52b48bd658946e6e367d64f1c76e6700bdbfbabe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fmway",
+        "repo": "garden",
+        "type": "github"
+      }
+    },
     "fmway-lib": {
       "inputs": {
         "nixpkgs": [
@@ -584,6 +604,7 @@
         "dsearch": "dsearch",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
+        "fmway-garden": "fmway-garden",
         "fmway-lib": "fmway-lib",
         "fmway-modules": "fmway-modules",
         "helium": "helium",
