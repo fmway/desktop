@@ -1,40 +1,29 @@
 { den, lib, ... }: let
-  # inherit (den.lib) policy; inherit (policy) pipe;
-  mkOverlay = jails: self: super: lib.sandbox.jail.parse super jails;
+  jailTo = class: keys:
+    { pkgs, jail, ... }:
+      lib.setAttrByPath keys (builtins.attrValues (lib.sandbox.jail.parse pkgs jail)) // {
+        key = "den.aspects.jail@${class}";
+      };
 in {
   den.quirks.jail = {};
 
-  den.aspects.jail.per-module = rec {
-    nixos = { jail, ... }: { nixpkgs.overlays = [ (mkOverlay jail) ]; };
-    darwin = nixos;
-    homeManager = { osConfig, jail, ... }: {
-      nixpkgs.overlays = lib.mkIf (!osConfig.home-manager.useGlobalPkgs or false) [
-        (mkOverlay jail)
-      ];
-    };
-  };
+  den.aspects.jail.includes = [
+    ({ user ? null, ... }:
+    if isNull user then {
+      nixos = jailTo "nixos" [ "environment" "systemPackages" ];
+      darwin = jailTo "darwin" [ "environment" "systemPackages" ];
 
-  # TODO: FIXME:
-  # den.aspects.jail = {
-  #   packages = { pkgs, jail, ... }: lib.sandbox.jail.parse pkgs jail;
-  #   flake = { jail, ... }: {
-  #     flake.overlays = lib.sandbox.jail.mkOverlays jail;
-  #   };
-  # };
-  # den.policies.collect-jail = _: [
-  #   (pipe.from "jail" [
-  #     (pipe.broadcast (_: true))
-  #     (pipe.to [ den.aspects.jail ])
-  #   ])
-  # ];
-  # den.default.includes = [
-  #   den.policies.collect-jail
-  # ];
-
+      # packages = { pkgs, jail, ... }:
+      #   lib.sandbox.jail.parse pkgs jail // {
+      #     key = "den.aspects.jail@flake-system";
+      #   };
+    } else {
+      homeManager = jailTo "homeManager" [ "home" "packages" ];
+    })
+  ];
   den.schema = rec {
-    # flake.includes = [ den.aspects.jail ];
-    # flake-system = flake;
-    host.includes = [ den.aspects.jail.per-module ];
+    host.includes = [ den.aspects.jail ];
+    user = host;
     home = host;
   };
   flake-file/*.specialisation.dev*/.inputs = {
