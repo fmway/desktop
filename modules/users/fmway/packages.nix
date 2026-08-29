@@ -3,6 +3,7 @@
   den.aspects.fmway.includes = [
     <fmway/packages>
     <fmx/desktops/apps/telegram>
+    <fmx/desktops/apps/appflowy>
   ];
   den.aspects.fmway._.packages = {
     homeManager = { pkgs, ... }:
