@@ -111,7 +111,28 @@
   keys = import ./_keys.nix { inherit lib; };
 in {
   inherit actions functions keys;
-  parse = fn: let
-    res = fn (keys // actions // functions // fix' res);
-  in fix res;
+  parse = let self = {
+    __fns = keys // actions // functions;
+    __functor = _: fn: let
+      res = fn (self.__fns // fix' res);
+    in fix res;
+
+    from-list = list: let
+      r = builtins.foldl' (a: fn: let
+        args = self.__fns // fix' rr;
+        rr = lib.recursiveUpdate a (fn args);
+      in rr) {} list;
+    in fix r;
+
+    from-quirks = keyds:
+      builtins.zipAttrsWith (profileName: profiles: let
+      r = builtins.zipAttrsWith (k: vs:
+        if k == "ids" then
+          builtins.concatLists vs
+        else if k == "settings" then
+          self.from-list vs
+        else null
+      ) profiles;
+    in { ids = r.ids or []; settings = r.settings or {}; }) (lib.unique keyds);
+  }; in self;
 }
