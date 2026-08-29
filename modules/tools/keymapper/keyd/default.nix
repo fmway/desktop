@@ -1,14 +1,30 @@
-# TODO: expose as schema / keyd class
-{ lib, ... }:
-{
+{ den, lib, ... }: let
+  inherit (den.lib.policy) pipe;
+in {
+  den.quirks.keyd-config = {};
+  den.policies.collect-keyd-config = { host ? null, user ? null, ... }:
+    if isNull user then
+      pipe.from "keyd-config" [ (pipe.for (x: [(lib.keymapper.keyd.parse.from-quirks x)])) ]
+    else
+      pipe.from "keyd-config" [ pipe.expose ];
+  den.schema = rec {
+    host.includes = [ den.policies.collect-keyd-config ];
+    user = host;
+  };
   fmx.tools.keymapper.keyd.includes = [
     # register keyd group for each user
     ({ user, host, ... }: {
       nixos.users.users.${user.userName}.extraGroups = [ "keyd" ];
     })
     { nixos.users.groups.keyd = {}; }
+    {
+      keyd-config = {
+        default.ids = [ "*" ];
+        default.settings = import ./_keymap.nix;
+      };
+    }
   ];
-  fmx.tools.keymapper.keyd.nixos = { pkgs, ... }:
+  fmx.tools.keymapper.keyd.nixos = { pkgs, keyd-config, ... }:
   {
     # Link keyd-keyboard to /dev/input/keyd
     services.udev.extraRules = /* udev */ ''
@@ -38,10 +54,7 @@
 
     services.keyd = {
       enable = true;
-      keyboards.default = {
-        ids = [ "*" ];
-        settings = lib.keymapper.keyd.parse (import ./_keymap.nix);
-      };
+      keyboards = builtins.head keyd-config;
     };
   };
 }
