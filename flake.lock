@@ -1,38 +1,5 @@
 {
   "nodes": {
-    "bun2nix": {
-      "inputs": {
-        "flake-parts": [
-          "llm-agents",
-          "flake-parts"
-        ],
-        "nixpkgs": [
-          "llm-agents",
-          "nixpkgs"
-        ],
-        "systems": [
-          "llm-agents",
-          "systems"
-        ],
-        "treefmt-nix": [
-          "llm-agents",
-          "treefmt-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1784665499,
-        "narHash": "sha256-9BMxlTxCCDAeoNLtb1a/st7udtTIJep+wpUzquA29VU=",
-        "owner": "nix-community",
-        "repo": "bun2nix",
-        "rev": "0f2a1f0b6f42cebe3b149bf62d38754c5e0e9729",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "bun2nix",
-        "type": "github"
-      }
-    },
     "cachyos-kernel": {
       "flake": false,
       "locked": {
@@ -243,6 +210,21 @@
         "type": "github"
       }
     },
+    "fmway-inputs": {
+      "locked": {
+        "lastModified": 1788604954,
+        "narHash": "sha256-On0kl/Cc4EIF4IY4LxJ5zvD2AkxowLHxJvlnDysj2GI=",
+        "owner": "fmway",
+        "repo": "inputs",
+        "rev": "429d6227a0ade2e740fc078163e3484434dfd73d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fmway",
+        "repo": "inputs",
+        "type": "github"
+      }
+    },
     "fmway-lib": {
       "inputs": {
         "nixpkgs": [
@@ -426,34 +408,6 @@
         "owner": "nix-community",
         "ref": "v1.0.0",
         "repo": "lanzaboote",
-        "type": "github"
-      }
-    },
-    "llm-agents": {
-      "inputs": {
-        "bun2nix": "bun2nix",
-        "flake-parts": [
-          "flake-parts"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": [
-          "systems"
-        ],
-        "treefmt-nix": "treefmt-nix"
-      },
-      "locked": {
-        "lastModified": 1785826862,
-        "narHash": "sha256-UOPf9uQHGoNqEMZ2kii8DqlPBd5dYR6uERzdU8wdroQ=",
-        "owner": "numtide",
-        "repo": "llm-agents.nix",
-        "rev": "fd0508ef842609ad0c6f5af46c6f572214efebd9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "llm-agents.nix",
         "type": "github"
       }
     },
@@ -699,6 +653,7 @@
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "fmway-garden": "fmway-garden",
+        "fmway-inputs": "fmway-inputs",
         "fmway-lib": "fmway-lib",
         "fmway-modules": "fmway-modules",
         "helium": "helium",
@@ -707,7 +662,6 @@
         "import-tree": "import-tree",
         "jail-nix": "jail-nix",
         "lanzaboote": "lanzaboote",
-        "llm-agents": "llm-agents",
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nixos-hardware": "nixos-hardware",
         "nixpak": "nixpak",
@@ -752,27 +706,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "triplet",
-        "type": "github"
-      }
-    },
-    "treefmt-nix": {
-      "inputs": {
-        "nixpkgs": [
-          "llm-agents",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785360170,
-        "narHash": "sha256-XE1lKgQ3eIO3E7zWryqcRsax+mYXod/5RHBn4YaR9YE=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "d1187f8bc71fb8aab02395869ec3f5c1920f75c0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
         "type": "github"
       }
     },

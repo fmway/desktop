@@ -26,10 +26,15 @@
 
     # importing PATH, useful if combine with dev environment
     loose = c.compose [
+      (c.ro "/etc/static")
       (c.rw "/nix/store")
       (c.ro "/etc/nix")
       (c.ro "/run/current-system")
       (c.ro (c.noescape "\"/etc/profiles/per-user/$USER\""))
+      (c.rw'"~/.nix-profile")
+      (c.rw'"~/.nix-defexpr")
+      (c.rw "~/.local/state/nix")
+      (c.rw "~/.cache/nix")
       (c.add-path "\"$PATH\"")
     ];
   };

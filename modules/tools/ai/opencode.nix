@@ -2,7 +2,7 @@
   fmx.tools.ai.opencode = {
     jail = { inputs', ... }:
     {
-      opencode.package = inputs'.llm-agents.packages.opencode;
+      opencode.package = "${inputs'."numtide/llm-agents.nix".packages.opencode.out}/bin/opencode";
       opencode.permissions = c: with c; [
         loose
         network
