@@ -1,69 +1,37 @@
 {
-  fmx.tools.ai.opencode = {
+  fmx.tools.ai.opencode = let
+    config_dirs = [
+      ".config/opencode"
+      ".local/share/opencode"
+      ".local/state/opencode"
+    ];
+    cache_dirs = [ ".cache/opencode" ];
+  in {
     jail = { inputs', ... }:
     {
-      opencode.package = inputs'.llm-agents.packages.opencode;
+      opencode.package = "${inputs'."numtide/llm-agents.nix".packages.opencode.out}/bin/opencode";
       opencode.permissions = c: with c; [
         loose
         network
         time-zone
         no-new-session
+        tui
+        vcs
+        bind-project
+        package-manager
 
-        (env "COLORTERM" "truecolor")
-
-        (add-runtime /* sh */ ''
-          if [ -d "$PROJECT_DIR" ]; then
-            RUNTIME_ARGS+=(--bind "$PROJECT_DIR" "$PROJECT_DIR")
-          else
-            echo "Error: PROJECT_DIR '$PROJECT_DIR' does not exist" >&2
-            exit 1
-          fi
-        '')
         (env (regex "^OPENCODE_"))
-
-        (rw "~/.config/opencode")
-        (rw "~/.local/share/opencode")
-        (rw "~/.local/state/opencode")
-        (ro "~/.config/git")
-        (ro "~/.config/jj")
-
-        # prevent re-downloading models and packages
-        (rw "~/.cache/opencode")
-        (rw "~/.npm")
-
-        (rw "~/.deno")
-        (rw "~/.gradle")
-      ];
+      ] ++ map (d: rw "~/${d}") (config_dirs ++ cache_dirs);
     };
 
     includes = [
       ({ host, persistent, ... }: {
         persistence = builtins.concatMap (user: [
-        {
-          ${persistent.defaultDirectory}.users.${user.userName}.directories = [
-            ".config/opencode"
-            ".local/state/opencode"
-            ".local/share/opencode"
-          ];
-        }
-        {
-          ${persistent.cacheDirectory}.users.${user.userName}.directories = [
-            ".cache/opencode"
-          ];
-        }
+          { ${persistent.defaultDirectory}.users.${user.userName}.directories = config_dirs; }
+          { ${persistent.cacheDirectory}.users.${user.userName}.directories = cache_dirs; }
         ]) (builtins.attrValues host.users) ++ [
-        {
-          ${persistent.defaultDirectory}.directories = [
-            "/root/.config/opencode"
-            "/root/.local/state/opencode"
-            "/root/.local/share/opencode"
-          ];
-        }
-        {
-          ${persistent.cacheDirectory}.directories = [
-            "/root/.cache/opencode"
-          ];
-        }
+          { ${persistent.defaultDirectory}.directories = map (d: "/root/${d}") config_dirs; }
+          { ${persistent.cacheDirectory}.directories = map (d: "/root/${d}") cache_dirs; }
         ];
       })
     ];

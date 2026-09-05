@@ -16,6 +16,7 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    fmway-inputs.url = "github:fmway/inputs";
     fmway-lib = {
       url = "github:fmway/lib";
       inputs.nixpkgs.follows = "nixpkgs";

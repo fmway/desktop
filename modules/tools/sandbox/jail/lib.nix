@@ -1,8 +1,10 @@
 { inputs, require, lib, ... }: let
-
+  inherit (lib.fmway) do;
   combinators = c: let
     normalizePath = p: if !p?_noescape && isStartWithTilde p then c.noescape p else p;
   in {
+    # TODO
+    init = c.compose [];
     rw'= p: c.try-readwrite (normalizePath p);
     ro = p: c.try-readonly (normalizePath p);
     rw = p: let p' = normalizePath p; p_ = p'._noescape or "\"${p'}\""; in c.compose [
@@ -26,11 +28,46 @@
 
     # importing PATH, useful if combine with dev environment
     loose = c.compose [
-      (c.rw "/nix/store")
+      (c.ro "/etc/static")
+      (c.rw'"/nix/store")
       (c.ro "/etc/nix")
       (c.ro "/run/current-system")
       (c.ro (c.noescape "\"/etc/profiles/per-user/$USER\""))
+      (c.rw'"~/.nix-profile")
+      (c.rw'"~/.nix-defexpr")
+      (c.rw "~/.local/state/nix")
+      (c.rw "~/.cache/nix")
       (c.add-path "\"$PATH\"")
+    ];
+
+    vcs = c.compose [
+      (c.ro "~/.config/git")
+      (c.ro "~/.config/jj")
+      (c.rw "~/.config/jj/repos")
+    ];
+
+    bind-project = c.add-runtime /* sh */ ''
+      if [ -d "$PROJECT_DIR" ]; then
+        RUNTIME_ARGS+=(--bind "$PROJECT_DIR" "$PROJECT_DIR")
+      else
+        echo "Error: PROJECT_DIR '$PROJECT_DIR' does not exist" >&2
+        exit 1
+      fi
+    '';
+
+    tui = c.compose [
+      (c.env "COLORTERM" "truecolor")
+      # FIXME: add more...
+    ];
+
+    package-manager = c.compose [
+      (c.rw "~/.npm")
+      (c.rw "~/.deno")
+      (c.rw "~/.cache/deno")
+      (c.rw "~/.cache/npm")
+      (c.rw "~/.gradle")
+      (c.rw "~/.cargo")
+      # FIXME: add more...
     ];
   };
 
@@ -87,16 +124,18 @@
               null = [];
             }.${builtins.typeOf x} or (throw "unknown type of permissions, allowed: null, function, list")) v
           else lib.fmway.resolvePriority v) vs;
-        pkg = jail appName r.package r.permissions // { wrapped = pkg; unwrapped = r.package; };
+          package = r.package or pkgs.${appName};
+          permissions = [combinators.init] ++ r.permissions;
+        pkg = jail appName package permissions // { wrapped = pkg; unwrapped = r.package; inherit r; };
       in pkg) jails;
       # mkOverlays = builtins.zipAttrsWith (appName: vs: _: pkgs: let
       #   jail = self.init pkgs; inherit (jail) combinators;
       #   r = builtins.zipAttrsWith (k: v: if k == "permissions" then builtins.concatMap (fn: fn combinators) v else lib.fmway.resolvePriority v) vs;
       #   pkg = jail appName r.package r.permissions // { wrapped = pkg; unwrapped = r.package; };
       # in pkg);
-      addCombinators = fn: mkJail {
+      addCombinators = x: mkJail {
         overlays = overlays ++ [
-          (self: let r = fn self; in if builtins.isFunction r then r else _: r)
+          (self: super: do (do x self) super)
         ];
       };
     };

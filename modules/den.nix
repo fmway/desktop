@@ -36,7 +36,10 @@ in {
     lib.optional (c ? host || c ? home)
     (policy.resolve.shared rec {
       system = host.system or home.system;
-      inputs' = builtins.mapAttrs (name: input: if name == "self" || input._type or "" == "flake" then config.perInput system input else input) inputs;
+      inputs' = builtins.mapAttrs (name: input:
+        if name == "self" || input._type or "" == "flake" then
+          config.perInput system input
+        else input) inputs // builtins.mapAttrs (_: config.perInput system) (inputs.fmway-inputs or {});
       self' = inputs'.self;
     }) ++ [
       (policy.resolve { inherit inputs; })
