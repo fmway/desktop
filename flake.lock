@@ -197,11 +197,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786968641,
-        "narHash": "sha256-mNZtc37vbpbaAh5i05am5AlVjcqmDgGCXTxlbL8WkHo=",
+        "lastModified": 1789485116,
+        "narHash": "sha256-uM8Qj+/PzO+Wml5BkCOPWZXhPV2S6os25PC/3v7XpU0=",
         "owner": "fmway",
         "repo": "garden",
-        "rev": "52b48bd658946e6e367d64f1c76e6700bdbfbabe",
+        "rev": "08cef84cb4265936aaab9bb8ab4cb29db15ab89c",
         "type": "github"
       },
       "original": {
@@ -368,6 +368,7 @@
       "original": {
         "owner": "denful",
         "repo": "import-tree",
+        "rev": "4ebb10ae17d5f1ad366e7aef5b92cb8eecf24f69",
         "type": "github"
       }
     },

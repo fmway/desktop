@@ -27,7 +27,7 @@
       nixpkgs.follows = "nixpkgs";
     };
     flake-file.url = "github:denful/flake-file";
-    import-tree.url = "github:denful/import-tree";
+    import-tree.url = "github:denful/import-tree/4ebb10ae17d5f1ad366e7aef5b92cb8eecf24f69";
     nur.url = "github:nix-community/nur";
     nur.inputs.flake-parts.follows = "flake-parts";
     nur.inputs.nixpkgs.follows = "nixpkgs";
