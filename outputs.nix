@@ -22,8 +22,10 @@ inputs: let
   api = {
     addPaths = self: paths:
       builtins.foldl' (s: s.addPath) self (lib.flatten paths);
-    onSuffix = self: suffix: self.filter (_lib.hasSuffix suffix);
-    offSuffix = self: suffix: self.filterNot (_lib.hasSuffix suffix);
+    onSuffix = self: sx: self.filter (_lib.hasSuffix sx);
+    offSuffix= self: sx: self.filterNot (_lib.hasSuffix sx);
+    onPrefix = self: px: self.filter (_lib.hasPrefix px);
+    offPrefix= self: px: self.filterNot (_lib.hasPrefix px);
     toAttrs = self: fn: (self
       .map (path: rec {
          name = inputs.fmway-lib.fmway.basename path;
@@ -90,6 +92,18 @@ inputs: let
 in inputs.flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
   imports = [
     ({ den, sources ? {}, ... }: scanModules.addScoped (scoped { inherit den sources; }) scanDir)
+    ({ den, lib, ... }: let
+      dir = builtins.toPath ./data;
+      data = import-tree.pipeTo (builtins.foldl' (a: f: let
+        k = lib.splitString "/" (lib.removeSuffix ".nix" (lib.removePrefix "${dir}/" f));
+        v = import f;
+      in lib.recursiveUpdate a (lib.setAttrByPath k v)) {}) dir;
+    in {
+      den.policies.extra-args = _:
+        den.lib.policy.resolve data;
+
+      den.default.includes = [ den.policies.extra-args ];
+    })
     ({ lib, config, ... }: {
       options.flake.flakeModules = lib.mkOption {
         type = lib.types.toml; # smart append for list value

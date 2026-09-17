@@ -41,16 +41,9 @@ in {
     perSystem =
       { pkgs, ... }:
       {
-        # minimal resource, maybe just using awk and bash
         packages.write-sources = let
-          get-hash = pkgs.writeScript "get-hash.fish" ''
-            #!${lib.getExe pkgs.fish}
-
-            ${lib.fileContents "${inputs.fmway-lib}/scripts/get-hash.fish"}
-          '';
           fetch-sources = pkgs.writeScript "fetch-sources" ''
             #!${lib.getExe pkgs.nushell}
-            alias get-hash = ${get-hash}
 
             ${lib.fileContents "${inputs.fmway-lib}/scripts/fetch-sources.nu"}
           '';

@@ -1,4 +1,4 @@
-{ lib, den, pretty-lock, ... }: let
+{ lib, den, ... }: let
   ipc = [ "noctalia-shell" "ipc" "call" ];
   inherit (lib.kdl) leaf plain node flag HJKL M seq;
   inherit (lib.niri) spawn window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule environment;
@@ -12,7 +12,7 @@ in {
     <fmx/desktops/niri/config>
   ];
   fmx.desktops._.niri.nixos.security.pam.services.swaylock = {};
-  fmx.desktops._.niri._.config.niri-config = { pkgs, ... }: let
+  fmx.desktops._.niri._.config.niri-config = { pkgs, shortcuts, ... }: let
     dmenu_path = lib.getExe' pkgs.dmenu "dmenu_path";
     fuzzel = lib.getExe pkgs.fuzzel;
 
@@ -266,7 +266,7 @@ in {
       (plain "Mod+Shift+D"
         (spawn "${dmenuan}"))
       (node "Mod+I"            { hotkey-overlay-title = "Lock the screen"; }
-        (spawn (lib.splitString " " (lib.trim pretty-lock)))
+        (spawn (lib.splitString " " (lib.trim shortcuts.pretty-lock)))
       )
 
       (plain "Mod+Shift+Q" (flag "close-window"))
