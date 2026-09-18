@@ -14,11 +14,12 @@
       "Alt+=" = "add video-zoom 0.25";
 
       # Rotate video
-      "ctrl+left" = ''cycle-values video-rotate "90" "180" "270" "0'';
+      "ctrl+left" = ''cycle-values video-rotate "90" "180" "270" "0"'';
 
       # mirroring video
-      "ctrl+l"= "vf oggle hflip";
+      "ctrl+l"= "vf toggle hflip";
       "ctrl+v"= "vf toggle vflip";
+      "/" = "cycle-values play-direction - +";
     };
 
     scriptOpts.playlistmanager = {

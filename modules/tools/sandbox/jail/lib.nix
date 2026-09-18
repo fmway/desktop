@@ -69,6 +69,18 @@
       (c.rw "~/.cargo")
       # FIXME: add more...
     ];
+
+    agent-tui = persist_dirs:
+      c.compose ([
+        c.loose
+        c.network
+        c.time-zone
+        c.no-new-session
+        c.tui
+        c.vcs
+        c.bind-project
+        c.package-manager
+      ] ++ map (d: c.rw "~/${d}") persist_dirs);
   };
 
   parseRegex = str: let
