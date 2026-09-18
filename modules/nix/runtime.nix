@@ -6,9 +6,9 @@
     nix.settings.experimental-features = [ "pipe-operators" ];
   });
 
-  fmx.nix._.runtime._.lix = { version ? "latest", ... }: {
+  fmx.nix._.runtime._.lix = {
     includes = [
-      (lib.mkCross ({ pkgs, class, ... }: {
+      ({ version ? "latest", ... }: lib.mkCross ({ pkgs, class, ... }: {
         key = "fmx@nix/runtime/lix";
         # TODO
         # imports = lib.optionals (version == "upstream") [
@@ -25,9 +25,9 @@
         nix.settings.experimental-features = [ "pipe-operator" ];
       }))
     ];
-    nix-options = {
-      "trusted-substituters" = "https://cache.lix.systems";
-      "trusted-public-keys" = "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o=";
+    extraCaches.lix = {
+      substituters = ["https://cache.lix.systems"];
+      trusted-public-keys = ["cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="];
     };
   };
 

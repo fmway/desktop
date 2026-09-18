@@ -69,11 +69,11 @@
     },
     "den": {
       "locked": {
-        "lastModified": 1786475005,
-        "narHash": "sha256-gp7Q7rMEjsqAyW4Uwz+sms8j+XegD5P/lzRCuMW2fNI=",
+        "lastModified": 1790044411,
+        "narHash": "sha256-J4i1q5/UWJBfZe0/tcCVumWnHQXWjRVWPEeLAMerCdU=",
         "owner": "denful",
         "repo": "den",
-        "rev": "e8e8de1e32646456cfc613f152175a7a548508ec",
+        "rev": "4d6911233c2d2b45113f3d2875deea8df823e170",
         "type": "github"
       },
       "original": {
@@ -212,11 +212,11 @@
     },
     "fmway-inputs": {
       "locked": {
-        "lastModified": 1788604954,
-        "narHash": "sha256-On0kl/Cc4EIF4IY4LxJ5zvD2AkxowLHxJvlnDysj2GI=",
+        "lastModified": 1790080565,
+        "narHash": "sha256-ygb/JOT7EA9/qDJJGVGPF+Uy2f3FGDYluqTcWQvuH9c=",
         "owner": "fmway",
         "repo": "inputs",
-        "rev": "429d6227a0ade2e740fc078163e3484434dfd73d",
+        "rev": "90d815b2125f410ea7c9b450a9fb33188453a366",
         "type": "github"
       },
       "original": {
@@ -232,11 +232,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789702463,
-        "narHash": "sha256-2KKWxlgfjRwK57XAd/oxDzGqgtO1MIw3xL9RUl7Q0P4=",
+        "lastModified": 1790054968,
+        "narHash": "sha256-NrXD4XIQtn1c2YIJHXXzSd8OJmLIpJBguLC8dPUPj/4=",
         "owner": "fmway",
         "repo": "lib",
-        "rev": "7648ed2184cad9f85340c58898ba64a5533aa196",
+        "rev": "a4aa698020cfd87b07569a18b24f9442b0d1adec",
         "type": "github"
       },
       "original": {

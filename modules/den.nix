@@ -39,10 +39,12 @@ in {
       inputs' = builtins.mapAttrs (name: input:
         if name == "self" || input._type or "" == "flake" then
           config.perInput system input
-        else input) inputs // builtins.mapAttrs (_: config.perInput system) (inputs.fmway-inputs or {});
+        else input) inputs // builtins.mapAttrs (_: config.perInput system) (inputs.fmway-inputs.outputs.inputs or {});
       self' = inputs'.self;
     }) ++ [
-      (policy.resolve { inherit inputs; })
+      (policy.resolve {
+        inputs = inputs // inputs.fmway-inputs.outputs.inputs;
+      })
     ];
 
   den.default.includes = [

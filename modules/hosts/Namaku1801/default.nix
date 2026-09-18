@@ -97,6 +97,7 @@ in {
     provides.to-users.includes = [
       <fmx/tools/ai/_>
       <fmx/essentials>
+      <fmx/nix/proxy>
       <fmx/programs>
       <fmx/shells/fish>
       <fmx/shells/nushell>

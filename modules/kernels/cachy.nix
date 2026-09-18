@@ -1,10 +1,13 @@
 { inputs, lib, ... }:
 {
-  fmx.kernels._.cachy = { config, ... }:
-  {
+  fmx.kernels._.cachy = {
+    extraCaches.lantian = {
+      substituters = [ "https://attic.xuyh0120.win/lantian" ];
+      trusted-public-keys = [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
+    };
     includes = [
-      config._.zfs
-      config._.scx
+      <fmx/kernels/cachy/zfs>
+      <fmx/kernels/cachy/scx>
     ];
     nixos = { pkgs, ... }:
     {

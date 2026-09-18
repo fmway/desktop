@@ -1,9 +1,7 @@
 { lib, ... }:
 {
-  den.quirks.nix-options.description = "collect all nix options (especially for binary caches), useful for autoappend into the shell (like fish abbr)";
   fmx.nix = {
     includes = [
-      <fmx/nix/cache>
       <fmx/nix/runtime>
       ({ host, persistent, ... }: {
         persistence = [
