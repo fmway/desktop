@@ -109,15 +109,6 @@ in {
       # <fmx/desktops/shells/dms>
       <fmx/desktops/niri>
       # (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
-
-      {
-        # disable ~/.config/nix/nix.conf since that's is already define in /etc/nix/nix.conf
-        homeManager.xdg.configFile."nix/nix.conf".enable = lib.mkDefault false;
-      }
-      ({ home, ... }: {
-        # reenable for standalone home manager
-        homeManager.xdg.configFile."nix/nix.conf".enable = lib.mkOverride 999 true;
-      })
     ];
 
     provides.to-users.homeManager =

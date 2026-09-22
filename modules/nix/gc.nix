@@ -5,9 +5,9 @@
       Automatic nix gc
 
       # Usage
-        fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00";
+        fmx.nix.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00";
         # or in darwin
-        fmx.nix._.gc "--delete-older-than 3d" [
+        fmx.nix.gc "--delete-older-than 3d" [
           { Hour = 0; Minute = 0; WeekDay = 5; }
           { Hour = 0; Minute = 0; WeekDay = 1; }
         ];

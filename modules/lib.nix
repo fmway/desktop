@@ -5,9 +5,9 @@
     else "${toString min}";
 in {
   mkCross = a:
-    lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: { config, pkgs, osConfig ? {}, ... } @ args: let
+    lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: { config, pkgs, osConfig ? {}, home ? null, ... } @ args: let
       m = if builtins.isFunction a then a ({ inherit config class pkgs; } // args) else a;
-    in lib.optionalAttrs (class != "homeManager" || !(osConfig.home-manager.useGlobalPkgs or false)) m);
+    in lib.optionalAttrs (class != "homeManager" || !isNull home || !(osConfig.home-manager.useGlobalPkgs or false)) m);
   tmux.mkScanPlugins = pkgs: path: extendPlugins:
     extendPlugins ++ (((lib.import-tree
       .initFilter (lib.hasSuffix ".tmux"))
