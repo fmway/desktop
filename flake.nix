@@ -8,8 +8,7 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # e8e8de1e32646456cfc613f152175a7a548508ec
-    den.url = "github:denful/den/main";
+    den.url = "github:fmway/den/fix/deepMergeAttrs";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";

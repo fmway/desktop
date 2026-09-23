@@ -1,6 +1,12 @@
 { lib, ... }:
 {
   fmx.tools.cli = {
+    nh.nixos = {
+      programs.nh.enable = true;
+      environment.sessionVariables = {
+        NH_OS_FLAKE = "/etc/nixos";
+      };
+    };
     gnu-parallel = {
       nixos = { pkgs, ... }: {
         environment.systemPackages = [ pkgs.parallel ];
