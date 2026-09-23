@@ -6,7 +6,7 @@
       value = if builtins.isFunction x then x pkgs else map (lib.flip builtins.getAttr pkgs) x;
     in lib.setAttrByPath keys value;
 in {
-  flake-file.inputs.den.url = "github:denful/den/main";
+  flake-file.inputs.den.url = "github:fmway/den/fix/deepMergeAttrs";
   flake-file.inputs.fmway-garden = {
     url = "github:fmway/garden";
     inputs.import-tree.follows = "import-tree";

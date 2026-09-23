@@ -69,16 +69,16 @@
     },
     "den": {
       "locked": {
-        "lastModified": 1790044411,
-        "narHash": "sha256-J4i1q5/UWJBfZe0/tcCVumWnHQXWjRVWPEeLAMerCdU=",
-        "owner": "denful",
+        "lastModified": 1790224850,
+        "narHash": "sha256-h0QVZVXrrrXVQUyhdDVaWX9E6gax+hVQX7qZJDk0AGE=",
+        "owner": "fmway",
         "repo": "den",
-        "rev": "4d6911233c2d2b45113f3d2875deea8df823e170",
+        "rev": "d192b6ffe901ce87ef7cc908e3dee593e0dd78d9",
         "type": "github"
       },
       "original": {
-        "owner": "denful",
-        "ref": "main",
+        "owner": "fmway",
+        "ref": "fix/deepMergeAttrs",
         "repo": "den",
         "type": "github"
       }

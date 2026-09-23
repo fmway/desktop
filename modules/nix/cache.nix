@@ -1,7 +1,7 @@
-{ lib, den, inputs, ... }:
-{
+{ lib, den, inputs, ... }: let
+  inherit (den.lib) policy; inherit (policy) pipe;
+in {
   den.quirks.extraCaches = { };
-  fmx.nix.includes = [ <fmx/nix/collect-cache> ];
   fmx.nix.collect-cache = lib.genAttrs [ "nixos" "homeManager" "darwin" ] (_: { host ? null, user ? null, extraCaches, ... }:
   lib.optionalAttrs (!(host.hasAspect or user.hasAspect or (_: false)) <fmx/nix/proxy>)
   {
@@ -32,4 +32,18 @@
       trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
     };
   };
+
+  den.schema.user.includes = [
+    <fmx/nix/policies/broadcast-extra-caches>
+  ];
+  den.schema.host.includes = [
+    <fmx/nix/policies/broadcast-extra-caches>
+  ];
+  fmx.nix.includes = [ <fmx/nix/collect-cache> ];
+
+  # broadcasting across host and users
+  fmx.nix.policies.broadcast-extra-caches = { host, user ? null, ... }: let hostname = host.name; in
+    pipe.from "extraCaches" [
+      (pipe.broadcast ({ host, user, ... }: host.name == hostname))
+    ];
 }
