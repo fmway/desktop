@@ -24,6 +24,7 @@ in {
     includes = [ <fmx/themes/catppuccin/_> ];
     homeManager.imports = [
       inputs.catppuccin.homeModules.catppuccin
+      { catppuccin.autoEnable = false; }
     ];
   } // toCatppuccinFriendly [
     "fzf"
