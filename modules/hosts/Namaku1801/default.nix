@@ -19,6 +19,9 @@ in {
     hardware = "lenovo-thinkpad-t480";
     persistent.enable = true;
     persistent.cacheDirectory = "/persist/shared_cache";
+    persistent.rollbackCommands = ''
+      zfs rollback -r zroot/ROOT@blank
+    '';
     scx = {
       default.scheduler = "scx_bpfland";
       default.args = [ "-f" "-k" "-p" ];
@@ -67,7 +70,6 @@ in {
 
       imports = [
         inputs.nixvim.nixosModules.nixvim
-        ./_impermanence.nix
       ];
       programs.nixvim.enable = true;
       programs.nixvim.imports = [
