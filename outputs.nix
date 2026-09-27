@@ -80,10 +80,12 @@ inputs: let
     __findFile = nixP: p: let
       pathLike = lib.hasInfix "/" p;
       paths = lib.splitString "/" p;
-      h = builtins.head paths;
-      t = builtins.tail paths;
-      p'= builtins.concatStringsSep "/" t;
-      r = sources.${p'} or (throw "<sources/${p'}> is missing");
+      h  = builtins.head paths;
+      t  = builtins.tail paths;
+      p' = builtins.concatStringsSep "/" t;
+      h' = builtins.head t;
+      p''= builtins.concatStringsSep "/" (builtins.tail t);
+      r  = sources.${p'} or (if sources ? ${h'} then "${sources.${h'}}/${p''}" else throw "<sources/${p'}> is missing");
     in if pathLike && h == "sources" && t != [] then
       r
     else den.lib.__findFile nixP p;

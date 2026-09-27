@@ -23,9 +23,15 @@
     "mainUrl": "https://raw.githubusercontent.com/mnixry/nixos-config/refs/heads/main/pkgs/nixpaks/common.nix",
     "type": "file"
   },
+  "nix-gvfs-googledrive/flake.nix": {
+    "url": "https://raw.githubusercontent.com/j-a-sunny/nix-gvfs-googledrive/refs/heads/main/flake.nix",
+    "hash": "sha256-UGI3AjfCdVznClJET5ka9rS6fQmQ9nC3vxiQNxssLSU=",
+    "mainUrl": "https://raw.githubusercontent.com/j-a-sunny/nix-gvfs-googledrive/refs/heads/main/flake.nix",
+    "type": "file"
+  },
   "waydroid-script": {
     "url": "https://codeload.github.com/casualsnek/waydroid_script/tar.gz/refs/heads/main",
-    "hash": "sha256-zSHZlhHJHWZRE3I5pYWhD4o8aNpa8rTiEtl2qJTuRjw=",
+    "hash": "sha256-UBbnYhiRCf4sMwpEDMlpJuTEsN66B2hZ8BPz6cCGXAc=",
     "mainUrl": "https://github.com/casualsnek/waydroid_script/archive/main.tar.gz",
     "type": "tarball"
   }

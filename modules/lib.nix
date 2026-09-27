@@ -3,10 +3,12 @@
     if val > min then
       "[${toString min}-${toString val}]"
     else "${toString min}";
+
+  getInstallPath = class: if class == "homeManager" then [ "home" "packages" ] else [ "environment" "systemPackages" ];
 in {
   mkCross = a:
     lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: { config, pkgs, osConfig ? {}, home ? null, ... } @ args: let
-      m = if builtins.isFunction a then a ({ inherit config class pkgs; } // args) else a;
+      m = if builtins.isFunction a then a ({ inherit config class pkgs; installPath = getInstallPath class; } // args) else a;
     in lib.optionalAttrs (class != "homeManager" || !isNull home || !(osConfig.home-manager.useGlobalPkgs or false)) m);
   tmux.mkScanPlugins = pkgs: path: extendPlugins:
     extendPlugins ++ (((lib.import-tree
