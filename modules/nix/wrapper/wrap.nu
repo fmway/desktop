@@ -6,7 +6,7 @@ def read-cache [file: string]: nothing -> record<substituters: list<string>, tru
 }
 
 def diff [flake_path: string, prev_cache_file: string, extra_args: list<any>]: nothing -> record<substituters: list<string>, trusted-public-keys: list<string>> {
-  let current_cache_file: string = ^nix build --no-link --print-out-paths $"($flake_path)#nixosConfigurations.($hostname).config.system.\"cache-info.json\"" ...$extra_args
+  let current_cache_file: string = ^nix build --no-link --print-out-paths $"($flake_path)#nixosConfigurations.($hostname).config.system.build.cache-info" ...$extra_args
   let prev  = read-cache $prev_cache_file
   let current = read-cache $current_cache_file
   {

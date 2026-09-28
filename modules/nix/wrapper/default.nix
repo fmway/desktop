@@ -9,7 +9,7 @@
     # FIXME, notfully wrapped
     nixos = { host, config, extraCaches, pkgs, ... }:
     {
-      options.system."cache-info.json" = lib.mkOption {
+      options.system.build.cache-info = lib.mkOption {
         type = lib.types.package;
         readOnly = true;
         default = pkgs.writers.writeJSON "cache-info.json"
@@ -20,14 +20,14 @@
       config = lib.mkMerge [
         {
           system.systemBuilderCommands = /* sh */ ''
-            ln -sf ${config.system."cache-info.json"} $out/cache-info.json
+            ln -sf ${config.system.build.cache-info} $out/cache-info.json
           '';
         }
         (lib.mkIf config.system.tools.nixos-rebuild.enable {
           environment.systemPackages = let
             package = config.system.build.nixos-rebuild;
             cmd = lib.getExe package;
-            prev_cache_file = "${config.system."cache-info.json"}";
+            prev_cache_file = "${config.system.build.cache-info}";
             pkg = pkgs.writeScriptBin package.meta.mainProgram /* nu */ ''
               #!/bin/env -S ${lib.getExe pkgs.nushell} -n
               source ${./wrap.nu}
@@ -55,7 +55,7 @@
           environment.systemPackages = let
             package = config.programs.nh.package;
             cmd = lib.getExe package;
-            prev_cache_file = "${config.system."cache-info.json"}";
+            prev_cache_file = "${config.system.build.cache-info}";
             pkg = pkgs.writeScriptBin package.meta.mainProgram /* nu */ ''
               #!/bin/env -S ${lib.getExe pkgs.nushell} -n
               source ${./wrap.nu}
