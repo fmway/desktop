@@ -61,10 +61,6 @@
       url = "sourcehut:~alexdavid/jail.nix";
       flake = false;
     };
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.0.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-cachyos-kernel = {
       url = "github:xddxdd/nix-cachyos-kernel";
       inputs.flake-parts.follows = "flake-parts";

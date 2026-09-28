@@ -28,4 +28,14 @@
       };
     };
   };
+
+  # TODO
+  # flake-file.inputs.selector4nix = {
+  #   # enable = !config.flake-file.inputs.fmway-inputs.enable or false;
+  #   url = "github:StarryReverie/selector4nix";
+  #   inputs = {
+  #     nixpkgs.follows = "nixpkgs";
+  #     flake-parts.follows = "flake-parts";
+  #   };
+  # };
 }

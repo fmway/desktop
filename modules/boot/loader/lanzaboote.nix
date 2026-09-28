@@ -1,16 +1,6 @@
 # Secureboot using lanzaboote
-{ inputs, lib, config, ... }: let
-  moduleFile = "${inputs.lanzaboote}/nix/modules/lanzaboote.nix";
-  moduleStr = builtins.readFile moduleFile;
-  replace = {
-    "boot.bootspec = {\n      enable = true;" = "boot.bootspec = {";
-  };
-  replaceK = builtins.attrNames replace; replaceV = builtins.attrValues replace;
-  patchModule =
-    if builtins.any (lib.flip lib.hasInfix moduleStr) replaceK then
-      builtins.toFile "lanzaboote.nix" (builtins.replaceStrings replaceK replaceV moduleStr)
-    else moduleFile;
-in {
+{ inputs, lib, config, ... }:
+{
   fmx.boot._.lanzaboote = {
     includes = [
       ({ persistent, ... }: {
@@ -20,7 +10,9 @@ in {
 
     nixos = { host, pkgs, ... }:
     {
-      imports = [ patchModule ];
+      imports = [
+        (inputs.fmway-inputs.lanzaboote or inputs.lanzaboote).nixosModules.default
+      ];
       environment.systemPackages = [
         pkgs.sbctl
       ];
@@ -32,17 +24,18 @@ in {
         enable = true;
         pkiBundle = "/var/lib/sbctl";
         configurationLimit = host.configurationLimit or 25;
-        package = lib.mkDefault inputs.lanzaboote.packages.${host.system}.lzbt;
       };
     };
   };
 
-  flake-file.inputs.lanzaboote = {
-    url = "github:nix-community/lanzaboote/v1.0.0";
-    inputs = {
-      nixpkgs.follows = "nixpkgs";
-    } // lib.optionalAttrs (config.flake-file.inputs ? rust-overlay) {
-      rust-overlay.follows = "rust-overlay";
-    };
-  };
+  # TODO
+  # flake-file.inputs.lanzaboote = {
+  #   # enable = !config.flake-file.inputs.fmway-inputs.enable or false;
+  #   url = "github:nix-community/lanzaboote/v1.2.0";
+  #   inputs = {
+  #     nixpkgs.follows = "nixpkgs";
+  #   } // lib.optionalAttrs (config.flake-file.inputs ? rust-overlay) {
+  #     rust-overlay.follows = "rust-overlay";
+  #   };
+  # };
 }
