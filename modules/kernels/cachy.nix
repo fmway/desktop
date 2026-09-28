@@ -1,80 +1,50 @@
-{ inputs, lib, ... }:
+{ inputs, fmx, lib, ... }:
 {
-  fmx.kernels._.cachy = {
-    inputs.nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-    extraCaches.lantian = {
-      substituters = [ "https://attic.xuyh0120.win/lantian" ];
-      trusted-public-keys = [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
-    };
+  fmx.kernels.cachy = {
     includes = [
-      <fmx/kernels/cachy/zfs>
-      <fmx/kernels/cachy/scx>
+      ({ from ? "xddxdd" }: {
+        includes = [
+          fmx.kernels.cachy.${from}
+          fmx.kernels.scx
+        ];
+       })
     ];
-    nixos = { pkgs, ... }:
-    {
-      boot.kernelPackages = lib.mkDefault pkgs.cachyosKernels.linuxPackages-cachyos-latest;
-      nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+
+    chaotic = {
+      nixos = { host, config, ... }:
+      {
+        config = lib.mkMerge [
+          { boot.kernelPackages = lib.mkDefault (inputs.fmway-inputs.chaotic.outputs or inputs.chaotic).legacyPackages.${host.system}.linuxPackages_cachyos; }
+          (lib.mkIf (host.hasAspect <fmx/disk/zfs>) {
+            boot.supportedFilesystems.zfs = true;
+            boot.zfs.package = lib.mkDefault config.boot.kernelPackages.zfs_cachyos;
+          })
+        ];
+      };
     };
 
-    _.zfs.nixos = { config, ... }:
-    {
-      boot.supportedFilesystems.zfs = true;
-      boot.zfs.package = config.boot.kernelPackages.zfs_cachyos;
-    };
+    xddxdd = {
+      extraCaches.lantian = {
+        substituters = [ "https://attic.xuyh0120.win/lantian" ];
+        trusted-public-keys = [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
+      };
+      inputs = {
+        nix-cachyos-kernel = {
+          url = "github:xddxdd/nix-cachyos-kernel";
+          inputs.flake-parts.follows = "flake-parts";
+        };
+      };
 
-    _.scx = { scx, ... }: {
-      nixos = { pkgs, config, ... }:
+      nixos = { pkgs, host, config, ... }:
       {
         config = lib.mkMerge [
           {
-            services.scx.enable = true;
-            services.scx.package = lib.mkDefault pkgs.scx.full;
-            services.scx.scheduler = scx.default.scheduler;
-            services.scx.extraArgs = scx.default.args;
+            boot.kernelPackages = lib.mkDefault pkgs.cachyosKernels.linuxPackages-cachyos-latest;
+            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
           }
-          (lib.mkIf (!isNull scx.alter.scheduler) {
-            # change scheduler to scx.alter when power is on
-            systemd.services.scx.serviceConfig = let
-              bin = lib.getExe' config.services.scx.package;
-              alter = lib.concatStringsSep " " ([ (bin scx.alter.scheduler) ] ++ scx.alter.args);
-              default = lib.concatStringsSep " " ([ (bin scx.default.scheduler) ] ++ scx.default.args);
-            in {
-              ExecStart = lib.mkForce (pkgs.writeScript "scx.sh" /* bash */ ''
-                #!${lib.getExe pkgs.bash}
-                
-                # if discarging, use default, if else use alter
-                if [ "$(cat /sys/class/power_supply/AC/online)" -eq 0 ]; then
-                  exec ${default}
-                else
-                  exec ${alter}
-                fi
-              '');
-            };
-
-            systemd.services."scx-refresh" = {
-              unitConfig = {
-                Description = "refresh scx";
-              };
-              script = ''
-                if systemctl status scx.service &>/dev/null; then
-                  systemctl stop scx.service
-                fi
-                systemctl start scx.service
-              '';
-              serviceConfig = {
-                Type = "oneshot";
-              };
-            };
-
-            services.udev.extraRules = /* udev */ ''
-              ACTION=="change", \
-                SUBSYSTEM=="power_supply", \
-                KERNEL=="AC", TAG+="systemd", \
-                ENV{SYSTEMD_WANTS}="scx-refresh.service"
-            '';
+          (lib.mkIf (host.hasAspect <fmx/disk/zfs>) {
+            boot.supportedFilesystems.zfs = true;
+            boot.zfs.package = lib.mkDefault config.boot.kernelPackages.zfs_cachyos;
           })
         ];
       };
