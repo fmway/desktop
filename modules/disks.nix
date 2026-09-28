@@ -1,28 +1,18 @@
-{ inputs, lib, ... }:
-{
-  flake-file.inputs.disko = {
-    url = "github:nix-community/disko";
-    inputs.nixpkgs.follows = "nixpkgs";
+{ inputs, lib, ... }: let
+  deps = {
+    name = "deps@disko";
+    inputs.disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-
-  # den.schema.host.imports = [
-  #   fmx.schema.host
-  # ];
-  #
-  # fmx.schema.host = { host, ... }:
-  # {
-  #   options.mainDisk = lib.mkOption {
-  #     type = lib.disko.optionTypes.absolute-pathname;
-  #     description = "Main disk Device";
-  #     default = "/dev/sda";
-  #   };
-  # };
-
+in {
   imports = [
     {
       fmx.disk._ = lib.import-tree.toAttrs (
         { path, name }:
         {
+          includes = [ deps ];
           description = ''
             Usage:
               den.aspects.Namaku1801.includes = [

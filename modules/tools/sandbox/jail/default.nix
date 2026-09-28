@@ -20,14 +20,14 @@ in {
     } else {
       homeManager = jailTo "homeManager" [ "home" "packages" ];
     })
+    {
+      inputs.jail-nix.url = "sourcehut:~alexdavid/jail.nix";
+      inputs.jail-nix.flake = false;
+    }
   ];
   den.schema = rec {
     host.includes = [ den.aspects.jail ];
     user = host;
     home = host;
-  };
-  flake-file/*.specialisation.dev*/.inputs = {
-    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
-    jail-nix.flake = false;
   };
 }

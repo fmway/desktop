@@ -1,10 +1,10 @@
-{ den, lib, ... }:
+{ den, lib, fmx, ... }:
 {
-  fmx.essentials = { config, ... }: {
+  fmx.essentials = {
     firewall = {
       tcp = [ 1234 3000 3001 5900 8000 8080 8888 9000 9876 ];
     };
-    includes = builtins.attrValues config.provides ++ [
+    includes = builtins.attrValues fmx.essentials.provides ++ [
       <fmx/nix>
       <fmx/boot>
       <fmx/networking>
@@ -159,11 +159,23 @@
       ];
       nixos.programs.kdeconnect.enable = true;
     };
-  };
 
-  flake-file.inputs.nixos-hardware = {
-    url = "github:NixOS/nixos-hardware/master";
-    inputs.nixpkgs.follows = "nixpkgs";
+    inputs = { host, ... }: {
+      nixos-hardware = {
+        url = "github:NixOS/nixos-hardware/master";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+      impermanence = {
+        enable = host.persistent.implementation or "" == "impermanence";
+        url = "github:nix-community/impermanence";
+        inputs.nixpkgs.follows = "nixpkgs";
+        inputs.home-manager.follows = "home-manager";
+      };
+      preservation = {
+        enable = host.persistent.implementation or "" == "preservation";
+        url = "github:nix-community/preservation";
+      };
+    };
   };
 
   source-files."kaku/hardware/bluetooth" = "https://raw.githubusercontent.com/linuxmobile/kaku/refs/heads/niri/system/hardware/bluetooth.nix";

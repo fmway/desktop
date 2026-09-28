@@ -34,13 +34,13 @@
         gpu-screen-recorder
       ];
     };
-  };
 
-  flake-file.inputs.noctalia = {
-    url = "github:noctalia-dev/noctalia-shell";
-    inputs = {
-      nixpkgs.follows = "nixpkgs";
-      noctalia-qs.inputs.systems.follows = "systems";
+    inputs.noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        noctalia-qs.inputs.systems.follows = "systems";
+      };
     };
   };
 }

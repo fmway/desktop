@@ -97,7 +97,7 @@ in {
       services.zfs.autoScrub.interval = "weekly";
     };
     provides.to-users.includes = [
-      <fmx/tools/ai/_>
+      <fmx/tools/ai>
       <fmx/essentials>
       <fmx/nix/proxy>
       <fmx/programs>

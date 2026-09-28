@@ -23,7 +23,19 @@
         # };
         nix.package = pkgs.lixPackageSets.${version}.lix;
         nix.settings.experimental-features = [ "pipe-operator" ];
-      }))
+      }
+      # TODO
+      # // lib.optionalAttrs (version == "upstream") {
+      #   inputs = {
+      #     lix.url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
+      #     lix.flake = false;
+      #
+      #     lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
+      #     lix-module.inputs.nixpkgs.follows = "nixpkgs";
+      #     lix-module.inputs.lix.follows = "lix";
+      #   };
+      # }
+      ))
     ];
     extraCaches.lix = {
       substituters = ["https://cache.lix.systems"];
@@ -32,30 +44,21 @@
   };
 
   # TODO
-  # flake-file.specialisation.dev.inputs = {
-  #   lix.url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
-  #   lix.flake = false;
-  #
-  #   lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
-  #   lix-module.inputs.nixpkgs.follows = "nixpkgs";
-  #   lix-module.inputs.lix.follows = "lix";
-  # };
-
-  # TODO
-  # fmx.nix.runtime.dnix = mkCross ({ class, ... }: {
+  # fmx.nix.runtime.dnix = lib.mkCross ({ class, ... }: {
   #   imports = [
   #     inputs.dev.determinate."${class}Modules".default
   #   ];
   #   nix.settings.experimental-features = [ "wasm-builtin" "pipe-operators" ];
   # }) // {
-  #   nix-options = {
-  #     "substituters" = "https://install.determinate.systems";
-  #     "trusted-public-keys" = "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM=";
+  #   extraCaches = {
+  #     substituters = ["https://install.determinate.systems"];
+  #     trusted-public-keys = ["cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="];
   #   };
+  #
+  #   inputs.determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
   # };
   #
   # fmx.nix.runtime.detsys.includes = [ <fmx/nix/runtime/dnix> ];
   # fmx.nix.runtime.determinate.includes = [ <fmx/nix/runtime/dnix> ];
   # fmx.nix.runtime.determinate-nix.includes = [ <fmx/nix/runtime/dnix> ];
-  # flake-file.specialisation.dev.inputs.determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
 }

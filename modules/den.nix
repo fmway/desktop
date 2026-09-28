@@ -6,15 +6,9 @@
       value = if builtins.isFunction x then x pkgs else map (lib.flip builtins.getAttr pkgs) x;
     in lib.setAttrByPath keys value;
 in {
-  flake-file.inputs.den.url = "github:fmway/den/fix/deepMergeAttrs";
-  flake-file.inputs.fmway-garden = {
-    url = "github:fmway/garden";
-    inputs.import-tree.follows = "import-tree";
-  };
-
   imports = [
     inputs.den.flakeModule
-    (inputs.fmway-garden.flakeModule.full.without [ "clan" ])
+    (inputs.fmway-garden.flakeModule.without [ "clan" ])
     (lib.den.namespace "fmx" true)
   ];
 
@@ -41,16 +35,19 @@ in {
           config.perInput system input
         else input) inputs // builtins.mapAttrs (_: config.perInput system) (inputs.fmway-inputs.outputs.inputs or {});
       self' = inputs'.self;
-    }) ++ [
-      (policy.resolve {
-        inputs = inputs // inputs.fmway-inputs.outputs.inputs;
-      })
-    ];
+    });
 
   den.default.includes = [
     den.policies.inputs-parametric
   ];
   den.schema = rec {
+    flake.includes = [{
+      inputs.den.url = "github:fmway/den/feat/den.lib.pipes";
+      inputs.fmway-garden = {
+        url = "github:fmway/garden";
+        inputs.import-tree.follows = "import-tree";
+      };
+    }];
     user.classes = lib.mkDefault [ "homeManager" ];
     user.includes = [
       den._.primary-user

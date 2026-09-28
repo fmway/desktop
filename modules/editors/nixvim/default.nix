@@ -1,8 +1,26 @@
-{ inputs, config, lib, ... }:
+{ inputs, lib, fmx, ... }:
 {
-  fmx.editors._.nixvim = { config, ... }:
-  {
-    includes = builtins.attrValues config.provides ++ [
+  fmx.editors._.nixvim = {
+    inputs = { inputs, ... }:
+    {
+      nixvim.url = "github:nix-community/nixvim";
+      nixvim.inputs = {
+        systems.follows = "systems";
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+      nxchad.url = "github:fmway/nxchad";
+      nxchad.inputs = {
+        fmway-lib.follows = "fmway-lib";
+        nixvim.follows = "nixvim";
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      } // lib.optionalAttrs (inputs ? fmway-modules) {
+        fmway-modules.follows = "fmway-modules";
+      };
+    };
+    includes = builtins.attrValues fmx.editors.nixvim.provides ++ [
       ({ host, persistent, ... }: {
         persistence.${persistent.cacheDirectory}.directories = [
           "/root/.local/state/nvim"
@@ -40,25 +58,6 @@
           ".*/zed/.*%.json" = "jsonc";
         };
       };
-    };
-  };
-
-  flake-file.inputs = {
-    nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs = {
-      systems.follows = "systems";
-      nixpkgs.follows = "nixpkgs";
-      flake-parts.follows = "flake-parts";
-    };
-    nxchad.url = "github:fmway/nxchad";
-    nxchad.inputs = {
-      fmway-lib.follows = "fmway-lib";
-      nixvim.follows = "nixvim";
-      flake-parts.follows = "flake-parts";
-      nixpkgs.follows = "nixpkgs";
-      systems.follows = "systems";
-    } // lib.optionalAttrs (config ? flake-file.inputs.fmway-modules) {
-      fmway-modules.follows = "fmway-modules";
     };
   };
 }

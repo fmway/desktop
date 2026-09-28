@@ -1,4 +1,4 @@
-{ fmx, lib, ... }:
+{ fmx, lib, inputs, ... }:
 {
   fmx.nix.proxy = {
     includes = [
@@ -8,12 +8,23 @@
     ];
 
     selector4nix = {
-      nixos = { extraCaches, inputs, ... }: let
+      inputs = { inputs, ... }:
+      {
+        selector4nix = {
+          enable = !inputs.fmway-inputs.enable or true;
+          url = "github:StarryReverie/selector4nix";
+          inputs = {
+            nixpkgs.follows = "nixpkgs";
+            flake-parts.follows = "flake-parts";
+          };
+        };
+      };
+      nixos = { extraCaches, ... }: let
         caches = builtins.zipAttrsWith (_: v: lib.unique (builtins.concatLists v)) (lib.select "**.**.{?substituters,?trusted-public-keys}" extraCaches);
       in {
         key = "fmx.nix.proxy@selector4nix";
         imports = [
-          inputs.selector4nix.nixosModules.default
+          (inputs.fmway-inputs.selector4nix or inputs.selector4nix).nixosModules.default
         ];
         services.selector4nix = {
           enable = true;
@@ -28,14 +39,4 @@
       };
     };
   };
-
-  # TODO
-  # flake-file.inputs.selector4nix = {
-  #   # enable = !config.flake-file.inputs.fmway-inputs.enable or false;
-  #   url = "github:StarryReverie/selector4nix";
-  #   inputs = {
-  #     nixpkgs.follows = "nixpkgs";
-  #     flake-parts.follows = "flake-parts";
-  #   };
-  # };
 }

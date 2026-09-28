@@ -8,13 +8,9 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    den.url = "github:fmway/den/fix/deepMergeAttrs";
+    den.url = "github:fmway/den/feat/den.lib.pipes";
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    dsearch = {
-      url = "github:AvengeMedia/danksearch";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-file.url = "github:denful/flake-file";

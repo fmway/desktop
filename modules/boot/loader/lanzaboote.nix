@@ -26,16 +26,17 @@
         configurationLimit = host.configurationLimit or 25;
       };
     };
-  };
 
-  # TODO
-  # flake-file.inputs.lanzaboote = {
-  #   # enable = !config.flake-file.inputs.fmway-inputs.enable or false;
-  #   url = "github:nix-community/lanzaboote/v1.2.0";
-  #   inputs = {
-  #     nixpkgs.follows = "nixpkgs";
-  #   } // lib.optionalAttrs (config.flake-file.inputs ? rust-overlay) {
-  #     rust-overlay.follows = "rust-overlay";
-  #   };
-  # };
+    inputs = { inputs, ... }: {
+      lanzaboote = {
+        enable = !inputs.fmway-inputs.enable or true;
+        url = "github:nix-community/lanzaboote/v1.2.0";
+        inputs = {
+          nixpkgs.follows = "nixpkgs";
+        } // lib.optionalAttrs (inputs ? rust-overlay) {
+          rust-overlay.follows = "rust-overlay";
+        };
+      };
+    };
+  };
 }

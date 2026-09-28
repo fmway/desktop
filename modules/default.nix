@@ -1,37 +1,33 @@
-{ inputs, config, ... }:
 {
-  imports = [
-    inputs.flake-file.flakeModules.default
-  ];
-
-  flake-file.inputs = {
-    # core flake
-    systems.url = "github:nix-systems/triplet";
-    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
-    home-manager = {
-      url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+  den.schema.flake.includes = [{
+    inputs = {
+      # core flake
+      systems.url = "github:nix-systems/triplet";
+      nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+      home-manager = {
+        url = "github:nix-community/home-manager/master";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+      flake-parts = {
+        url = "github:hercules-ci/flake-parts";
+        inputs.nixpkgs-lib.follows = "nixpkgs";
+      };
+      fmway-inputs.url = "github:fmway/inputs";
+      fmway-lib = {
+        url = "github:fmway/lib";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+      fmway-modules.url = "github:fmway/modules";
+      fmway-modules.inputs = {
+        fmway-lib.follows = "fmway-lib";
+        nixpkgs.follows = "nixpkgs";
+      };
+      import-tree.url = "github:denful/import-tree/4ebb10ae17d5f1ad366e7aef5b92cb8eecf24f69";
+      nur.url = "github:nix-community/nur";
+      nur.inputs.flake-parts.follows = "flake-parts";
+      nur.inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-    fmway-inputs.url = "github:fmway/inputs";
-    fmway-lib = {
-      url = "github:fmway/lib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    fmway-modules.url = "github:fmway/modules";
-    fmway-modules.inputs = {
-      fmway-lib.follows = "fmway-lib";
-      nixpkgs.follows = "nixpkgs";
-    };
-    flake-file.url = "github:denful/flake-file";
-    import-tree.url = "github:denful/import-tree/4ebb10ae17d5f1ad366e7aef5b92cb8eecf24f69";
-    nur.url = "github:nix-community/nur";
-    nur.inputs.flake-parts.follows = "flake-parts";
-    nur.inputs.nixpkgs.follows = "nixpkgs";
-  };
+  }];
 
   # auto update lock (if adding / removing inputs)
   flake-file.write-hooks = [

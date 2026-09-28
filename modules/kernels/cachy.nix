@@ -1,6 +1,10 @@
 { inputs, lib, ... }:
 {
   fmx.kernels._.cachy = {
+    inputs.nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel";
+      inputs.flake-parts.follows = "flake-parts";
+    };
     extraCaches.lantian = {
       substituters = [ "https://attic.xuyh0120.win/lantian" ];
       trusted-public-keys = [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
@@ -75,9 +79,5 @@
         ];
       };
     };
-  };
-  flake-file.inputs.nix-cachyos-kernel = {
-    url = "github:xddxdd/nix-cachyos-kernel";
-    inputs.flake-parts.follows = "flake-parts";
   };
 }

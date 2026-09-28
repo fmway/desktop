@@ -28,19 +28,16 @@
     #   inputs.dms.homeModules.dank-material-shell
     # ];
 
+    _.danksearch.inputs.dsearch = {
+      url = "github:AvengeMedia/danksearch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     _.danksearch.homeManager = {
       imports = [
         inputs.dsearch.homeModules.default
       ];
       programs.dsearch.enable = true;
-    };
-  };
-
-
-  flake-file.inputs = {
-    dsearch = {
-      url = "github:AvengeMedia/danksearch";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }

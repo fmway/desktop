@@ -54,16 +54,16 @@
     },
     "den": {
       "locked": {
-        "lastModified": 1790224850,
-        "narHash": "sha256-h0QVZVXrrrXVQUyhdDVaWX9E6gax+hVQX7qZJDk0AGE=",
+        "lastModified": 1790570966,
+        "narHash": "sha256-AaXkG2O0MnXz69xjgyM5mX5W5lfC2/kxbj0NfVpsOaM=",
         "owner": "fmway",
         "repo": "den",
-        "rev": "d192b6ffe901ce87ef7cc908e3dee593e0dd78d9",
+        "rev": "39aa07e194ee51cc4f90bb5a127b87929d312006",
         "type": "github"
       },
       "original": {
         "owner": "fmway",
-        "ref": "fix/deepMergeAttrs",
+        "ref": "feat/den.lib.pipes",
         "repo": "den",
         "type": "github"
       }
@@ -85,26 +85,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "disko",
-        "type": "github"
-      }
-    },
-    "dsearch": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1784433272,
-        "narHash": "sha256-5Gz3pC/rcn8LLwzLZZhrpPMqY+PDdUzoFtXV3uWoitg=",
-        "owner": "AvengeMedia",
-        "repo": "danksearch",
-        "rev": "4b4905e2ef3454230fb648d2139f3139b742b0eb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AvengeMedia",
-        "repo": "danksearch",
         "type": "github"
       }
     },
@@ -166,11 +146,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790512426,
-        "narHash": "sha256-HhUIWUcz5BMo+BTF3D650IKEQRU5BICXhx65QiaWuK4=",
+        "lastModified": 1790559930,
+        "narHash": "sha256-LmEZg2RQFa5C/ZOPsu4vBtJNn2PbxtH+AJsTLIPpXoc=",
         "owner": "fmway",
         "repo": "garden",
-        "rev": "48d5739432c2b7fd16455e7871a9b306d9657719",
+        "rev": "7537f7e8249edeb7694e161c49c9ae86ea41a1fd",
         "type": "github"
       },
       "original": {
@@ -201,11 +181,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790054968,
-        "narHash": "sha256-NrXD4XIQtn1c2YIJHXXzSd8OJmLIpJBguLC8dPUPj/4=",
+        "lastModified": 1790560028,
+        "narHash": "sha256-OVoxkg7bR52z9sDhQxtnslE0Aq9BEz6EW4UaKZMS4Wc=",
         "owner": "fmway",
         "repo": "lib",
-        "rev": "a4aa698020cfd87b07569a18b24f9442b0d1adec",
+        "rev": "0d0c4ea5222dd9dac0b40b79e3959f6ff0462161",
         "type": "github"
       },
       "original": {
@@ -550,7 +530,6 @@
         "catppuccin": "catppuccin",
         "den": "den",
         "disko": "disko",
-        "dsearch": "dsearch",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "fmway-garden": "fmway-garden",

@@ -45,15 +45,16 @@ in {
         (self: super: toPackages super nixpak)
       ];
     };
+
+    inputs = {
+      nixpak.url = "github:nixpak/nixpak";
+      nixpak.flake = false;
+    };
   };
   den.schema = rec {
     flake.includes = [ den.aspects.nixpak ];
     host = flake;
     home = flake;
-  };
-  flake-file/*.specialisation.dev*/.inputs = {
-    nixpak.url = "github:nixpak/nixpak";
-    nixpak.flake = false;
   };
 
   source-files."mnixry/nixpak/common" = "https://raw.githubusercontent.com/mnixry/nixos-config/refs/heads/main/pkgs/nixpaks/common.nix";
