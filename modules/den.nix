@@ -42,10 +42,38 @@ in {
   ];
   den.schema = rec {
     flake.includes = [{
-      inputs.den.url = "github:fmway/den/feat/den.lib.pipes";
-      inputs.fmway-garden = {
-        url = "github:fmway/garden";
-        inputs.import-tree.follows = "import-tree";
+      inputs = {
+        # core flake
+        systems.url = "github:nix-systems/triplet";
+        nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+        home-manager = {
+          url = "github:nix-community/home-manager/master";
+          inputs.nixpkgs.follows = "nixpkgs";
+        };
+        flake-parts = {
+          url = "github:hercules-ci/flake-parts";
+          inputs.nixpkgs-lib.follows = "nixpkgs";
+        };
+        fmway-inputs.url = "github:fmway/inputs";
+        fmway-lib = {
+          url = "github:fmway/lib";
+          inputs.nixpkgs.follows = "nixpkgs";
+        };
+        fmway-modules.url = "github:fmway/modules";
+        fmway-modules.inputs = {
+          fmway-lib.follows = "fmway-lib";
+          nixpkgs.follows = "nixpkgs";
+        };
+        import-tree.url = "github:denful/import-tree/4ebb10ae17d5f1ad366e7aef5b92cb8eecf24f69";
+        nur.url = "github:nix-community/nur";
+        nur.inputs.flake-parts.follows = "flake-parts";
+        nur.inputs.nixpkgs.follows = "nixpkgs";
+
+        den.url = "github:fmway/den/feat/den.lib.pipes";
+        fmway-garden = {
+          url = "github:fmway/garden";
+          inputs.import-tree.follows = "import-tree";
+        };
       };
     }];
     user.classes = lib.mkDefault [ "homeManager" ];
@@ -80,4 +108,11 @@ in {
       }
     ];
   };
+
+  # collect all extraCaches quirk
+  flake-file.nixConfig = let
+    extraCaches = lib.select
+      "**.extraCaches.**.**.{?substituters:extra-substituters,?trusted-public-keys:extra-trusted-public-keys}"
+      den.lib.fleetResult.pipeContexts;
+  in builtins.zipAttrsWith (_: v: lib.unique (builtins.concatLists v)) extraCaches;
 }
