@@ -1,5 +1,32 @@
-{ inputs, lib, fmx, ... }:
+{ den, inputs, lib, fmx, ... }:
 {
+  # TODO: maybe use quirks instead
+  den.classes.nixvim = { };
+  den.schema.flake-system.includes = [
+    <fmx/editors/nixvim>
+  ];
+  fmx.editors.policies.nixvim-to-host = { host, ... }: [
+    (den.lib.policy.route {
+      fromClass = "nixvim";
+      intoClass = "nixos";
+      path = [ "programs" "nixvim" ];
+      guard = { options, ... }: options ? programs.nixvim;
+      reinstantiate = true;
+    })
+  ];
+  fmx.editors.policies.nixvim-to-packages = { system, ... } @ a: let
+    entity = a.__entityKind or "";
+  in [
+    (den.lib.policy.route {
+      fromClass = "nixvim";
+      intoClass = if entity == "flake-parts" then "flake-parts" else "packages";
+      path = lib.optional (entity == "flake-parts") "packages" ++ [ "nvim" ];
+      instantiate = { modules, ... }:
+        inputs.nixvim.legacyPackages.${system}.makeNixvimWithModule {
+          module.imports = modules;
+        };
+    })
+  ];
   fmx.editors._.nixvim = {
     inputs = { inputs, ... }:
     {
@@ -21,6 +48,8 @@
       };
     };
     includes = builtins.attrValues fmx.editors.nixvim.provides ++ [
+      <fmx/editors/policies/nixvim-to-host>
+      <fmx/editors/policies/nixvim-to-packages>
       ({ host, persistent, ... }: {
         persistence.${persistent.cacheDirectory}.directories = [
           "/root/.local/state/nvim"

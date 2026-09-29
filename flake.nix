@@ -35,7 +35,7 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    den.url = "github:fmway/den/feat/den.lib.pipes";
+    den.url = "github:fmway/den/me";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
