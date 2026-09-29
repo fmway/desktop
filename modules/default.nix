@@ -13,8 +13,7 @@
     }
   ];
 
-  perSystem = { pkgs, lib, ... }:
-  {
-    packages = import ../packages { inherit pkgs lib; };
-  };
+  den.schema.flake-system.includes = [
+    { packages = { pkgs, lib, ... }: import ../packages { inherit pkgs lib; }; }
+  ];
 }

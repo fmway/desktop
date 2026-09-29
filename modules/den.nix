@@ -69,7 +69,8 @@ in {
         nur.inputs.flake-parts.follows = "flake-parts";
         nur.inputs.nixpkgs.follows = "nixpkgs";
 
-        den.url = "github:fmway/den/feat/den.lib.pipes";
+        # Fork den with additional changes
+        den.url = "github:fmway/den/me";
         fmway-garden = {
           url = "github:fmway/garden";
           inputs.import-tree.follows = "import-tree";

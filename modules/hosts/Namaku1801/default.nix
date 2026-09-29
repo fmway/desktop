@@ -1,5 +1,4 @@
 { fmx, den, lib, inputs, ... }: let
-  nixvimModule = den.lib.aspects.resolve "nixvim" den.aspects.Namaku1801;
   inherit (den.lib.aspects) fx;
 in {
   # den.aspects.fmway.excludes = [
@@ -73,7 +72,7 @@ in {
       ];
       programs.nixvim.enable = true;
       programs.nixvim.imports = [
-        nixvimModule
+        # nixvimModule
       ];
 
       # disable capslock
@@ -135,13 +134,6 @@ in {
           "grp:shifts_toggle"
         ];
       };
-    };
-  };
-
-  perSystem = { pkgs, ... }:
-  {
-    packages.nvim = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system}.makeNixvimWithModule {
-      module.imports = [ nixvimModule ];
     };
   };
 }

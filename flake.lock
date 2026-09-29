@@ -22,16 +22,16 @@
     },
     "den": {
       "locked": {
-        "lastModified": 1790570966,
-        "narHash": "sha256-AaXkG2O0MnXz69xjgyM5mX5W5lfC2/kxbj0NfVpsOaM=",
+        "lastModified": 1790744765,
+        "narHash": "sha256-EKkOZ+fGLpAXXwSHIsoMznqUxOU/AQ/QuUTzhToS74U=",
         "owner": "fmway",
         "repo": "den",
-        "rev": "39aa07e194ee51cc4f90bb5a127b87929d312006",
+        "rev": "8d68cdfbbd4f3624c15c4018ed842fab7bc862cf",
         "type": "github"
       },
       "original": {
         "owner": "fmway",
-        "ref": "feat/den.lib.pipes",
+        "ref": "me",
         "repo": "den",
         "type": "github"
       }

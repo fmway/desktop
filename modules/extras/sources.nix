@@ -37,21 +37,23 @@ in {
       type = "file";
     }) config.source-files;
     p = builtins.toFile "sources.json" (builtins.toJSON o);
-  in lib.mkIf (config.source-archives != {} || config.source-files != {}) {
-    perSystem =
-      { pkgs, ... }:
-      {
-        packages.write-sources = let
-          fetch-sources = pkgs.writeScript "fetch-sources" ''
-            #!${lib.getExe pkgs.nushell}
+    aspect.packages = { pkgs, ... }:
+    {
+      write-sources = let
+        fetch-sources = pkgs.writeScript "fetch-sources" ''
+          #!${lib.getExe pkgs.nushell}
 
-            ${lib.fileContents "${inputs.fmway-lib}/scripts/fetch-sources.nu"}
-          '';
-        in pkgs.writeScriptBin "write-sources" ''
-          #!${lib.getExe pkgs.bash}
-
-          ${fetch-sources} ${p} > sources.json
+          ${lib.fileContents "${inputs.fmway-lib}/scripts/fetch-sources.nu"}
         '';
-      };
+      in pkgs.writeScriptBin "write-sources" ''
+        #!${lib.getExe pkgs.bash}
+
+        ${fetch-sources} ${p} > sources.json
+      '';
+    };
+  in {
+    den.schema.flake-system.includes = lib.optionals (config.source-archives != {} || config.source-files != {}) [
+      aspect
+    ];
   };
 }
