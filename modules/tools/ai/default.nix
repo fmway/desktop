@@ -1,4 +1,5 @@
-{  
+{ inputs, ... }:
+{
   fmx.tools.ai = {
     includes = [ <fmx/tools/ai/_> ];
     nixos = { inputs', ... }:
@@ -8,6 +9,7 @@
         codegraph
         gitnexus
         ai-memory
+        pi
       ];
     };
 
@@ -23,5 +25,7 @@
         };
       };
     };
+
+    extraCaches.llm-agents = inputs.fmway-inputs.llm-agents.extraCaches or {};
   };
 }
