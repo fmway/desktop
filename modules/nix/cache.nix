@@ -9,9 +9,8 @@ in {
       builtins.zipAttrsWith (_: v: lib.unique (builtins.concatLists v)) (
         lib.select "**.**.{?substituters,?trusted-public-keys}" extraCaches);
   });
-  fmx.nix.extraCaches =
-    lib.select
-      "*.??extraCaches.{?substituters,?trusted-public-keys}" inputs.fmway-inputs.collections // {
+  fmx.nix.extraCaches = {
+    chaotic = inputs.fmway-inputs.chaotic.extraCaches or {};
     clan = {
       substituters = [ "https://cache.clan.lol" ];
       trusted-public-keys = [ "cache.clan.lol-1:3KztgSAB5R1M+Dz7vzkBGzXdodizbgLXGXKXlcQLA28=" ];

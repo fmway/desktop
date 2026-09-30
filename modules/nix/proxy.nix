@@ -19,6 +19,7 @@
           };
         };
       };
+      extraCaches.selector4nix = inputs.fmway-inputs.selector4nix.extraCaches or {}; 
       nixos = { extraCaches, ... }: let
         caches = builtins.zipAttrsWith (_: v: lib.unique (builtins.concatLists v)) (lib.select "**.**.{?substituters,?trusted-public-keys}" extraCaches);
       in {
