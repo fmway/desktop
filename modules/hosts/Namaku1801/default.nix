@@ -96,19 +96,16 @@ in {
       services.zfs.autoScrub.interval = "weekly";
     };
     provides.to-users.includes = [
+      { homeManager.imports = [ inputs.fmway-modules.homeManagerModules.fish-keybindings ]; }
       <fmx/tools/ai>
       <fmx/essentials>
       <fmx/nix/proxy>
-      <fmx/programs>
       <fmx/shells/fish>
       <fmx/shells/nushell>
       # <fmx/containers/waydroid>
       <fmx/containers/flatpak>
       <fmx/containers/docker>
       # <fmx/containers/bottles>
-      <fmx/desktops/shells/noctalia>
-      # <fmx/desktops/shells/dms>
-      <fmx/desktops/niri>
       # (fmx.nix._.gc "--delete-older-than 3d" "Mon,Fri *-*-* 00:00:00")
     ];
 

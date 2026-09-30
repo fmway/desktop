@@ -1,4 +1,3 @@
-{ den, lib, ... }:
 {
   fmx.boot._.plymouth.nixos = { ... }:
   {

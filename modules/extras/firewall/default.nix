@@ -26,15 +26,12 @@
 
 in {
   den.quirks.firewall = {};
-  den.policies.validate-firewall = { user ? null, ... }: [
-    (pipe.from "firewall" [
-      (pipe.for cleaning)
-    ])
-  ] ++ lib.optionals (user != null) [
-    (pipe.from "firewall" [
-      pipe.expose
-    ])
-  ];
+  den.policies.validate-firewall = { user ? null, ... }:
+    if isNull user then
+      pipe.from "firewall" [ pipe.expose ]
+    else
+      pipe.from "firewall" [ (pipe.for cleaning) ]
+  ;
 
   # TODO: cross entity
   # den.policies.fleet-firewall = _: [];

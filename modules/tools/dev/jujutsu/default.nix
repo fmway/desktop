@@ -1,7 +1,7 @@
 { lib, den, ... }:
 {
   fmx.tools.dev.jujutsu = {
-    includes = [ <fmx/tools/dev/jujutsu/starship> ];
+    includes = [ <fmx/tools/dev/jujutsu/_> ];
     homeManager = { user, config, ... }:
     {
       programs.jujutsu.enable = true;
@@ -23,9 +23,11 @@
     };
 
     starship = {
-      name = "tai";
-      meta.name = "den.ful.den.aspects.tai";
-      homeManager = { pkgs, ... }:
+      homeManager = { pkgs, home ? null, host ? null, user, ... }:
+      lib.optionalAttrs (
+        user.hasAspect <fmx/programs/starship> ||
+        (home.hasAspect or host.hasAspect or (_: false)) <fmx/programs/starship>
+      )
       {
         home.packages = with pkgs;[
           starship-jj

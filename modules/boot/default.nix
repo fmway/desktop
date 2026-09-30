@@ -3,7 +3,14 @@
     includes = [
       <fmx/boot/systemd-boot>
       <fmx/boot/plymouth>
+      <fmx/boot/reisub>
     ];
+
+    # REISUB
+    _.reisub.nixos.boot.kernel.sysctl = {
+      "kernel.sysrq" = 1;
+      "kernel.printk" = "3 3 3 3";
+    };
 
     nixos = { lib, config, ... }:
     {
@@ -12,10 +19,6 @@
         tmp.useTmpfs = lib.mkDefault false;
 
         kernel.sysctl  = {
-          # REISUB
-          "kernel.sysrq" = 1;
-          "kernel.printk" = "3 3 3 3";
-
           # Swap configuration
           "vm.swappiness" = 150;
           "vm.watermark_boost_factor" = 5000;

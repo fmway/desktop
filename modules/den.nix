@@ -1,9 +1,9 @@
 { inputs, den, lib, config, ... }: let
   inherit (den.lib) policy;
   toPackages = x: keys: pkgs:
-    assert builtins.all builtins.isString x || builtins.isFunction x;
+    assert (builtins.isList x && builtins.all builtins.isString x) || builtins.isFunction x;
     let
-      value = if builtins.isFunction x then x pkgs else map (lib.flip builtins.getAttr pkgs) x;
+      value = if builtins.isFunction x then lib.fmway.flat (x pkgs) else map (lib.flip builtins.getAttr pkgs) x;
     in lib.setAttrByPath keys value;
 in {
   imports = [
@@ -22,9 +22,8 @@ in {
   };
 
   den._.packages = x:
-    lib.mkCross ({ class, pkgs, ... }: let
-      key = if class == "homeManager" then [ "home" "packages" ] else [ "environment" "systemPackages" ];
-    in toPackages x key pkgs);
+    lib.mkCross' ({ pkgs, installPath, ... }:
+      toPackages x installPath pkgs);
 
   den.policies.inputs-parametric = { host ? null, home ? null, ... } @ c:
     lib.optional (c ? host || c ? home)

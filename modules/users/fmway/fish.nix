@@ -1,15 +1,12 @@
-{ lib, inputs, den, ... }: let
+{ lib, ... }: let
   inherit (lib.fish) bind bind';
 in {
   den.aspects.fmway.includes = [
-    den.aspects.fmway._.fish
+    <fmway/fish>
   ];
 
   # TODO: fish class, and more overridable keybindings
   den.aspects.fmway._.fish.homeManager = {
-    imports = [
-      inputs.fmway-modules.homeManagerModules.fish-keybindings
-    ];
     programs.fish = {
       shellAbbrs = let
         with-cursor = str: {

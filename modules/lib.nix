@@ -5,20 +5,13 @@
     else "${toString min}";
 
   getInstallPath = class: if class == "homeManager" then [ "home" "packages" ] else [ "environment" "systemPackages" ];
-in {
-  mkCross = a:
+  mkCross = check-global-pkgs: a:
     lib.genAttrs [ "nixos" "homeManager" "darwin" ] (class: { config, pkgs, osConfig ? {}, home ? null, ... } @ args: let
       m = if builtins.isFunction a then a ({ inherit config class pkgs; installPath = getInstallPath class; } // args) else a;
-    in lib.optionalAttrs (class != "homeManager" || !isNull home || !(osConfig.home-manager.useGlobalPkgs or false)) m);
-  tmux.mkScanPlugins = pkgs: path: extendPlugins:
-    extendPlugins ++ (((lib.import-tree
-      .initFilter (lib.hasSuffix ".tmux"))
-      .map (p: let k = lib.fmway.basename p; in {
-        plugin = pkgs.tmuxPlugins.${k};
-        extraConfig = lib.fileContents p;
-      }) )
-      .pipeTo lib.id)
-      path;
+    in lib.optionalAttrs (!check-global-pkgs || (class != "homeManager" || !isNull home || !(osConfig.home-manager.useGlobalPkgs or false))) m);
+in {
+  mkCross = mkCross true;
+  mkCross'= mkCross false;
 
   mkNuSecretReplacements = pkgs: {
     extras ? [ ],

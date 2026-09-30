@@ -16,6 +16,10 @@
 
   den.aspects.fmway = {
     includes = [
+      <fmx/programs>
+      <fmx/desktops/shells/noctalia>
+      # <fmx/desktops/shells/dms>
+      <fmx/desktops/niri>
       <fmx/tools/drive/megasync>
       <fmx/tools/productivity/zoom>
       <fmx/tools/productivity/zotero>
