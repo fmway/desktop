@@ -1,6 +1,6 @@
 { lib, inputs, ... }:
 {
-  fmx.nix._.runtime.includes = [ <fmx/nix/runtime/nix> ];
+  fmx.nix._.runtime.includes = [ <fmx/nix/runtime/lix> ];
   fmx.nix._.runtime._.nix = lib.mkCross ({ pkgs, ... }: {
     nix.package = pkgs.nix;
     nix.settings.experimental-features = [ "pipe-operators" ];
@@ -21,7 +21,16 @@
         # nix = lib.optionalAttrs (version != "upstream") {
         #   package = pkgs.lixPackageSets.${version}.lix;
         # };
-        nix.package = pkgs.lixPackageSets.${version}.lix;
+        nixpkgs.overlays = [
+          (self: super: let
+            p = (super.lixPackageSets.override {
+              inherit (super) colmena nil nixos-anywhere nixos-rebuild-ng nixpkgs-review nixpkgs-reviewFull nix-init nix-direnv nix-du nix-fast-build nix-serve-ng;
+            }).${version};
+          in {
+            inherit (p) colmena lix nix-eval-jobs nil nixos-anywhere nixos-rebuild-ng nixpkgs-review nixpkgs-reviewFull nix-init nix-direnv nix-du nix-fast-build nix-serve-ng;
+          })
+        ];
+        nix.package = pkgs.lix;
         nix.settings.experimental-features = [ "pipe-operator" ];
       }
       # TODO
@@ -37,10 +46,10 @@
       # }
       ))
     ];
-    extraCaches.lix = {
-      substituters = ["https://cache.lix.systems"];
-      trusted-public-keys = ["cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="];
-    };
+    # extraCaches.lix = {
+    #   substituters = ["https://cache.lix.systems"];
+    #   trusted-public-keys = ["cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="];
+    # };
   };
 
   # TODO
