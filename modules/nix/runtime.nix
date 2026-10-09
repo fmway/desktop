@@ -1,6 +1,6 @@
 { lib, inputs, ... }:
 {
-  fmx.nix._.runtime.includes = [ <fmx/nix/runtime/lix> ];
+  fmx.nix._.runtime.includes = [ <fmx/nix/runtime/nix> ];
   fmx.nix._.runtime._.nix = lib.mkCross ({ pkgs, ... }: {
     nix.package = pkgs.nix;
     nix.settings.experimental-features = [ "pipe-operators" ];
