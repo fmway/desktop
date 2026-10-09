@@ -16,6 +16,7 @@
 
   den.aspects.fmway = {
     includes = [
+      <fmx/tools/dev/direnv/lorri>
       <fmx/programs>
       <fmx/desktops/shells/noctalia>
       # <fmx/desktops/shells/dms>
