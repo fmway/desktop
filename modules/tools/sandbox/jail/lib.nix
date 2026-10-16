@@ -47,10 +47,10 @@
     ];
 
     bind-project = c.add-runtime /* sh */ ''
-      if [ -d "$PROJECT_DIR" ]; then
+      if [ -n "''${PROJECT_DIR+x}" ] && [ -d "$PROJECT_DIR" ]; then
         RUNTIME_ARGS+=(--bind "$PROJECT_DIR" "$PROJECT_DIR")
-      else
-        echo "Error: PROJECT_DIR '$PROJECT_DIR' does not exist" >&2
+      elif [[ ! "$*" =~ (^(-v|--version|-h|--help)$|[[:space:]](-v|--version|-h|--help)([[:space:]]|$)) ]]; then
+        echo "Error: \$PROJECT_DIR does not exist or not initialized" >&2
         exit 1
       fi
     '';
@@ -135,11 +135,22 @@
               list = x;
               null = [];
             }.${builtins.typeOf x} or (throw "unknown type of permissions, allowed: null, function, list")) v
+          else if k == "buildCommand" then
+            lib.concatMapStringsSep "\n" lib.trim v + "\n"
           else lib.fmway.resolvePriority v) vs;
-          package = r.package or pkgs.${appName};
-          permissions = [combinators.init] ++ r.permissions;
-        pkg = jail appName package permissions // { wrapped = pkg; unwrapped = r.package; inherit r; };
-      in pkg) jails;
+        package = r.package or pkgs.${appName};
+        permissions = [combinators.init] ++ r.permissions;
+        config = r // {
+          result = (jail appName package permissions).overrideAttrs (o: {
+            buildCommand = o.buildCommand + r.buildCommand or "";
+            passthru = o.passthru or {} // {
+              wrapped = config.result;
+              unwrapped = r.package;
+              inherit config;
+            };
+          });
+        };
+      in config.result) jails;
       # mkOverlays = builtins.zipAttrsWith (appName: vs: _: pkgs: let
       #   jail = self.init pkgs; inherit (jail) combinators;
       #   r = builtins.zipAttrsWith (k: v: if k == "permissions" then builtins.concatMap (fn: fn combinators) v else lib.fmway.resolvePriority v) vs;
