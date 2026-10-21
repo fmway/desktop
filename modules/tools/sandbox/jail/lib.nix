@@ -38,6 +38,7 @@
       (c.rw "~/.local/state/nix")
       (c.rw "~/.cache/nix")
       (c.add-path "\"$PATH\"")
+      (c.env (c.regex "^NIX(OS)?_"))
     ];
 
     vcs = c.compose [
