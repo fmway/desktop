@@ -1,7 +1,12 @@
 { lib, den, ... }:
 {
   fmx.tools.dev.jujutsu = {
-    includes = [ <fmx/tools/dev/jujutsu/_> ];
+    includes = [
+      <fmx/tools/dev/jujutsu/_>
+      ({ user, ... }: {
+        persistence.users.${user.userName}.directories = [ ".config/jj/repos" ];
+      })
+    ];
     homeManager = { user, config, ... }:
     {
       programs.jujutsu.enable = true;
@@ -9,6 +14,7 @@
         ui.editor = "nvim";
         ui.default-command = "log";
         user = {
+        snapshot.auto-update-stale = true;
           name = user.userName;
         } // lib.optionalAttrs (!isNull (user.email or null)) {
           email = user.email;
