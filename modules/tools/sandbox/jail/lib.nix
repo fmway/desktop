@@ -39,6 +39,7 @@
       (c.rw "~/.cache/nix")
       (c.add-path "\"$PATH\"")
       (c.env (c.regex "^NIX(OS)?_"))
+      (c.env (c.regex "_[Pp][Rr][Oo][Xx][Yy]$"))
     ];
 
     vcs = c.compose [
