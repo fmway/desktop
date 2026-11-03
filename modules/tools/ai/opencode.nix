@@ -8,21 +8,15 @@
     ];
     cache_dirs = [ ".cache/opencode" ];
   in {
-    v1.jail = { inputs', ... }:
-    {
-      opencode.package = inputs'.llm-agents.packages.opencode;
-      opencode.permissions = c: with c; [
-        (agent-tui (config_dirs ++ cache_dirs))
-        (env (regex "^OPENCODE_"))
-      ];
-    };
+    jail.opencode.type = "agent";
+    jail.opencode.permissions = c: with c; [
+      (agent-tui (config_dirs ++ cache_dirs))
+      (env (regex "^OPENCODE_"))
+    ];
+    v1.jail = { inputs', ... }: { opencode.package = inputs'.llm-agents.packages.opencode; };
     v2.jail = { inputs', ... }:
     rec {
       opencode.package = inputs'.llm-agents.packages.opencode2;
-      opencode.permissions = c: with c; [
-        (agent-tui (config_dirs ++ cache_dirs))
-        (env (regex "^OPENCODE_"))
-      ];
       # plus completions
       opencode.buildCommand = lib.concatMapAttrsStringSep "" (shell: p: /* sh */ ''
         mkdir -p "$out/${dirOf p}"

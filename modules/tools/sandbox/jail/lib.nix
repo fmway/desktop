@@ -1,10 +1,8 @@
 { inputs, require, lib, ... }: let
-  inherit (lib.fmway) do;
+  inherit (lib.fmway) do flat;
   combinators = c: let
     normalizePath = p: if !p?_noescape && isStartWithTilde p then c.noescape p else p;
   in {
-    # TODO
-    init = c.compose [];
     rw'= p: c.try-readwrite (normalizePath p);
     ro = p: c.try-readonly (normalizePath p);
     rw = p: let p' = normalizePath p; p_ = p'._noescape or "\"${p'}\""; in c.compose [
@@ -110,14 +108,22 @@
 
   isStartWithTilde = s: builtins.substring 0 1 s == "~";
 
+  normalizePermissions = x: combinators: {
+    lambda = x combinators;
+    list = x;
+    null = [];
+  }.${builtins.typeOf x} or (throw "unknown type of permissions, allowed: null, function, list");
+
   patchJail = builtins.toFile "jail.nix" (builtins.replaceStrings [
     "./"
     "additionalCombinators ? _: { }"
     "allCombinators = builtinCombinators // additionalCombinators builtinCombinators"
+    "initialState = {"
   ] [
     "${inputs.jail-nix}/lib/"
     "overlays ? []"
     "allCombinators = lib.fix (lib.extends (lib.composeManyExtensions overlays) (_: builtinCombinators))"
+    "initialState = { inherit pkgs;"
   ] (builtins.readFile "${inputs.jail-nix}/lib/jail.nix"));
   jailNix = import patchJail;
   mkJail = { overlays ? [], }: let
@@ -129,30 +135,35 @@
       parse = pkgs: jails: let
         jail = self.init pkgs;
         inherit (jail) combinators;
-      in builtins.zipAttrsWith (appName: vs: let
-        r = builtins.zipAttrsWith (k: v:
-          if k == "permissions" then
-            builtins.concatMap (x: {
-              lambda = x combinators;
-              list = x;
-              null = [];
-            }.${builtins.typeOf x} or (throw "unknown type of permissions, allowed: null, function, list")) v
-          else if k == "buildCommand" then
-            lib.concatMapStringsSep "\n" lib.trim v + "\n"
-          else lib.fmway.resolvePriority v) vs;
-        package = r.package or pkgs.${appName};
-        permissions = [combinators.init] ++ r.permissions;
-        config = r // {
-          result = (jail appName package permissions).overrideAttrs (o: {
-            buildCommand = o.buildCommand + r.buildCommand or "";
-            passthru = o.passthru or {} // {
-              wrapped = config.result;
-              unwrapped = r.package;
-              inherit config;
+        r = builtins.zipAttrsWith (appName: vs:
+          if appName == "modules" then
+              map (x: x // {
+                type = x.type or "general";
+                permissions = normalizePermissions (x.permissions or []) combinators;
+              }) vs
+          else let
+            r' = builtins.zipAttrsWith (k: v:
+              if k == "permissions" then
+                builtins.concatMap (lib.flip normalizePermissions combinators) v
+              else if k == "buildCommand" then
+                lib.concatMapStringsSep "\n" lib.trim v + "\n"
+              else lib.fmway.resolvePriority v) vs;
+            package = r'.package or pkgs.${appName};
+            filtereds = builtins.filter (x: x.type == "general" || r'.type or "" == x.type) (r.modules or []);
+            permissions = builtins.concatMap (x: x.permissions or []) filtereds ++ r'.permissions;
+            buildCommand = builtins.concatStringsSep "\n" (builtins.concatMap (x: flat (x.buildCommand or [])) filtereds ++ flat (r'.buildCommand or []));
+            config = r' // {
+              result = (jail appName package permissions).overrideAttrs (o: {
+                buildCommand = o.buildCommand + buildCommand;
+                passthru = o.passthru or {} // {
+                  wrapped = config.result;
+                  unwrapped = r'.package;
+                  inherit config;
+                };
+              });
             };
-          });
-        };
-      in config.result) jails;
+          in config.result) jails;
+      in removeAttrs r [ "modules" ];
       # mkOverlays = builtins.zipAttrsWith (appName: vs: _: pkgs: let
       #   jail = self.init pkgs; inherit (jail) combinators;
       #   r = builtins.zipAttrsWith (k: v: if k == "permissions" then builtins.concatMap (fn: fn combinators) v else lib.fmway.resolvePriority v) vs;
