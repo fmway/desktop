@@ -44,6 +44,8 @@ in {
       inputs = {
         # core flake
         systems.url = "github:nix-systems/triplet";
+        flake-compat.url = "github:nixos/flake-compat";
+        flake-compat.flake = false;
         nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
         home-manager = {
           url = "github:nix-community/home-manager/master";

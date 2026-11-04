@@ -1,0 +1,48 @@
+name: Nix environment setup
+
+inputs:
+  for-build:
+    required: false
+    type: boolean
+    default: false
+  extra-substituters:
+    required: false
+    default: ""
+  extra-trusted-public-keys:
+    required: false
+    default: ""
+  github-token:
+    required: true
+  cachix-token:
+    required: false
+  nix-config:
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+  - uses: wimpysworld/nothing-but-nix@baf7355748bb5651f08b839669d6bb39051b2874
+    with:
+      hatchet-protocol: 'rampage'
+      root-safe-haven: '3072'
+      mnt-safe-haven: '2048'
+    if: ${{ inputs.for-build == 'true' || inputs.for-build == true }}
+  - uses: cachix/install-nix-action@v31
+    with:
+      github_access_token: ${{ inputs.github-token }}
+      extra_nix_config: |
+        substituters = https://cache.nixos.org/ https://fmcachix.cachix.org ${{ inputs.extra-substituters }}
+        trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= fmcachix.cachix.org-1:Z5j9jk83ctoCK22EWrbQL6AAP3CTYnZ/PHljlYSakrw= ${{ inputs.extra-trusted-public-keys }}
+        experimental-features = nix-command flakes 
+        sandbox-fallback = false
+        ${{ inputs.nix-config }}
+  - uses: DeterminateSystems/magic-nix-cache-action@main
+    with:
+      use-flakehub: false
+  - uses: cachix/cachix-action@v17
+    with:
+      name: fmcachix
+      authToken: '${{ inputs.cachix-token }}'
+      skipAddingSubstituter: true
+    if: ${{ inputs.for-build == 'true' || inputs.for-build == true }}

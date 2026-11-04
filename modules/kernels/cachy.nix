@@ -14,25 +14,27 @@
       nixos = { host, config, ... }:
       {
         config = lib.mkMerge [
-          { boot.kernelPackages = lib.mkDefault (inputs.fmway-inputs.chaotic.outputs or inputs.chaotic).legacyPackages.${host.system}.linuxPackages_cachyos; }
+          { boot.kernelPackages = lib.mkDefault inputs.chaotic.legacyPackages.${host.system}.linuxPackages_cachyos; }
           (lib.mkIf (host.hasAspect <fmx/disk/zfs>) {
             boot.supportedFilesystems.zfs = true;
             boot.zfs.package = lib.mkDefault config.boot.kernelPackages.zfs_cachyos;
           })
         ];
       };
+
+      inputs.chaotic = {
+        url = "github:chaotic-cx/nyx";
+        inputs.nixpkgs.follows = "nixpkgs";
+        inputs.home-manager.follows = "home-manager";
+      };
     };
 
     xddxdd = {
-      extraCaches.lantian = {
-        substituters = [ "https://attic.xuyh0120.win/lantian" ];
-        trusted-public-keys = [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
-      };
-      inputs = {
-        nix-cachyos-kernel = {
-          url = "github:xddxdd/nix-cachyos-kernel";
-          inputs.flake-parts.follows = "flake-parts";
-        };
+      inputs.nix-cachyos-kernel = {
+        url = "github:xddxdd/nix-cachyos-kernel";
+        inputs.flake-parts.follows = "flake-parts";
+        inputs.nixpkgs.follows = "nixpkgs";
+        inputs.flake-compat.follows = "flake-compat";
       };
 
       nixos = { pkgs, host, config, ... }:
@@ -40,7 +42,7 @@
         config = lib.mkMerge [
           {
             boot.kernelPackages = lib.mkDefault pkgs.cachyosKernels.linuxPackages-cachyos-latest;
-            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.default ];
           }
           (lib.mkIf (host.hasAspect <fmx/disk/zfs>) {
             boot.supportedFilesystems.zfs = true;

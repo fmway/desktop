@@ -1,0 +1,61 @@
+name: Check kernel
+on:
+  push:
+    paths:
+      - flake.lock
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: kernel
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-26.04-arm
+    outputs:
+      need-build: ${{ steps.kernel.outputs.is_update }}
+      matrix: ${{ steps.kernel.outputs.matrix }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 2
+    - uses: $/.github/actions/nix-setup
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Check lockfile
+      id: kernel
+      run: |
+        updated="$(jq -c --slurpfile old <(git show -r HEAD~1:flake.lock) '. as $current | .nodes.root.inputs | to_entries | map(.key as $name | .value as $target | if $old[0].nodes[$target].locked != $current.nodes[$target].locked then $name else empty end)' ./flake.lock)"
+        echo "updated inputs: $updated"
+        # TODO: auto detect which input that used by the host kernel
+        echo "is_update=$(jq -r -n --argjson i "$updated" --argjson k '["chaotic", "nix-cachyos-kernel"]' 'any($k[]; . as $x | $i | index($x) != null)')" | tee --append "$GITHUB_OUTPUT"
+        echo "matrix=$(nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json | jq -c 'map({ host: . })')" | tee --append "$GITHUB_OUTPUT"
+  build:
+    needs: [check]
+    runs-on: ubuntu-26.04
+    if: ${{ needs.check.outputs.need-build == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.check.outputs.matrix) }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+    - uses: $/.github/actions/nix-setup
+      with:
+        for-build: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        nix-config: |
+          system-features = big-parallel gccarch-x86-64-v3
+          build-dir = /nix/build
+    - name: Build Kernels and the others
+      # TODO: auto detect required build
+      run: |
+        nix build .#nixosConfigurations.$host.config.boot.{kernelPackages.{kernel,systemd,cpupower},zfs.package} --out-link result/$host --show-trace --verbose
+        nix-collect-garbage -d
+      env:
+        host: ${{ matrix.host }}
