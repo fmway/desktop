@@ -3,8 +3,8 @@
   fmx.tools.dev.jujutsu = {
     includes = [
       <fmx/tools/dev/jujutsu/_>
-      ({ user, ... }: {
-        persistence.users.${user.userName}.directories = [ ".config/jj/repos" ];
+      ({ user, persistent, ... }: {
+        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [ ".config/jj/repos" ];
       })
     ];
     homeManager = { user, config, ... }:

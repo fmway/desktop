@@ -56,7 +56,7 @@ in {
     xdg.portal.xdgOpenUsePortal = true;
     services.gnome.gnome-keyring.enable = true;
     services.dbus.packages = with pkgs; [
-      gcr
+      gcr_4
       gnome-settings-daemon
       libsecret
     ];

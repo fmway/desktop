@@ -46,8 +46,6 @@
       # manix # nix options search
       nix-init # automate builder nix derivation
       # nurl # ?
-      rclone
-      cachix # unofficial binary cache server (another binary cache in cache.nixos.org)
       nmap # hem...
       # wayvnc # vnc for wayland / especially wlroots
       # flyctl # fly.io management in terminal

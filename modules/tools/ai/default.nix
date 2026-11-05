@@ -7,8 +7,8 @@
       environment.systemPackages = with inputs'.llm-agents.packages; [
         rtk
         codegraph
-        gitnexus
-        ai-memory
+        # gitnexus
+        # ai-memory
         pi
       ];
     };
