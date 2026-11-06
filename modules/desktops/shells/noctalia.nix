@@ -1,33 +1,16 @@
-{ config, lib, inputs, ... }:
+{ den, lib, inputs, ... }:
 {
-  fmx.desktops._.shells._.noctalia = {
-    homeManager = { pkgs, ... }: let
-      noctalia-shell = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    in {
-      home.packages = with pkgs; [
-        libappindicator
-        libdbusmenu
-        noctalia-shell
+  fmx.desktops._.shells._.noctalia._.v5 = {
+    nixos = { pkgs, ... }: {
+      imports = [
+        (inputs.fmway-inputs.noctalia.nixosModules.noctalia or inputs.noctalia.nixosModules.default)
       ];
-    };
 
-    includes = [
-      <fmx/desktops/utils/ddc>
-      <fmx/tools/clipboard/cliphist>
-      ({ user, persistent, host, ... }: {
-        persistence.${persistent.defaultDirectory}.users.${user.userName}.directories = [
-          ".config/noctalia"
-        ];
-      })
-      ({ user, persistent, host, ... }: {
-        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
-          ".cache/noctalia"
-        ];
-      })
-    ];
+      programs.noctalia = {
+        enable = true;
+        recommendedServices.enable = true;
+      };
 
-    nixos = { pkgs, ... }:
-    {
       environment.systemPackages = with pkgs; [
         evtest
         wl-mirror
@@ -35,12 +18,19 @@
       ];
     };
 
-    inputs.noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        noctalia-qs.inputs.systems.follows = "systems";
-      };
+    includes = [
+      <fmx/desktops/utils/ddc>
+      ({ user, persistent, host, ... }: {
+        persistence.${persistent.cacheDirectory}.users.${user.userName}.directories = [
+          ".cache/noctalia"
+          ".local/state/noctalia"
+        ];
+      })
+    ];
+
+    extraCaches.noctalia = {
+      substituters = [ "https://noctalia.cachix.org" ];
+      trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
     };
   };
 }

@@ -30,7 +30,7 @@ in {
     services.udev.extraRules = /* udev */ ''
       SUBSYSTEM=="input", \
         ATTRS{name}=="keyd virtual keyboard", \
-        SYMLINK+="input/keyd"
+        SYMLINK+="input/by-path/keyd"
     '';
 
     environment.etc."libinput/local-overrides.quirks".text = /* ini */ ''

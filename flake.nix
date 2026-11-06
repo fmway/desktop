@@ -109,13 +109,6 @@
         systems.follows = "systems";
       };
     };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        noctalia-qs.inputs.systems.follows = "systems";
-      };
-    };
     nur = {
       url = "github:nix-community/nur";
       inputs = {
