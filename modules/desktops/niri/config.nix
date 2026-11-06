@@ -1,12 +1,9 @@
 { lib, den, ... }: let
-  ipc = [ "noctalia-shell" "ipc" "call" ];
   inherit (lib.kdl) leaf plain node flag HJKL M seq;
-  inherit (lib.niri) spawn window-rule proportion match spawn-at-startup sh mkSub bind exclude include binds layer-rule environment;
+  inherit (lib.niri) spawn window-rule proportion match spawn-at-startup exclude include binds environment;
   inherit (den.lib) policy;
 in {
   fmx.desktops._.niri.includes = [
-    (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/noctalia>)
-      (policy.include <fmx/desktops/niri/noctalia>))
     (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/dms>)
       (policy.include <fmx/desktops/niri/dms>))
     <fmx/desktops/niri/config>
@@ -383,18 +380,18 @@ in {
     (spawn-at-startup "foot" "--server")
 
     
-    (spawn-at-startup
-      "swayidle"
-        "timeout" "300"
-          "swaylock -f -c 000000"
-        "timeout" "600"
-          "niri msg output off"
-        "timeout" "1000"
-          "systemctl suspend"
-        "resume"
-          "niri msg output on"
-        "before-sleep"
-          "swaylock -f -c 000000")
+    # (spawn-at-startup
+    #   "swayidle"
+    #     "timeout" "300"
+    #       "swaylock -f -c 000000"
+    #     "timeout" "600"
+    #       "niri msg output off"
+    #     "timeout" "1000"
+    #       "systemctl suspend"
+    #     "resume"
+    #       "niri msg output on"
+    #     "before-sleep"
+    #       "swaylock -f -c 000000")
     (spawn-at-startup "wayland-pipewire-idle-inhibit")
     # (spawn-at-startup "uwsm" "finalize")
     # (spawn-at-startup "systemctl" "--user" "start" "hyprpolkitagent")
@@ -409,14 +406,7 @@ in {
       wayland-pipewire-idle-inhibit
     ];
   };
-  fmx.desktops._.niri._.noctalia.includes = [
-    <fmx/desktops/niri/noctalia/config>
-    ({ host, user, persistent, ... }: {
-      persistence.${persistent.cacheDirectory}.users.${user.userName}.files = [
-        ".config/niri/noctalia.kdl"
-      ];
-    })
-  ];
+  
   fmx.desktops._.niri._.dms.includes = [
     <fmx/desktops/niri/dms/config>
   ];
@@ -429,67 +419,5 @@ in {
     (include { optional = true; } "./dms/outputs.kdl")
     (include { optional = true; } "./dms/windowrules.kdl")
     (include { optional = true; } "./dms/wblur.kdl")
-  ];
-  fmx.desktops._.niri._.noctalia._.config.niri-config = { pkgs, ... }: let
-    sub = mkSub pkgs;
-  in [
-    (binds.append
-      # fn section
-      # (node "XF86AudioRaiseVolume" { allow-when-locked = true; }
-      #   (spawn ipc "volume" "increase"))
-      # (node "XF86AudioLowerVolume" { allow-when-locked = true; }
-      #   (spawn ipc "volume" "decrease"))
-      # (node "XF86AudioMute"        { allow-when-locked = true; }
-      #   (spawn ipc "volume" "muteOutput"))
-      # (node "XF86AudioMicMute"      { allow-when-locked = true; }
-      #   (spawn ipc "volume" "muteInput"))
-
-      (plain "XF86MonBrightnessUp"
-        (spawn ipc "brightness" "increase"))
-      (plain "XF86MonBrightnessDown"
-        (spawn ipc "brightness" "decrease"))
-
-      # noctalia features
-      (plain "Ctrl+Alt+Delete"
-        (spawn ipc "sessionMenu" "toggle"))
-      (node "Mod+Shift+I" { hotkey-overlay-title = "Lock the screen (alt)"; }
-        (spawn ipc "lockScreen" "lock"))
-      (plain "Mod+Slash"
-        (spawn ipc "launcher" "toggle"))
-      (plain "Mod+Shift+C"
-        (spawn ipc "launcher" "calculator"))
-      (plain "Mod+Semicolon"
-        (spawn ipc "launcher" "emoji"))
-      (plain "Mod+V"
-        (spawn ipc "launcher" "clipboard"))
-
-      # submap for change background
-      (sub "Mod+B" "Custom Binds"
-        (bind "b" "Toggle Bar"
-          (sh ipc "bar" "toggle"))
-        (bind "c" "Change Wallpaper"
-          (sh ipc "wallpaper" "toggle"))
-        (bind "r" "Random Wallpaper"
-          (sh ipc "wallpaper" "random"))
-      )
-    )
-
-    (layer-rule
-      (match { namespace = "^quickshell-wallpaper$"; })
-      (match { namespace = "^quickshell-overview$"; })
-      (match { namespace = "^swww-daemon$"; })
-      (match { namespace = "^noctalia-overview*"; })
-      (leaf "place-within-backdrop" true)
-    )
-
-    (spawn-at-startup "noctalia-shell")
-
-    # already did in noctalia-shell
-    # (spawn-at-startup
-    #   "wl-paste" "--type" "image" "--watch" "cliphist" "store")
-    # (spawn-at-startup
-    #   "wl-paste" "--type" "text" "--watch" "cliphist" "store")
-
-    (include { optional = true; } "./noctalia.kdl")
   ];
 }

@@ -129,11 +129,11 @@
     },
     "fmway-inputs": {
       "locked": {
-        "lastModified": 1793876957,
-        "narHash": "sha256-YtHjLHHt7EVOjydBy+YiQ+JI4CH8Hb9rhoNAAOgj6Lc=",
+        "lastModified": 1793962439,
+        "narHash": "sha256-LbQ6eE0yHiPt5NGcyGT7AO/LYAzlZJUFXwp53jkBMjY=",
         "owner": "fmway",
         "repo": "inputs",
-        "rev": "d48f207c48da6c637065c51ae26e8af0b867c1e2",
+        "rev": "eaf6d4b5aa4e6d77851e3b0050b0c9bb9a08796d",
         "type": "github"
       },
       "original": {
@@ -417,26 +417,6 @@
         "type": "github"
       }
     },
-    "noctalia": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785020013,
-        "narHash": "sha256-p4AzXXPOOitAx1Y9/ecKI7GfxQYSHCgFswN4vSeLH2o=",
-        "owner": "noctalia-dev",
-        "repo": "noctalia-shell",
-        "rev": "8f2180e3fbe27d96a15d4ccd7073d1aea3b9bae7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "noctalia-dev",
-        "repo": "noctalia-shell",
-        "type": "github"
-      }
-    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -517,7 +497,6 @@
         "nixpak": "nixpak",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "noctalia": "noctalia",
         "nur": "nur",
         "nxchad": "nxchad",
         "systems": "systems"

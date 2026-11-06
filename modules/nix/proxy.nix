@@ -19,7 +19,10 @@
           };
         };
       };
-      extraCaches.selector4nix = inputs.fmway-inputs.selector4nix.extraCaches or {}; 
+      extraCaches.selector4nix = {
+        substituters = [ "https://selector4nix.cachix.org/" ];
+        trusted-public-keys = [ "selector4nix.cachix.org-1:wovVlT07In5JCVz2tFgxPQTLpnN8hZT6P/RwfFcz3KE=" ];
+      };
       nixos = { extraCaches, ... }: let
         caches = builtins.zipAttrsWith (_: v: lib.unique (builtins.concatLists v)) (lib.select "**.**.{?substituters,?trusted-public-keys}" extraCaches);
       in {

@@ -18,7 +18,7 @@
     includes = [
       <fmx/tools/dev/direnv/lorri>
       <fmx/programs>
-      <fmx/desktops/shells/noctalia>
+      <fmx/desktops/shells/noctalia/v5>
       # <fmx/desktops/shells/dms>
       <fmx/desktops/niri>
       <fmx/tools/drive/megasync>
