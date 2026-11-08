@@ -16,7 +16,7 @@
       ({ user, host, persistent, ... }: {
         persistence = [
           { ${persistent.defaultDirectory}.users.${user.userName}.files = [ ".local/share/nix/repl-history" ]; }
-          { ${persistent.cacheDirectory}.users.${user.userName}.directories = [ ".cache/nix" ".local/state/nix" ".nix-profile" ".nix-defexpr" ]; }
+          { ${persistent.cacheDirectory}.users.${user.userName}.directories = [ ".cache/nix" ".local/state/nix" ]; }
         ];
       })
       (lib.mkCross {
