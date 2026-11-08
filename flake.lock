@@ -129,11 +129,11 @@
     },
     "fmway-inputs": {
       "locked": {
-        "lastModified": 1793962439,
-        "narHash": "sha256-LbQ6eE0yHiPt5NGcyGT7AO/LYAzlZJUFXwp53jkBMjY=",
+        "lastModified": 1794101014,
+        "narHash": "sha256-CMX98o2z4YqXuVtuMFiMrXODSBELHYcXrI0fEBfWXXc=",
         "owner": "fmway",
         "repo": "inputs",
-        "rev": "eaf6d4b5aa4e6d77851e3b0050b0c9bb9a08796d",
+        "rev": "459bd963f9e42258606e0abbc85856f2c021ba38",
         "type": "github"
       },
       "original": {

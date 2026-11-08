@@ -52,6 +52,18 @@
     # };
   };
 
+  fmx.nix._.runtime._.iets = {
+    nixos = {
+      imports = [
+        (inputs.fmway-inputs.iets or inputs.iets).nixosModules.default
+      ];
+
+      iets.classic.enable = true;
+      # iets.classic.nix = pkgs.nixVersions.latest;
+      nix.settings.experimental-features = [ "pipe-operators" ];
+    };
+  };
+
   # TODO
   # fmx.nix.runtime.dnix = lib.mkCross ({ class, ... }: {
   #   imports = [
