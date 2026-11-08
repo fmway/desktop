@@ -1,8 +1,9 @@
 { den, lib, ... }: let
   inherit (den.lib) policy;
   inherit (lib.kdl) leaf plain node;
-  inherit (lib.niri) match spawn-at-startup spawn spawn-sh binds layer-rule window-rule include;
-  ipc = spawn "noctalia" "msg";
+  inherit (lib.niri) match spawn-at-startup spawn spawn-sh binds layer-rule window-rule include mkSub sh bind;
+  ipc.__functor = _: spawn "noctalia" "msg";
+  ipc.sh = sh "noctalia" "msg";
 in {
   fmx.desktops._.niri.includes = [
     (policy.when (ctx: ctx.hasAspect <fmx/desktops/shells/noctalia/v5>)
@@ -19,8 +20,9 @@ in {
   ];
 
   
-  fmx.desktops._.niri._.noctalia._.v5._.config.niri-config = { pkgs, ... }:
-  [
+  fmx.desktops._.niri._.noctalia._.v5._.config.niri-config = { pkgs, ... }: let
+    sub = mkSub pkgs;
+  in [
     (spawn-at-startup "noctalia" "--daemon")
     (include { optional = true; } "./noctalia.kdl")
 
@@ -42,6 +44,9 @@ in {
       (plain "Mod+Shift+I"     (ipc "session" "lock"))
       (plain "Mod+Alt+I"       (ipc "session" "lock-and-suspend"))
       (plain "Mod+V"           (ipc "panel-toggle" "clipboard"))
+      (plain "Ctrl+Alt+Delete" (ipc "panel-toggle" "session"))
+      (plain "Mod+Semicolon"   (ipc "panel-toggle" "launcher" "/emo "))
+      (plain "Mod+Shift+C"     (ipc "panel-toggle" "launcher" "/calc "))
 
       # Audio & Brightness
       # (plain "XF86AudioRaiseVolume"  (ipc "volume-up"))
@@ -49,6 +54,16 @@ in {
       # (plain "XF86AudioMute"         (ipc "volume-mute"))
       (plain "XF86MonBrightnessUp"   (ipc "brightness-up"))
       (plain "XF86MonBrightnessDown" (ipc "brightness-down"))
+
+      # submap for change background
+      (sub "Mod+B" "Custom Binds"
+        (bind "b" "Toggle Bar"
+          (ipc.sh "bar-toggle"))
+        (bind "c" "Change Wallpaper"
+          (ipc.sh "panel-toggle" "wallpaper"))
+        (bind "r" "Random Wallpaper"
+          (ipc.sh "wallpaper-random"))
+      )
     )
 
     # ======== Overview Wallpaper =============
