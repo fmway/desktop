@@ -1,0 +1,942 @@
+diff --git a/docs/wiki/Configuration:-Animations.md b/docs/wiki/Configuration:-Animations.md
+index f62dab3b..ef10f73f 100644
+--- a/docs/wiki/Configuration:-Animations.md
++++ b/docs/wiki/Configuration:-Animations.md
+@@ -62,6 +62,10 @@ animations {
+     recent-windows-close {
+         spring damping-ratio=1.0 stiffness=800 epsilon=0.001
+     }
++
++    magnifier-zoom {
++        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
++    }
+ }
+ ```
+ 
+@@ -454,6 +458,18 @@ animations {
+ }
+ ```
+ 
++#### `magnifier-zoom`
++
++The zoom level change animation of the magnifier when adjusting it (e.g. by scrolling while it's open).
++
++```kdl
++animations {
++    magnifier-zoom {
++        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
++    }
++}
++```
++
+ ### Synchronized Animations
+ 
+ <sup>Since: 0.1.5</sup>
+diff --git a/docs/wiki/Configuration:-Miscellaneous.md b/docs/wiki/Configuration:-Miscellaneous.md
+index 6ed2b9be..3b25ee39 100644
+--- a/docs/wiki/Configuration:-Miscellaneous.md
++++ b/docs/wiki/Configuration:-Miscellaneous.md
+@@ -248,6 +248,57 @@ overview {
+ }
+ ```
+ 
++### `magnifier`
++
++Settings for the live cursor-following screen magnifier. Scrolling with the [`zoom-modifier`](#zoom-modifier) held turns the magnifier on and zooms it, so no `toggle-magnifier` bind is required; that action remains available for turning the magnifier off, or on without zooming.
++
++```kdl
++magnifier {
++    zoom 2.0
++    max-zoom 10.0
++    zoom-speed 0.25
++    zoom-modifier "mod"
++    // hide-mouse
++}
++```
++
++#### `zoom`
++
++The zoom level the magnifier starts at when toggled on. `zoom` ranges from 1 to 10.
++
++#### `max-zoom`
++
++The upper bound for the zoom level while scrolling to adjust it with the magnifier open.
++
++#### `zoom-speed`
++
++How much the zoom level changes for every scroll tick while the magnifier is open.
++
++The zoom level change itself is animated; see the [`magnifier-zoom` animation](./Configuration:-Animations.md#magnifier-zoom) to control that.
++
++#### `zoom-modifier`
++
++Controls which modifier, if any, you need to hold to zoom by scrolling. Scrolling like this turns the magnifier on if it isn't already.
++
++Set to `"mod"` (the default) to require holding the [`Mod` key](./Configuration:-Key-Bindings.md#overview) while scrolling, `"mod-ctrl"` to require Mod and Ctrl together, or `"none"` for plain scroll (no modifier) to zoom.
++
++```kdl
++magnifier {
++    // Zoom with plain scroll, no modifier needed.
++    zoom-modifier "none"
++}
++```
++
++#### `hide-mouse`
++
++Hides the real mouse cursor while the magnifier is active, rather than showing it (zoomed in along with everything else).
++
++```kdl
++magnifier {
++    hide-mouse
++}
++```
++
+ ### `xwayland-satellite`
+ 
+ <sup>Since: 25.08</sup>
+diff --git a/niri-config/src/animations.rs b/niri-config/src/animations.rs
+index d54f3797..0b949e1c 100644
+--- a/niri-config/src/animations.rs
++++ b/niri-config/src/animations.rs
+@@ -24,6 +24,7 @@ pub struct Animations {
+     pub screenshot_ui_open: ScreenshotUiOpenAnim,
+     pub overview_open_close: OverviewOpenCloseAnim,
+     pub recent_windows_close: RecentWindowsCloseAnim,
++    pub magnifier_zoom: MagnifierZoomAnim,
+ }
+ 
+ impl Default for Animations {
+@@ -42,6 +43,7 @@ impl Default for Animations {
+             screenshot_ui_open: Default::default(),
+             overview_open_close: Default::default(),
+             recent_windows_close: Default::default(),
++            magnifier_zoom: Default::default(),
+         }
+     }
+ }
+@@ -76,6 +78,8 @@ pub struct AnimationsPart {
+     pub overview_open_close: Option<OverviewOpenCloseAnim>,
+     #[knuffel(child)]
+     pub recent_windows_close: Option<RecentWindowsCloseAnim>,
++    #[knuffel(child)]
++    pub magnifier_zoom: Option<MagnifierZoomAnim>,
+ }
+ 
+ impl MergeWith<AnimationsPart> for Animations {
+@@ -102,6 +106,7 @@ impl MergeWith<AnimationsPart> for Animations {
+             screenshot_ui_open,
+             overview_open_close,
+             recent_windows_close,
++            magnifier_zoom,
+         );
+     }
+ }
+@@ -386,6 +391,22 @@ impl Default for RecentWindowsCloseAnim {
+     }
+ }
+ 
++#[derive(Debug, Clone, Copy, PartialEq)]
++pub struct MagnifierZoomAnim(pub Animation);
++
++impl Default for MagnifierZoomAnim {
++    fn default() -> Self {
++        Self(Animation {
++            off: false,
++            kind: Kind::Spring(SpringParams {
++                damping_ratio: 1.,
++                stiffness: 800,
++                epsilon: 0.0001,
++            }),
++        })
++    }
++}
++
+ impl<S> knuffel::Decode<S> for WorkspaceSwitchAnim
+ where
+     S: knuffel::traits::ErrorSpan,
+@@ -824,6 +845,21 @@ impl Animation {
+     }
+ }
+ 
++impl<S> knuffel::Decode<S> for MagnifierZoomAnim
++where
++    S: knuffel::traits::ErrorSpan,
++{
++    fn decode_node(
++        node: &knuffel::ast::SpannedNode<S>,
++        ctx: &mut knuffel::decode::Context<S>,
++    ) -> Result<Self, DecodeError<S>> {
++        let default = Self::default().0;
++        Ok(Self(Animation::decode_node(node, ctx, default, |_, _| {
++            Ok(false)
++        })?))
++    }
++}
++
+ impl<S> knuffel::Decode<S> for SpringParams
+ where
+     S: knuffel::traits::ErrorSpan,
+diff --git a/niri-config/src/binds.rs b/niri-config/src/binds.rs
+index e4701e52..72365971 100644
+--- a/niri-config/src/binds.rs
++++ b/niri-config/src/binds.rs
+@@ -517,6 +517,7 @@ pub enum Action {
+     ToggleOverview,
+     OpenOverview,
+     CloseOverview,
++    ToggleMagnifier,
+     #[knuffel(skip)]
+     ToggleWindowUrgent(u64),
+     #[knuffel(skip)]
+@@ -890,6 +891,7 @@ impl From<niri_ipc::Action> for Action {
+             niri_ipc::Action::ToggleOverview {} => Self::ToggleOverview,
+             niri_ipc::Action::OpenOverview {} => Self::OpenOverview,
+             niri_ipc::Action::CloseOverview {} => Self::CloseOverview,
++            niri_ipc::Action::ToggleMagnifier {} => Self::ToggleMagnifier,
+             niri_ipc::Action::ToggleWindowUrgent { id } => Self::ToggleWindowUrgent(id),
+             niri_ipc::Action::SetWindowUrgent { id } => Self::SetWindowUrgent(id),
+             niri_ipc::Action::UnsetWindowUrgent { id } => Self::UnsetWindowUrgent(id),
+diff --git a/niri-config/src/lib.rs b/niri-config/src/lib.rs
+index fad654b3..dc144b33 100644
+--- a/niri-config/src/lib.rs
++++ b/niri-config/src/lib.rs
+@@ -83,6 +83,7 @@ pub struct Config {
+     pub blur: Blur,
+     pub gestures: Gestures,
+     pub overview: Overview,
++    pub magnifier: Magnifier,
+     pub environment: Environment,
+     pub xwayland_satellite: XwaylandSatellite,
+     pub window_rules: Vec<WindowRule>,
+@@ -204,6 +205,7 @@ where
+                 "blur" => m_merge!(blur),
+                 "gestures" => m_merge!(gestures),
+                 "overview" => m_merge!(overview),
++                "magnifier" => m_merge!(magnifier),
+                 "xwayland-satellite" => m_merge!(xwayland_satellite),
+                 "switch-events" => m_merge!(switch_events),
+                 "debug" => m_merge!(debug),
+@@ -2158,6 +2160,18 @@ mod tests {
+                         ),
+                     },
+                 ),
++                magnifier_zoom: MagnifierZoomAnim(
++                    Animation {
++                        off: false,
++                        kind: Spring(
++                            SpringParams {
++                                damping_ratio: 1.0,
++                                stiffness: 800,
++                                epsilon: 0.0001,
++                            },
++                        ),
++                    },
++                ),
+             },
+             blur: Blur {
+                 off: false,
+@@ -2213,6 +2227,13 @@ mod tests {
+                     },
+                 },
+             },
++            magnifier: Magnifier {
++                zoom: 2.0,
++                max_zoom: 10.0,
++                zoom_speed: 0.25,
++                zoom_modifier: Mod,
++                hide_mouse: false,
++            },
+             environment: Environment(
+                 [
+                     EnvironmentVariable {
+diff --git a/niri-config/src/misc.rs b/niri-config/src/misc.rs
+index 66a200ca..2ea0e6a3 100644
+--- a/niri-config/src/misc.rs
++++ b/niri-config/src/misc.rs
+@@ -152,6 +152,59 @@ impl MergeWith<OverviewPart> for Overview {
+     }
+ }
+ 
++#[derive(knuffel::DecodeScalar, Debug, Default, Clone, Copy, PartialEq, Eq)]
++pub enum MagnifierZoomModifier {
++    /// Hold the compositor Mod key and scroll to zoom.
++    #[default]
++    Mod,
++    /// Hold Mod and Ctrl together and scroll to zoom.
++    ModCtrl,
++    /// No modifier needed; plain scroll while the magnifier is open zooms it.
++    None,
++}
++
++#[derive(Debug, Clone, Copy, PartialEq)]
++pub struct Magnifier {
++    pub zoom: f64,
++    pub max_zoom: f64,
++    pub zoom_speed: f64,
++    pub zoom_modifier: MagnifierZoomModifier,
++    pub hide_mouse: bool,
++}
++
++impl Default for Magnifier {
++    fn default() -> Self {
++        Self {
++            zoom: 2.,
++            max_zoom: 10.,
++            zoom_speed: 0.25,
++            zoom_modifier: MagnifierZoomModifier::Mod,
++            hide_mouse: false,
++        }
++    }
++}
++
++#[derive(knuffel::Decode, Debug, Clone, Copy, PartialEq)]
++pub struct MagnifierPart {
++    #[knuffel(child, unwrap(argument))]
++    pub zoom: Option<FloatOrInt<1, 10>>,
++    #[knuffel(child, unwrap(argument))]
++    pub max_zoom: Option<FloatOrInt<1, 100>>,
++    #[knuffel(child, unwrap(argument))]
++    pub zoom_speed: Option<FloatOrInt<0, 10>>,
++    #[knuffel(child, unwrap(argument))]
++    pub zoom_modifier: Option<MagnifierZoomModifier>,
++    #[knuffel(child)]
++    pub hide_mouse: Option<Flag>,
++}
++
++impl MergeWith<MagnifierPart> for Magnifier {
++    fn merge_with(&mut self, part: &MagnifierPart) {
++        merge!((self, part), zoom, max_zoom, zoom_speed, hide_mouse);
++        merge_clone!((self, part), zoom_modifier);
++    }
++}
++
+ #[derive(knuffel::Decode, Debug, Default, Clone, PartialEq, Eq)]
+ pub struct Environment(#[knuffel(children)] pub Vec<EnvironmentVariable>);
+ 
+diff --git a/niri-ipc/src/lib.rs b/niri-ipc/src/lib.rs
+index 545c365d..61404a22 100644
+--- a/niri-ipc/src/lib.rs
++++ b/niri-ipc/src/lib.rs
+@@ -1005,6 +1005,8 @@ pub enum Action {
+     OpenOverview {},
+     /// Close the Overview.
+     CloseOverview {},
++    /// Toggle the live cursor-following screen magnifier.
++    ToggleMagnifier {},
+     /// Toggle urgent status of a window.
+     ToggleWindowUrgent {
+         /// Id of the window to toggle urgent.
+diff --git a/src/input/mod.rs b/src/input/mod.rs
+index 93c9e72f..61236853 100644
+--- a/src/input/mod.rs
++++ b/src/input/mod.rs
+@@ -7,8 +7,8 @@ use calloop::timer::{TimeoutAction, Timer};
+ use calloop::RegistrationToken;
+ use input::event::gesture::GestureEventCoordinates as _;
+ use niri_config::{
+-    Action, Bind, Binds, BoundAction, Config, Key, ModKey, Modifiers, MruDirection, SwitchBinds,
+-    Trigger,
++    Action, Bind, Binds, BoundAction, Config, Key, MagnifierZoomModifier, ModKey, Modifiers,
++    MruDirection, SwitchBinds, Trigger,
+ };
+ use niri_ipc::LayoutSwitchTarget;
+ use smithay::backend::input::{
+@@ -2601,6 +2601,11 @@ impl State {
+                     self.niri.queue_redraw_all();
+                 }
+             }
++            Action::ToggleMagnifier => {
++                self.niri.magnifier_active = !self.niri.magnifier_active;
++                self.niri.magnifier.damage();
++                self.niri.queue_redraw_all();
++            }
+             Action::ToggleWindowUrgent(id) => {
+                 let window = self
+                     .niri
+@@ -3523,6 +3528,13 @@ impl State {
+             let mods = self.niri.seat.get_keyboard().unwrap().modifier_state();
+             let modifiers = modifiers_from_state(mods);
+             let use_builtin_bindings = should_handle_in_overview || is_mru_open;
++            let is_magnifier_zoom_scroll = match self.niri.config.borrow().magnifier.zoom_modifier {
++                MagnifierZoomModifier::Mod => modifiers == mod_key.to_modifiers(),
++                MagnifierZoomModifier::ModCtrl => {
++                    modifiers == mod_key.to_modifiers() | Modifiers::CTRL
++                }
++                MagnifierZoomModifier::None => modifiers.is_empty(),
++            };
+ 
+             if use_builtin_bindings
+                 || self
+@@ -3591,6 +3603,7 @@ impl State {
+                     .niri
+                     .mods_with_vertical_wheel_binds
+                     .contains(&modifiers)
++                || is_magnifier_zoom_scroll
+             {
+                 let vertical = vertical_amount_v120.unwrap_or(0.);
+                 let ticks = self.niri.vertical_wheel_tracker.accumulate(vertical);
+@@ -3652,6 +3665,19 @@ impl State {
+                             hotkey_overlay_title: None,
+                         });
+                         (bind_up, bind_down)
++                    } else if is_magnifier_zoom_scroll {
++                        // Scroll (with the configured zoom-modifier held, if any) zooms the
++                        // magnifier directly, rather than going through the bind system — this
++                        // isn't a navigation action, just a live numeric adjustment. It also
++                        // activates the magnifier on first use, so no separate toggle press is
++                        // needed. Scroll up (ticks < 0) zooms in, scroll down (ticks > 0) zooms
++                        // out.
++                        self.niri.magnifier_active = true;
++                        let zoom_speed = self.niri.config.borrow().magnifier.zoom_speed;
++                        let target = self.niri.magnifier_zoom_target - ticks as f64 * zoom_speed;
++                        self.niri.set_magnifier_zoom_target(target);
++                        self.niri.queue_redraw_all();
++                        (None, None)
+                     } else {
+                         (
+                             self.find_pointer_bind(mod_key, Trigger::WheelScrollUp, mods),
+diff --git a/src/niri.rs b/src/niri.rs
+index ce37ae56..57a589d2 100644
+--- a/src/niri.rs
++++ b/src/niri.rs
+@@ -122,7 +122,7 @@ use wayland_server::protocol::wl_output::WlOutput;
+ 
+ #[cfg(feature = "dbus")]
+ use crate::a11y::A11y;
+-use crate::animation::Clock;
++use crate::animation::{Animation, Clock};
+ use crate::backend::tty::SurfaceDmabufFeedback;
+ use crate::backend::{Backend, Headless, RenderResult, Tty, Winit};
+ use crate::cursor::{CursorManager, CursorTextureCache, RenderCursor, XCursor};
+@@ -168,6 +168,7 @@ use crate::protocols::output_management::OutputManagementManagerState;
+ use crate::protocols::screencopy::{Screencopy, ScreencopyManagerState};
+ use crate::render_helpers::blur::BlurOptions;
+ use crate::render_helpers::debug::push_opaque_regions;
++use crate::render_helpers::magnifier::MagnifierElement;
+ use crate::render_helpers::primary_gpu_texture::PrimaryGpuTextureRenderElement;
+ use crate::render_helpers::renderer::NiriRenderer;
+ use crate::render_helpers::solid_color::{SolidColorBuffer, SolidColorRenderElement};
+@@ -462,6 +463,13 @@ pub struct Niri {
+     pub debug_draw_opaque_regions: bool,
+     pub debug_draw_damage: bool,
+ 
++    pub magnifier: crate::render_helpers::magnifier::Magnifier,
++    pub magnifier_active: bool,
++    /// Target zoom level, as set by the user (e.g. via scrolling).
++    pub magnifier_zoom_target: f64,
++    /// Animation driving the actual rendered zoom level towards `magnifier_zoom_target`.
++    pub magnifier_zoom_anim: Animation,
++
+     #[cfg(feature = "dbus")]
+     pub dbus: Option<crate::dbus::DBusServers>,
+     #[cfg(feature = "dbus")]
+@@ -2867,6 +2875,14 @@ impl Niri {
+             )
+             .unwrap();
+ 
++        let magnifier_zoom_target = config_.magnifier.zoom;
++        let magnifier_zoom_anim = Animation::new(
++            animation_clock.clone(),
++            magnifier_zoom_target,
++            magnifier_zoom_target,
++            0.,
++            config_.animations.magnifier_zoom.0,
++        );
+         drop(config_);
+         let mut niri = Self {
+             config,
+@@ -3012,6 +3028,11 @@ impl Niri {
+             debug_draw_opaque_regions: false,
+             debug_draw_damage: false,
+ 
++            magnifier: crate::render_helpers::magnifier::Magnifier::new(),
++            magnifier_active: false,
++            magnifier_zoom_target,
++            magnifier_zoom_anim,
++
+             #[cfg(feature = "dbus")]
+             dbus: None,
+             #[cfg(feature = "dbus")]
+@@ -4110,16 +4131,34 @@ impl Niri {
+         renderer: &mut R,
+         output: &Output,
+         push: &mut dyn FnMut(PointerRenderElements<R>),
++    ) {
++        self.render_pointer_at(renderer, output, None, push);
++    }
++
++    /// Like [`Self::render_pointer`], but if `pos_override` is given, draws the cursor at
++    /// that output-local logical position instead of the real pointer location.
++    ///
++    /// Used by the magnifier: it warps the framebuffer around the cursor, so the cursor
++    /// sprite (drawn separately, on top) needs the same warp applied to its position, or it
++    /// visually drifts away from the magnified content it's supposed to be pointing at.
++    pub fn render_pointer_at<R: NiriRenderer>(
++        &self,
++        renderer: &mut R,
++        output: &Output,
++        pos_override: Option<Point<f64, Logical>>,
++        push: &mut dyn FnMut(PointerRenderElements<R>),
+     ) {
+         let _span = tracy_client::span!("Niri::render_pointer");
+         let output_scale = output.current_scale();
+         let output_pos = self.global_space.output_geometry(output).unwrap().loc;
+ 
+         // Check whether we need to draw the tablet cursor or the regular cursor.
+-        let pointer_pos = self
+-            .tablet_cursor_location
+-            .unwrap_or_else(|| self.seat.get_pointer().unwrap().current_location());
+-        let pointer_pos = pointer_pos - output_pos.to_f64();
++        let pointer_pos = pos_override.unwrap_or_else(|| {
++            let pointer_pos = self
++                .tablet_cursor_location
++                .unwrap_or_else(|| self.seat.get_pointer().unwrap().current_location());
++            pointer_pos - output_pos.to_f64()
++        });
+ 
+         // Get the render cursor to draw.
+         let cursor_scale = output_scale.integer_scale();
+@@ -4522,6 +4561,26 @@ impl Niri {
+         }
+     }
+ 
++    /// Sets a new target zoom level for the magnifier, animating towards it from whatever the
++    /// current (possibly still-animating) zoom level is.
++    pub fn set_magnifier_zoom_target(&mut self, target: f64) {
++        let config = self.config.borrow();
++        let target = target.clamp(1., config.magnifier.max_zoom);
++        self.magnifier_zoom_target = target;
++
++        let current = self.magnifier_zoom_anim.value();
++        self.magnifier_zoom_anim = Animation::new(
++            self.clock.clone(),
++            current,
++            target,
++            0.,
++            config.animations.magnifier_zoom.0,
++        );
++        drop(config);
++
++        self.magnifier.damage();
++    }
++
+     pub fn advance_animations(&mut self) {
+         let _span = tracy_client::span!("Niri::advance_animations");
+ 
+@@ -4531,6 +4590,13 @@ impl Niri {
+         self.screenshot_ui.advance_animations();
+         self.window_mru_ui.advance_animations();
+ 
++        if self.magnifier_active {
++            // Force a fresh capture every frame while the magnifier is active: the cursor
++            // can move and the scene behind it can change between frames, both of which
++            // invalidate the captured crop just as much as a zoom change would.
++            self.magnifier.damage();
++        }
++
+         for state in self.output_state.values_mut() {
+             if let Some(transition) = &mut state.screen_transition {
+                 if transition.is_done() {
+@@ -4681,9 +4747,72 @@ impl Niri {
+             push
+         };
+ 
++        // The magnifier, if active, goes above literally everything, including the pointer:
++        // it needs to be the very first thing pushed so that its capture_framebuffer() call
++        // (which grabs whatever the renderer already drew this frame) runs dead last, after
++        // every other element below has actually been drawn to the real framebuffer. Pushing
++        // elements is front-to-back (see "The pointer goes on the top" below, which pushes
++        // first to end up on top), and the renderer draws back-to-front, so "pushed first" is
++        // "drawn last" is "on top".
++        let mut hide_pointer_for_magnifier = false;
++        let mut magnifier_pointer_pos = None;
++
++        if self.magnifier_active {
++            if let Some(output_geo) = self.global_space.output_geometry(output) {
++                let mag = self.config.borrow().magnifier;
++                hide_pointer_for_magnifier = mag.hide_mouse;
++
++                let pointer_pos = self
++                    .tablet_cursor_location
++                    .unwrap_or_else(|| self.seat.get_pointer().unwrap().current_location());
++                let pointer_pos_logical = pointer_pos - output_geo.loc.to_f64();
++                let pointer_pos: Point<i32, Physical> =
++                    pointer_pos_logical.to_physical_precise_round(output_scale);
++
++                let output_size = output_geo.size.to_f64();
++
++                // A spring animation can overshoot its target, so clamp the rendered value in
++                // addition to the target itself: otherwise a bouncy magnifier-zoom spring
++                // could momentarily exceed the configured max-zoom.
++                let zoom = self.magnifier_zoom_anim.value().clamp(1., mag.max_zoom);
++
++                let geometry = Rectangle::from_size(output_size);
++
++                // The magnifier warps the framebuffer around the cursor (crops a small box
++                // centered on it, then scales that box up to fill `geometry`), so the cursor
++                // sprite, drawn separately below via `render_pointer_at`, needs the same warp
++                // applied to its position — otherwise it stays at its real screen location
++                // while the content it's pointing at moves out from under it. This mirrors
++                // the crop-rect math in magnifier.rs's capture_framebuffer exactly.
++                let dst: Rectangle<i32, Physical> =
++                    geometry.to_physical_precise_round(output_scale);
++                let output_size_phys: Size<i32, Physical> =
++                    output_size.to_physical_precise_round(output_scale);
++                let src_w = ((dst.size.w as f64) / zoom).round().max(1.) as i32;
++                let src_h = ((dst.size.h as f64) / zoom).round().max(1.) as i32;
++                let max_x = (output_size_phys.w - src_w).max(0);
++                let max_y = (output_size_phys.h - src_h).max(0);
++                let src_x = (pointer_pos.x - src_w / 2).clamp(0, max_x);
++                let src_y = (pointer_pos.y - src_h / 2).clamp(0, max_y);
++                let mapped_x = dst.loc.x as f64
++                    + (pointer_pos.x - src_x) as f64 / src_w as f64 * dst.size.w as f64;
++                let mapped_y = dst.loc.y as f64
++                    + (pointer_pos.y - src_y) as f64 / src_h as f64 * dst.size.h as f64;
++                magnifier_pointer_pos = Some(Point::from((
++                    mapped_x / output_scale.x,
++                    mapped_y / output_scale.y,
++                )));
++
++                let elem = self.magnifier.render(geometry, pointer_pos, zoom);
++                push(elem.into());
++            }
++        }
++
+         // The pointer goes on the top.
+-        if include_pointer && self.pointer_visibility.is_visible() {
+-            self.render_pointer(ctx.renderer, output, &mut |elem| push(elem.into()));
++        if include_pointer && self.pointer_visibility.is_visible() && !hide_pointer_for_magnifier {
++            self.render_pointer_at(ctx.renderer, output, magnifier_pointer_pos, &mut |elem| {
++                push(elem.into())
++            });
+         }
+ 
+         // Next, the screen transition texture.
+@@ -5075,6 +5204,8 @@ impl Niri {
+             state.unfinished_animations_remain |= self.screenshot_ui.are_animations_ongoing();
+             state.unfinished_animations_remain |= self.window_mru_ui.are_animations_ongoing();
+             state.unfinished_animations_remain |= state.screen_transition.is_some();
++            state.unfinished_animations_remain |=
++                self.magnifier_active && !self.magnifier_zoom_anim.is_clamped_done();
+ 
+             // Also keep redrawing if the current cursor is animated.
+             state.unfinished_animations_remain |= self
+@@ -7571,5 +7702,6 @@ niri_render_elements! {
+         Texture = PrimaryGpuTextureRenderElement,
+         // Used for the CPU-rendered panels.
+         RelocatedMemoryBuffer = RelocateRenderElement<MemoryRenderBufferRenderElement<R>>,
++        Magnifier = MagnifierElement,
+     }
+ }
+diff --git a/src/render_helpers/magnifier.rs b/src/render_helpers/magnifier.rs
+new file mode 100644
+index 00000000..2f8a5854
+--- /dev/null
++++ b/src/render_helpers/magnifier.rs
+@@ -0,0 +1,294 @@
++use std::cell::RefCell;
++
++use smithay::backend::allocator::Fourcc;
++use smithay::backend::renderer::element::{Element, Id, RenderElement};
++use smithay::backend::renderer::gles::{ffi, GlesError, GlesFrame, GlesRenderer, GlesTexture};
++use smithay::backend::renderer::utils::CommitCounter;
++use smithay::backend::renderer::{Frame as _, FrameContext, Offscreen, Texture as _};
++use smithay::gpu_span_location;
++use smithay::utils::user_data::UserDataMap;
++use smithay::utils::{Buffer, Logical, Physical, Point, Rectangle, Scale, Transform};
++
++use crate::backend::tty::{TtyFrame, TtyRenderer, TtyRendererError};
++use crate::render_helpers::renderer::AsGlesFrame as _;
++
++/// A whole-output live magnifier effect: crops a small area of the already-composited
++/// framebuffer around the cursor and blits it back scaled up to fill the entire output.
++///
++/// Modeled on [`super::framebuffer_effect::FramebufferEffect`]'s `capture_framebuffer` trick
++/// (grab whatever was already drawn to the output before this element runs), but much
++/// simpler: no blur/shader postprocessing, and the captured source rectangle is decoupled
++/// from the element's own draw destination (framebuffer_effect always captures from `dst`
++/// itself, i.e. draws in place; we deliberately capture from a *different*, smaller,
++/// cursor-centered rectangle and let a single `glBlitFramebuffer` do the crop and the
++/// upscale together).
++#[derive(Debug)]
++pub struct Magnifier {
++    id: Id,
++    commit: CommitCounter,
++}
++
++#[derive(Debug)]
++pub struct MagnifierElement {
++    id: Id,
++    commit: CommitCounter,
++    /// This element's own draw destination, in output-local logical coordinates: always the
++    /// whole output.
++    geometry: Rectangle<f64, Logical>,
++    /// Cursor position, in output-local physical coordinates, at the time this element was
++    /// built. Precomputed by the caller (which already has the output scale to hand) rather
++    /// than recomputed here, since `capture_framebuffer`/`draw` only see physical space.
++    pointer_pos: Point<i32, Physical>,
++    zoom: f64,
++}
++
++#[derive(Debug)]
++struct Inner {
++    intermediate: Option<GlesTexture>,
++}
++
++impl Magnifier {
++    pub fn new() -> Self {
++        Self {
++            id: Id::new(),
++            commit: CommitCounter::default(),
++        }
++    }
++
++    /// Marks the effect as changed, forcing a fresh capture on the next render. Call this
++    /// every frame while the magnifier is active: the cursor moving (or the content behind
++    /// it changing) both require a fresh crop of the framebuffer, and this element has no
++    /// other way to know that happened.
++    pub fn damage(&mut self) {
++        self.commit.increment();
++    }
++
++    pub fn render(
++        &self,
++        geometry: Rectangle<f64, Logical>,
++        pointer_pos: Point<i32, Physical>,
++        zoom: f64,
++    ) -> MagnifierElement {
++        MagnifierElement {
++            id: self.id.clone(),
++            commit: self.commit,
++            geometry,
++            pointer_pos,
++            zoom,
++        }
++    }
++}
++
++impl Default for Magnifier {
++    fn default() -> Self {
++        Self::new()
++    }
++}
++
++impl Element for MagnifierElement {
++    fn id(&self) -> &Id {
++        &self.id
++    }
++
++    fn current_commit(&self) -> CommitCounter {
++        self.commit
++    }
++
++    fn src(&self) -> Rectangle<f64, Buffer> {
++        let size = self.geometry.size.to_buffer(1., Transform::Normal);
++        Rectangle::from_size(size)
++    }
++
++    fn geometry(&self, scale: Scale<f64>) -> Rectangle<i32, Physical> {
++        self.geometry.to_physical_precise_round(scale)
++    }
++
++    fn is_framebuffer_effect(&self) -> bool {
++        true
++    }
++}
++
++impl RenderElement<GlesRenderer> for MagnifierElement {
++    fn capture_framebuffer(
++        &self,
++        frame: &mut GlesFrame<'_, '_>,
++        _src: Rectangle<f64, Buffer>,
++        dst: Rectangle<i32, Physical>,
++        cache: &UserDataMap,
++    ) -> Result<(), GlesError> {
++        let _span = tracy_client::span!("MagnifierElement::capture_framebuffer");
++        let location = gpu_span_location!("MagnifierElement::capture_framebuffer");
++        frame.with_gpu_span(location, |frame| {
++            let output_rect = Rectangle::from_size(frame.output_size());
++            let transform = frame.transformation();
++
++            let mut guard = frame.renderer();
++
++            let inner = cache.get_or_insert::<RefCell<Inner>, _>(|| RefCell::new(Inner::new()));
++            let mut inner = inner.borrow_mut();
++            let inner = &mut *inner;
++
++            inner.intermediate = None;
++
++            // The area of the framebuffer we actually want to sample: a small box centered
++            // on the cursor, sized so that blitting it up to the destination (the whole
++            // output) gives the requested zoom factor. Clamp so it never reads outside the
++            // output (the cursor near an edge shifts the box instead of letting it go out of
++            // bounds).
++            let zoom = self.zoom.max(1.);
++            let src_w = ((dst.size.w as f64) / zoom).round().max(1.) as i32;
++            let src_h = ((dst.size.h as f64) / zoom).round().max(1.) as i32;
++            let max_x = (output_rect.size.w - src_w).max(0);
++            let max_y = (output_rect.size.h - src_h).max(0);
++            let src_x = (self.pointer_pos.x - src_w / 2).clamp(0, max_x);
++            let src_y = (self.pointer_pos.y - src_h / 2).clamp(0, max_y);
++            let capture_rect = Rectangle::new((src_x, src_y).into(), (src_w, src_h).into());
++            // Account for output transform/rotation the same way framebuffer_effect.rs does,
++            // since these are raw framebuffer pixel coordinates for the GL blit below.
++            let capture_rect = transform.transform_rect_in(capture_rect, &output_rect.size);
++
++            // The intermediate texture is sized to match `dst`, so capturing straight into it
++            // is what performs the crop-and-upscale in a single blit. `capture_rect` above was
++            // transformed into raw (rotated) framebuffer pixel space, so the texture we blit
++            // it into needs to be sized to match that same space (swapping width and height
++            // under a 90°/270° output transform), or the blit stretches the image unevenly.
++            let tex_size = transform.transform_size(dst.size);
++
++            let renderer = guard.as_mut();
++            let texture: GlesTexture = renderer.create_buffer(
++                Fourcc::Abgr8888,
++                tex_size.to_logical(1).to_buffer(1, Transform::Normal),
++            )?;
++
++            drop(guard);
++
++            frame.with_context(|gl| unsafe {
++                while gl.GetError() != ffi::NO_ERROR {}
++
++                let mut current_fbo = 0i32;
++                gl.GetIntegerv(ffi::DRAW_FRAMEBUFFER_BINDING, &mut current_fbo as *mut _);
++
++                // BlitFramebuffer is affected by the scissor test, we don't want that.
++                gl.Disable(ffi::SCISSOR_TEST);
++
++                let mut fbo = 0;
++                gl.GenFramebuffers(1, &mut fbo as *mut _);
++                gl.BindFramebuffer(ffi::DRAW_FRAMEBUFFER, fbo);
++
++                gl.FramebufferTexture2D(
++                    ffi::DRAW_FRAMEBUFFER,
++                    ffi::COLOR_ATTACHMENT0,
++                    ffi::TEXTURE_2D,
++                    texture.tex_id(),
++                    0,
++                );
++
++                gl.BlitFramebuffer(
++                    capture_rect.loc.x,
++                    capture_rect.loc.y,
++                    capture_rect.loc.x + capture_rect.size.w,
++                    capture_rect.loc.y + capture_rect.size.h,
++                    0,
++                    0,
++                    tex_size.w,
++                    tex_size.h,
++                    ffi::COLOR_BUFFER_BIT,
++                    ffi::LINEAR,
++                );
++
++                gl.BindFramebuffer(ffi::DRAW_FRAMEBUFFER, current_fbo as u32);
++                gl.Enable(ffi::SCISSOR_TEST);
++
++                gl.DeleteFramebuffers(1, &mut fbo as *mut _);
++
++                if gl.GetError() != ffi::NO_ERROR {
++                    Err(GlesError::BlitError)
++                } else {
++                    Ok(())
++                }
++            })??;
++
++            inner.intermediate = Some(texture);
++
++            Ok(())
++        })
++    }
++
++    fn draw(
++        &self,
++        frame: &mut GlesFrame<'_, '_>,
++        _src: Rectangle<f64, Buffer>,
++        dst: Rectangle<i32, Physical>,
++        damage: &[Rectangle<i32, Physical>],
++        opaque_regions: &[Rectangle<i32, Physical>],
++        cache: Option<&UserDataMap>,
++    ) -> Result<(), GlesError> {
++        let Some(cache) = cache else {
++            return Ok(());
++        };
++        let Some(inner) = cache.get::<RefCell<Inner>>() else {
++            return Ok(());
++        };
++        let inner = inner.borrow();
++
++        let Some(texture) = &inner.intermediate else {
++            return Ok(());
++        };
++
++        // The intermediate texture was already captured at exactly `dst`'s size, so this is
++        // a plain 1:1 blit — no cropping needed, unlike framebuffer_effect.rs.
++        frame.render_texture_from_to(
++            texture,
++            Rectangle::from_size(texture.size().to_f64()),
++            dst,
++            damage,
++            opaque_regions,
++            frame.transformation().invert(),
++            1.,
++            None,
++            &[],
++        )
++    }
++}
++
++impl<'render> RenderElement<TtyRenderer<'render>> for MagnifierElement {
++    fn capture_framebuffer(
++        &self,
++        frame: &mut TtyFrame<'_, '_, '_>,
++        src: Rectangle<f64, Buffer>,
++        dst: Rectangle<i32, Physical>,
++        cache: &UserDataMap,
++    ) -> Result<(), TtyRendererError<'render>> {
++        let gles_frame = frame.as_gles_frame();
++        RenderElement::<GlesRenderer>::capture_framebuffer(&self, gles_frame, src, dst, cache)?;
++        Ok(())
++    }
++
++    fn draw(
++        &self,
++        frame: &mut TtyFrame<'_, '_, '_>,
++        src: Rectangle<f64, Buffer>,
++        dst: Rectangle<i32, Physical>,
++        damage: &[Rectangle<i32, Physical>],
++        opaque_regions: &[Rectangle<i32, Physical>],
++        cache: Option<&UserDataMap>,
++    ) -> Result<(), TtyRendererError<'render>> {
++        let gles_frame = frame.as_gles_frame();
++        RenderElement::<GlesRenderer>::draw(
++            &self,
++            gles_frame,
++            src,
++            dst,
++            damage,
++            opaque_regions,
++            cache,
++        )?;
++        Ok(())
++    }
++}
++
++impl Inner {
++    fn new() -> Self {
++        Inner { intermediate: None }
++    }
++}
+diff --git a/src/render_helpers/mod.rs b/src/render_helpers/mod.rs
+index ad0e0127..ca0a4043 100644
+--- a/src/render_helpers/mod.rs
++++ b/src/render_helpers/mod.rs
+@@ -35,6 +35,7 @@ pub mod debug;
+ pub mod effect_buffer;
+ pub mod framebuffer_effect;
+ pub mod gradient_fade_texture;
++pub mod magnifier;
+ pub mod memory;
+ pub mod offscreen;
+ pub mod primary_gpu_texture;

@@ -23,6 +23,12 @@
     "mainUrl": "https://raw.githubusercontent.com/mnixry/nixos-config/refs/heads/main/pkgs/nixpaks/common.nix",
     "type": "file"
   },
+  "niri": {
+    "url": "https://codeload.github.com/niri-wm/niri/tar.gz/refs/heads/main",
+    "hash": "sha256-Olv3oXpH+E2AicKSb0Ggem1AW5hDEJEt7J/HDu1IGgk=",
+    "mainUrl": "https://github.com/niri-wm/niri/archive/main.tar.gz",
+    "type": "tarball"
+  },
   "nix-gvfs-googledrive/flake.nix": {
     "url": "https://raw.githubusercontent.com/j-a-sunny/nix-gvfs-googledrive/refs/heads/main/flake.nix",
     "hash": "sha256-UGI3AjfCdVznClJET5ka9rS6fQmQ9nC3vxiQNxssLSU=",

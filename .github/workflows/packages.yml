@@ -1,0 +1,25 @@
+# TODO: declare in nix
+name: packages
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+    - uses: $/.github/actions/nix-setup
+      with:
+        for-build: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        nix-config: |
+          system-features = big-parallel gccarch-x86-64-v3
+          build-dir = /nix/build
+    - name: Build Niri
+      run: |
+        nix build .#nixosConfigurations.Namaku1801.pkgs.niri --show-trace --verbose

@@ -59,7 +59,16 @@ in {
     provides.to-users.nixos = { config, pkgs, ... }:
     {
       nixpkgs.overlays = [
-        (self: super: import ../../../packages { inherit lib; pkgs = self; })
+        (self: super: import ../../../packages { inherit lib; pkgs = super; })
+        (self: super: {
+          niri = super.niri.overrideAttrs (o: {
+            src = <sources/niri>;
+            patches = o.patches or [] ++ [
+              ../../../patches/niri/cursor-zoom.patch
+            ];
+            cargoHash = "sha256-rLVTigIUf8rxn25bVdjVyOqPPjBq8KpKINoXQ/gFYxI=";
+          });
+        })
       ];
       environment.systemPackages = with pkgs; [
         qr-watcher
@@ -133,4 +142,6 @@ in {
       };
     };
   };
+
+  source-archives.niri = "https://github.com/niri-wm/niri/archive/main.tar.gz";
 }
