@@ -33,7 +33,7 @@ index f62dab3b..ef10f73f 100644
  
  <sup>Since: 0.1.5</sup>
 diff --git a/docs/wiki/Configuration:-Miscellaneous.md b/docs/wiki/Configuration:-Miscellaneous.md
-index 6ed2b9be..3b25ee39 100644
+index 6ed2b9be..8268e620 100644
 --- a/docs/wiki/Configuration:-Miscellaneous.md
 +++ b/docs/wiki/Configuration:-Miscellaneous.md
 @@ -248,6 +248,57 @@ overview {
@@ -42,7 +42,7 @@ index 6ed2b9be..3b25ee39 100644
  
 +### `magnifier`
 +
-+Settings for the live cursor-following screen magnifier. Scrolling with the [`zoom-modifier`](#zoom-modifier) held turns the magnifier on and zooms it, so no `toggle-magnifier` bind is required; that action remains available for turning the magnifier off, or on without zooming.
++Settings for the live cursor-following screen magnifier. Scrolling with the [`zoom-modifier`](#zoom-modifier) held turns the magnifier on and zooms it — with both the mouse wheel and two-finger touchpad scroll — so no `toggle-magnifier` bind is required; that action remains available for turning the magnifier off, or on without zooming.
 +
 +```kdl
 +magnifier {
@@ -70,7 +70,7 @@ index 6ed2b9be..3b25ee39 100644
 +
 +#### `zoom-modifier`
 +
-+Controls which modifier, if any, you need to hold to zoom by scrolling. Scrolling like this turns the magnifier on if it isn't already.
++Controls which modifier, if any, you need to hold to zoom by scrolling — either with the mouse wheel or by two-finger scrolling on a touchpad. Scrolling like this turns the magnifier on if it isn't already.
 +
 +Set to `"mod"` (the default) to require holding the [`Mod` key](./Configuration:-Key-Bindings.md#overview) while scrolling, `"mod-ctrl"` to require Mod and Ctrl together, or `"none"` for plain scroll (no modifier) to zoom.
 +
@@ -327,7 +327,7 @@ index 545c365d..61404a22 100644
      ToggleWindowUrgent {
          /// Id of the window to toggle urgent.
 diff --git a/src/input/mod.rs b/src/input/mod.rs
-index 93c9e72f..61236853 100644
+index 93c9e72f..ce06f072 100644
 --- a/src/input/mod.rs
 +++ b/src/input/mod.rs
 @@ -7,8 +7,8 @@ use calloop::timer::{TimeoutAction, Timer};
@@ -353,21 +353,30 @@ index 93c9e72f..61236853 100644
              Action::ToggleWindowUrgent(id) => {
                  let window = self
                      .niri
-@@ -3523,6 +3528,13 @@ impl State {
-             let mods = self.niri.seat.get_keyboard().unwrap().modifier_state();
-             let modifiers = modifiers_from_state(mods);
+@@ -3516,12 +3521,20 @@ impl State {
+ 
+         let is_mru_open = self.niri.window_mru_ui.is_open();
+ 
++        let mods = self.niri.seat.get_keyboard().unwrap().modifier_state();
++        let modifiers = modifiers_from_state(mods);
++        let is_magnifier_zoom_scroll = match self.niri.config.borrow().magnifier.zoom_modifier {
++            MagnifierZoomModifier::Mod => modifiers == mod_key.to_modifiers(),
++            MagnifierZoomModifier::ModCtrl => {
++                modifiers == mod_key.to_modifiers() | Modifiers::CTRL
++            }
++            MagnifierZoomModifier::None => modifiers.is_empty(),
++        };
++
+         // Handle wheel scroll bindings.
+         if source == AxisSource::Wheel {
+             // If we have a scroll bind with current modifiers, then accumulate and don't pass to
+             // Wayland. If there's no bind, reset the accumulator.
+-            let mods = self.niri.seat.get_keyboard().unwrap().modifier_state();
+-            let modifiers = modifiers_from_state(mods);
              let use_builtin_bindings = should_handle_in_overview || is_mru_open;
-+            let is_magnifier_zoom_scroll = match self.niri.config.borrow().magnifier.zoom_modifier {
-+                MagnifierZoomModifier::Mod => modifiers == mod_key.to_modifiers(),
-+                MagnifierZoomModifier::ModCtrl => {
-+                    modifiers == mod_key.to_modifiers() | Modifiers::CTRL
-+                }
-+                MagnifierZoomModifier::None => modifiers.is_empty(),
-+            };
  
              if use_builtin_bindings
-                 || self
-@@ -3591,6 +3603,7 @@ impl State {
+@@ -3591,6 +3604,7 @@ impl State {
                      .niri
                      .mods_with_vertical_wheel_binds
                      .contains(&modifiers)
@@ -375,7 +384,7 @@ index 93c9e72f..61236853 100644
              {
                  let vertical = vertical_amount_v120.unwrap_or(0.);
                  let ticks = self.niri.vertical_wheel_tracker.accumulate(vertical);
-@@ -3652,6 +3665,19 @@ impl State {
+@@ -3652,6 +3666,19 @@ impl State {
                              hotkey_overlay_title: None,
                          });
                          (bind_up, bind_down)
@@ -395,6 +404,56 @@ index 93c9e72f..61236853 100644
                      } else {
                          (
                              self.find_pointer_bind(mod_key, Trigger::WheelScrollUp, mods),
+@@ -3682,9 +3709,6 @@ impl State {
+         }
+         // Handle touchpad and continuous scroll bindings.
+         else if source == AxisSource::Finger || source == AxisSource::Continuous {
+-            let mods = self.niri.seat.get_keyboard().unwrap().modifier_state();
+-            let modifiers = modifiers_from_state(mods);
+-
+             let horizontal = event.amount(Axis::Horizontal).unwrap_or(0.);
+             let vertical = event.amount(Axis::Vertical).unwrap_or(0.);
+ 
+@@ -3783,7 +3807,10 @@ impl State {
+                 }
+             }
+ 
+-            if is_mru_open || self.niri.mods_with_finger_scroll_binds.contains(&modifiers) {
++            if is_mru_open
++                || self.niri.mods_with_finger_scroll_binds.contains(&modifiers)
++                || is_magnifier_zoom_scroll
++            {
+                 let ticks = self
+                     .niri
+                     .horizontal_finger_scroll_tracker
+@@ -3811,10 +3838,23 @@ impl State {
+                     .vertical_finger_scroll_tracker
+                     .accumulate(vertical);
+                 if ticks != 0 {
+-                    let (bind_up, bind_down) = (
+-                        self.find_pointer_bind(mod_key, Trigger::TouchpadScrollUp, mods),
+-                        self.find_pointer_bind(mod_key, Trigger::TouchpadScrollDown, mods),
+-                    );
++                    let (bind_up, bind_down) = if is_magnifier_zoom_scroll {
++                        // Two-finger scroll (with the configured zoom-modifier held, if any)
++                        // zooms the magnifier directly, rather than going through the bind
++                        // system. Also activates the magnifier on first use.
++                        self.niri.magnifier_active = true;
++                        let zoom_speed = self.niri.config.borrow().magnifier.zoom_speed;
++                        let target =
++                            self.niri.magnifier_zoom_target - ticks as f64 * zoom_speed;
++                        self.niri.set_magnifier_zoom_target(target);
++                        self.niri.queue_redraw_all();
++                        (None, None)
++                    } else {
++                        (
++                            self.find_pointer_bind(mod_key, Trigger::TouchpadScrollUp, mods),
++                            self.find_pointer_bind(mod_key, Trigger::TouchpadScrollDown, mods),
++                        )
++                    };
+ 
+                     if let Some(down) = bind_down {
+                         for _ in 0..ticks {
 diff --git a/src/niri.rs b/src/niri.rs
 index ce37ae56..57a589d2 100644
 --- a/src/niri.rs
