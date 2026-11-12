@@ -55,7 +55,7 @@ jobs:
     - name: Build Kernels and the others
       # TODO: auto detect required build
       run: |
-        nix build .#nixosConfigurations.$host.config.boot.{kernelPackages.{kernel,systemd,cpupower},zfs.package} --out-link result/$host --show-trace --verbose
+        nix build .#nixosConfigurations.$host.config.boot.{kernelPackages.{kernel,systemd,cpupower,amneziawg},zfs.package} --out-link result/$host --show-trace --verbose
         nix-collect-garbage -d
       env:
         host: ${{ matrix.host }}
