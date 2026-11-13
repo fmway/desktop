@@ -26,8 +26,8 @@
 
 in {
   den.quirks.firewall = {};
-  den.policies.validate-firewall = { user ? null, ... }:
-    if isNull user then
+  den.policies.validate-firewall = { host, user ? null, ... }:
+    if !isNull user then
       pipe.from "firewall" [ pipe.expose ]
     else
       pipe.from "firewall" [ (pipe.for cleaning) ]
